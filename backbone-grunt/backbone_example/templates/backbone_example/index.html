@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Backbone Example (grunt built)</title>
+
+        <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min.js"></script>
+
+        <link rel="stylesheet" type="text/css"
+              href="{% static 'backbone_example/css/app.css'|add:backbone_example_url_suffix %}" />
+
+        <script type="text/javascript">
+            window.PARAMS = {};
+            {% for key, value in params.items %}
+                window.PARAMS['{{key}}'] = "{{value}}";
+            {% endfor %}
+        </script>
+    </head>
+
+    <body>
+        <h3>Dataset List (max: 10)</h3>
+        <div id="projects"></div>
+        <script src="{% static 'backbone_example/templates.js'|add:backbone_example_url_suffix %}">
+        </script>
+        <script type="text/javascript"
+                src="{% static 'backbone_example/app.js'|add:backbone_example_url_suffix %}">
+        </script>
+    </body>
+
+</html>

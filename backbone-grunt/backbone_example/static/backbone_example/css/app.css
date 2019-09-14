@@ -1,0 +1,20 @@
+/* add your css */
+html {
+    text-align: center;
+    background-image: url('images/ome-icon-opacity.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+}
+
+#projects table {
+    width: 100%;
+}
+
+#projects thead {
+    font-weight: bold;
+}
+#projects td {
+    max-width: 300px;
+    overflow-x: hidden;
+}

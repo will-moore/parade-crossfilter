@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "description": "Webpack Example",
+  "scripts": {
+    "debug": "webpack --config webpack.config.js --progress --devtool source-map",
+    "prod": "webpack -p --config webpack.config.js --progress"
+  },
+  "dependencies": {
+    "jquery": ">=3.4.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-eslint": "7.2.3",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.6.0",
+    "file-loader": "1.1.5",
+    "fs.extra": "1.3.2",
+    "webpack": "3.8.1"
+  }
+}

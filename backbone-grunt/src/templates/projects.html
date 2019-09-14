@@ -1,0 +1,22 @@
+<%
+    if (error) {
+        print(error)
+    } else if (!ready) {
+        print('Loading...')
+    } else if (projects.length === 0) {
+        print('Empty Project List')
+   } else {
+%>
+    <table>
+        <thead><tr><td>Id</td><td>Name</td><td>Desc</td></tr></thead>
+        <tbody>
+<% projects.forEach(function(p) { %>
+            <tr>
+                <td><% print(p.get('@id')) %></td>
+                <td><% print(p.get('Name') ? p.get('Name') : '') %></td>
+                <td><% print(p.get('Description') ? p.get('Description') : '') %></td>
+            </tr>
+<% }) %>
+        </tbody>
+    </table>
+<% } %>
