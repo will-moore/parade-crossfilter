@@ -30,13 +30,13 @@ def index(request, conn=None, **kwargs):
     """
     # We need to serve the create-react-app build.
     # Load the template html and replace OMEROWEB_INDEX
-    template = loader.get_template('react_webapp/index.html')
+    template = loader.get_template('parade_crossfilter/index.html')
     html = template.render({}, request)
     omeroweb_index = reverse('index')
     html = html.replace('OMEROWEB_INDEX = dev_omeroweb_index',
                         'OMEROWEB_INDEX = "%s"' % omeroweb_index)
     # update links to static files
-    static_dir = static.static('react_webapp/')
+    static_dir = static.static('parade_crossfilter/')
     html = html.replace('href="/static/', 'href="%s' % static_dir)
     html = html.replace('src="/static/', 'src="%s' % static_dir)
     return HttpResponse(html)
