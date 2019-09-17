@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Drawer from './Drawer.js'
 
+import {DataContext} from './crossfilter/DataContext';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -33,6 +35,7 @@ function App() {
 
   return (
     <div className="App">
+      <DataContext>
       <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
       </nav>
@@ -99,6 +102,7 @@ function App() {
           </main>
         </div>
       </div>
+      </DataContext>
     </div>
   );
 }

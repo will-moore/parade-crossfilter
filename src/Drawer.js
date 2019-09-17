@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import React, {useState} from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import Filters from './filters/Filters';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -41,16 +42,12 @@ function Drawer() {
   return (
     <React.Fragment>
       <nav className="bg-light" style={drawerStyle}>
-        <div className="sidebar-sticky">
-          <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Filters</span>
-          </h6>
-        </div>
+        <Filters />
       </nav>
 
       <nav className="bg-light" style={toolbarStyle}>
         <div className="sidebar-sticky" style={{padding: 7}}>
-          <button onClick={handleClickExpand} type="button" class="btn btn-light" style={expandButtonStyle}>
+          <button onClick={handleClickExpand} type="button" className="btn btn-light" style={expandButtonStyle}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
         </div>
