@@ -1,6 +1,5 @@
 import React from 'react';
 import DimensionChooser from './DimensionChooser';
-import Histogram from './Histogram';
 import Filter from './Filter';
 
 const Filters = () => {

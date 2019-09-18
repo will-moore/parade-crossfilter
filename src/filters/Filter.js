@@ -1,6 +1,7 @@
 
 import React, {useState} from 'react';
 import Histogram from './Histogram';
+import TextFilter from './TextFilter';
 
 const Filter = ({dimName, dimType, removeFilter}) => {
 
@@ -24,7 +25,7 @@ const Filter = ({dimName, dimType, removeFilter}) => {
             <div className="toast-body">
                 { (dimType === 'number') ? 
                     <Histogram dimName={dimName} setSubheading={setSubheading} />
-                    : <div> TextFilter </div>
+                    : <TextFilter dimName={dimName} />
                 }
             </div>
         </div>
