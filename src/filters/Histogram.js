@@ -30,9 +30,8 @@ const histogramFunc = (divRef, ndx, dimName) => {
 const Histogram = props => (
     <ChartTemplate
         chartFunction={histogramFunc}
-        title={props.dimName}
+        setSubheading={props.setSubheading}
         dimName={props.dimName}
-        removeChart={props.removeChart}
     />
 )
 

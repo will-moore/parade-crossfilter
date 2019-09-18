@@ -1,45 +1,8 @@
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
+import ResetButton from './ResetButton';
 import * as dc from "dc";
 
-const ResetButton = props => {
-    const style = {
-        padding: 4,
-        display: 'inline',
-        cursor: 'pointer',
-        float:'right',
-    }
-    return (
-        <button
-        {...style}
-        onClick={() => {
-            props.chart.filterAll();
-            dc.redrawAll();
-        }}
-        >
-        reset
-        </button>
-        );
-    };
-
-const FilterTitle = props => {
-    const [filter, setFilter] = React.useState(null);
-
-    if (props.chart) {
-        props.chart.on('filtered', function(chart, filter){
-            if (filter && filter.filterType === "RangedFilter") {
-                setFilter(filter);
-            }
-        });
-    }
-
-    return (
-        <label>
-            <span style={{'marginRight': 10}}>{props.title}</span>
-            <span>{filter ? `${filter['0'].toFixed(2)} - ${filter['1'].toFixed(2)}` : ''}</span>
-        </label>
-    )
-}
 
 export const ChartTemplate = props => {
     /*
@@ -50,13 +13,23 @@ export const ChartTemplate = props => {
     */
     const context = React.useContext(CXContext);
     const [chart, updateChart] = React.useState(null);
+    const [isFiltered, setFiltered] = React.useState(false);
     const ndx = context.ndx;
     const div = React.useRef(null);
-    const {dimName, chartFunction} = props;
+    const {dimName, chartFunction, setSubheading} = props;
     React.useEffect(() => {
         const newChart = chartFunction(div.current, ndx, dimName); // chartfunction takes the ref and does something with it
         
         newChart.render();
+
+        newChart.on('filtered', function(chart, filter){
+            setFiltered(filter != null);
+            if (filter && filter.filterType === "RangedFilter") {
+                let subheading = filter ? `${filter['0'].toFixed(2)} - ${filter['1'].toFixed(2)}` : '';
+                setSubheading(subheading);
+            }
+        })
+
         updateChart(newChart);
         
         // Specify how to clean up after this effect:
@@ -70,19 +43,18 @@ export const ChartTemplate = props => {
         width:'100%',
         height:'auto',
         boxSizing:'border-box',
-        padding: 10,
+        padding: 0,
+        position: 'relative',
     }
-    const btnStyle = {float:'right', marginLeft: 5};
     return (
         <div
             ref={div}
             style={chartStyles}
             >
-        
-            <button onClick={() => props.removeChart(props.title)}
-                style={btnStyle}>X</button>
-            <ResetButton chart={chart} /> 
-            <FilterTitle title={props.title} chart={chart} /> 
+
+            <ResetButton
+                isFiltered={isFiltered}
+                chart={chart} />
         </div>
     );
 };

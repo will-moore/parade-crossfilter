@@ -1,6 +1,7 @@
 import React from 'react';
 import DimensionChooser from './DimensionChooser';
 import Histogram from './Histogram';
+import Filter from './Filter';
 
 const Filters = () => {
 
@@ -24,23 +25,18 @@ const Filters = () => {
             </h6>
             <DimensionChooser addFilter={addFilter} />
 
+            <div style={{padding:10}}>
+
             {filters.map(filter => {
-                if (filter.type === 'number') {
-                    return (
-                        <div key={filter.name}>
-                            <Histogram dimName={filter.name} removeChart={removeFilter}/>
-                        </div>
-                    )
-                } else {
-                    return <div key={filter.name}>
-                        {filter.name}
-                        {/* <TextFilter dimName={filter.name}
-                            removeChart={removeFilter} />
-                        <GroupFilter dimName={filter.name}
-                            removeChart={removeFilter} /> */}
-                    </div>
-                }
+                return (
+                    <Filter key={filter.name}
+                        removeFilter={removeFilter}
+                        dimType={filter.type}
+                        dimName={filter.name}
+                    />
+                )
             })}
+            </div>
         </div>
     )
 }
