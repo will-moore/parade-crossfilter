@@ -26,13 +26,13 @@ function App() {
                 <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
             </nav>
 
-            <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0}}>
+            <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
                 <Drawer />
                 <main role="main" className="column" style={mainStyle}>
-                    <div style={{background: ''}}>
+                    <div style={{background: '', flex: '1 1 auto'}}>
                         <h2>Plot</h2>
                     </div>
-                    <div style={{overflow: 'auto'}}>
+                    <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>
                         <DataTable />
                     </div>
                 </main>
