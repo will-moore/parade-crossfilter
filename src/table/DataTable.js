@@ -21,16 +21,12 @@ const DataTable = props => {
     By passing the key to the parent div, we get a rerender once the chart is defined. 
     */
     const context = React.useContext(CXContext);
-    const [chart, updateChart] = React.useState(null);
     const ndx = context.ndx;
     const columns = context.columns;
-    console.log('columns', columns);
     const table = React.useRef(null);
     React.useEffect(() => {
         const newChart = tableFunc(table.current, ndx, columns); // chartfunction takes the ref and does something with it
         newChart.render();
-
-        updateChart(newChart);
 
         // Specify how to clean up after this effect:
         return () => {

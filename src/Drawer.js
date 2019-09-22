@@ -11,8 +11,8 @@ function Drawer() {
   const drawerWidth = 320;
 
   const toolbarStyle = {
-    zIndex: 100,
-    padding: '48px 0 0',
+    zIndex: 110,
+    padding: '0',
     boxShadow: 'inset -1px 0 0 rgba(0, 0, 0, .1)',
     display: 'block',
     flex: `0 0 50px`,
@@ -22,7 +22,7 @@ function Drawer() {
 
   const drawerStyle = {
     zIndex: 100,
-    padding: '48px 0 0',
+    padding: '0',
     boxShadow: 'inset -1px 0 0 rgba(0, 0, 0, .1)',
     display: 'block',
     flexGrow: 0,

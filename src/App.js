@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from 'react';
-import Button from 'react-bootstrap/Button';
+import React from 'react';
 import Drawer from './Drawer.js'
 import DataTable from './table/DataTable';
 
@@ -16,31 +15,29 @@ function App() {
         paddingRight: 15,
         display: 'flex',
         flexDirection: 'column',
-        border: 'solid green 2px',
         width: '200',
+        overflow: 'auto',
     }
 
     return (
         <div className="App">
             <DataContext>
             <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-            <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
-        </nav>
+                <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
+            </nav>
 
-        <div className="container-fluid">
-            <div className="row" style={{display: 'flex', flexWrap: 'nowrap'}}>
+            <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0}}>
                 <Drawer />
                 <main role="main" className="column" style={mainStyle}>
-                    <div style={{background: 'rebeccapurple', height: '50%'}}>
+                    <div style={{background: ''}}>
                         <h2>Plot</h2>
                     </div>
-                    <div style={{background: 'blue', height: '50%', overflow: 'auto'}}>
+                    <div style={{overflow: 'auto'}}>
                         <DataTable />
                     </div>
                 </main>
             </div>
-        </div>
-        </DataContext>
+            </DataContext>
         </div>
     );
 }
