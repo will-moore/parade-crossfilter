@@ -1,5 +1,6 @@
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
+import GroupFilter from './GroupFilter';
 import * as dc from "dc";
 
 const TextFilter = ({dimName}) => {
@@ -30,12 +31,17 @@ const TextFilter = ({dimName}) => {
     }
 
     return (
+        <React.Fragment>
         <input
             type="text"
             placeholder={`Filter by ${dimName}`}
             className="form-control"
             value={text}
             onChange={handleChange} />
+        
+            <GroupFilter dimName={dimName} />
+        </React.Fragment>
+
     );
 };
 
