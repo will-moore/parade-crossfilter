@@ -73,7 +73,7 @@ export class DataContext extends React.Component {
         this.setState({loading:true});
 
         // Load CSV file...
-        let url = window.OMEROWEB_INDEX + "webclient/annotation/951";
+        let url = window.OMEROWEB_INDEX + "webclient/annotation/12551";
         fetch(url, {mode: 'cors', credentials: 'include'})
         .then(rsp => rsp.body.getReader())
         .then(reader => {

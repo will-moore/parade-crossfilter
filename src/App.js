@@ -2,7 +2,7 @@ import React from 'react';
 import Drawer from './Drawer.js'
 import DataTable from './table/DataTable';
 import PlotContainer from './plots/PlotContainer';
-
+import Images from './images/Images';
 import {DataContext} from './crossfilter/DataContext';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -30,8 +30,13 @@ function App() {
             <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
                 <Drawer />
                 <main className="column" style={mainStyle}>
-                    <div style={{background: '', flex: '1 1 auto'}}>
-                        <PlotContainer />
+                    <div style={{background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
+                        <div style={{ flex: '1 1 50%'}} >
+                            <PlotContainer />
+                        </div>
+                        <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
+                            <Images />
+                        </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>
                         <DataTable />

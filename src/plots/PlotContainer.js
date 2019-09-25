@@ -25,7 +25,7 @@ const PlotContainer = props => {
     }
 
     return (
-        <div>
+        <div style={{ position: 'relative', padding: 20}}>
             {
                 xAxis.type === 'number' ? (
                     <ScatterPlot
