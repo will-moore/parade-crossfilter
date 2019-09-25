@@ -12,21 +12,33 @@ const scatterPlotFunction = (divRef, ndx, xAxis, yAxis) => {
     var scatterDim = ndx.dimension(function(d) {return [d[xAxis], d[yAxis]];});
     var sumGroup = scatterDim.group()    
 
+    // https://stackoverflow.com/questions/47994241/dc-js-scatter-plot-and-elasticy-behavior
+    function remove_empty_bins(source_group) {
+        return {
+            all: function () {
+                return source_group.all().filter(function(d) {
+                    return Math.abs(d.value) > 0.00001; // if using floating-point numbers
+                    // return d.value !== 0; // if integers only
+                });
+            }
+        };
+    }
 
     var scatter1 = dc.scatterPlot(divRef)
         .width(500)
         .height(250)
         .margins({top:10,bottom:30,right:20,left:50})
         .dimension(scatterDim)
-        .group(sumGroup)
+        .group(remove_empty_bins(sumGroup))
         .symbolSize(5)
         .clipPadding(10)
         .xAxisLabel(xAxis)
         .yAxisLabel(yAxis)
         .excludedOpacity(0.5)
-        .elasticY(true)    // ignored?
+        .elasticY(true)
+        .elasticX(true)
+        .transitionDuration(0)
         .x(scaleLinear().domain([min_value,max_value]));
-    // scatter1.yAxis().ticks(5);
     return scatter1;
 }
 
