@@ -59,6 +59,29 @@ export class DataContext extends React.Component {
         // save columns and crossfilter for Context
         this.columns = columns;
         this.ndx = crossfilter(data);
+
+        // Example how to get e.g. average Bounding Box values per Dataset
+        // let dsDim = this.ndx.dimension(r => r.Dataset);
+        // let dsGrouping = dsDim.group();
+        // dsGrouping.reduce(
+        //     function(p, v) { // add
+        //         p.sum = p.sum + v.Bounding_Box;
+        //         p.count = p.count + 1;
+        //         p.avg = p.sum / p.count;
+        //         return p;
+        //     },
+        //     function(p, v) { // remove
+        //         p.sum = p.sum - v.Bounding_Box;
+        //         p.count = p.count - 1;
+        //         p.avg = p.sum / p.count;
+        //         return p;
+        //     },
+        //     function() { // init
+        //         return {sum: 0, count: 0, avg: 0};
+        //     }
+        // )
+        // console.log('ds', dsGrouping.all());
+
         // setState to render...
         this.setState({loading:false, hasNDX:true});
     }

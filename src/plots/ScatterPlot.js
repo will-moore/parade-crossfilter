@@ -68,7 +68,7 @@ const ScatterPlot = props => {
   const chartStyles  = {
     width:'100%',
     height:'100%',
-    boxSizing:'border-box',
+    boxsizing:'border-box',
     padding: 10,
   }
   return (
