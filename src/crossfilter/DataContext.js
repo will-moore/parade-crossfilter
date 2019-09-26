@@ -12,6 +12,8 @@ export class DataContext extends React.Component {
         super(props);
         this.chars = [];
         this.state={loading:false,hasNDX:false};
+        this.annId = props.annId;
+        console.log("DataContext annId", this.annId);
     }
 
     initCrossfilter(data) {
@@ -96,7 +98,7 @@ export class DataContext extends React.Component {
         this.setState({loading:true});
 
         // Load CSV file...
-        let url = window.OMEROWEB_INDEX + "webclient/annotation/12551";
+        let url = window.OMEROWEB_INDEX + `webclient/annotation/${ this.annId }`;
         fetch(url, {mode: 'cors', credentials: 'include'})
         .then(rsp => rsp.body.getReader())
         .then(reader => {
