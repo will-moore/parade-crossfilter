@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router } from "@reach/router";
 import CsvPage from './pages/CsvPage';
+import ProjectPage from './pages/ProjectPage';
 import Home from './pages/Home';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,6 +15,7 @@ function App() {
             <Router>
                 <Home path="/" />
                 <CsvPage path="csv/:annId" />
+                <ProjectPage path="project/:projectId" />
             </Router>
 
         </div>
