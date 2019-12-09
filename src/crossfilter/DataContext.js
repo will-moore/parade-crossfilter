@@ -49,14 +49,14 @@ export class DataContext extends React.Component {
         });
 
         // Filter for unique Images
-        let uniqueIds = new Set();
-        data = data.filter(d => {
-            if (uniqueIds.has(d.Image)) {
-                return false;
-            }
-            uniqueIds.add(d.Image);
-            return true;
-        });
+        // let uniqueIds = new Set();
+        // data = data.filter(d => {
+        //     if (uniqueIds.has(d.Image)) {
+        //         return false;
+        //     }
+        //     uniqueIds.add(d.Image);
+        //     return true;
+        // });
 
         // save columns and crossfilter for Context
         this.columns = columns;

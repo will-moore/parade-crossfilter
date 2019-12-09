@@ -5,7 +5,7 @@ import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
 
-function CsvPage({annId}) {
+function CsvPage({dtype, objectId, annId}) {
 
     const mainStyle = {
         flex: '1 1 auto',
@@ -31,7 +31,10 @@ function CsvPage({annId}) {
                             <PlotContainer />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images />
+                            <Images
+                                dtype={dtype}
+                                objectId={objectId}
+                            />
                         </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>

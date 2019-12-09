@@ -10,8 +10,16 @@ const PlotContainer = props => {
     const stringCols = context.columns.filter(col => col.type !== 'number');
 
     // Start by plotting the first 2 dimensions we have
-    const [xAxis, setXAxis] = React.useState(numberCols[0])
-    const [yAxis, setYAxis] = React.useState(numberCols[1])
+    const [yAxis, setYAxis] = React.useState(numberCols[0]);
+    let initialXcol = stringCols[0];
+    if (numberCols.length > 1) {
+        initialXcol = numberCols[1];
+    }
+    const [xAxis, setXAxis] = React.useState(initialXcol);
+
+    if (numberCols.length == 0) {
+        return (<div>No number columns: plot not available</div>)
+    }
 
     const handleChangeX = (event) => {
         let name = event.target.value;
@@ -25,7 +33,7 @@ const PlotContainer = props => {
     }
 
     return (
-        <div style={{ position: 'relative', padding: 20}}>
+        <div style={{ position: 'relative', padding: 30}}>
             {
                 xAxis.type === 'number' ? (
                     <ScatterPlot

@@ -36,7 +36,9 @@ const scatterPlotFunction = (divRef, ndx, xAxis, yAxis) => {
         .yAxisLabel(yAxis)
         .excludedOpacity(0.5)
         .elasticY(true)
+        .yAxisPadding('1%')   // Allow the max values to be brushed
         .elasticX(true)
+        .xAxisPadding('1%')   // Allow the max values to be brushed
         .transitionDuration(0)
         .x(scaleLinear().domain([min_value,max_value]));
     return scatter1;

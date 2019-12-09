@@ -109,3 +109,19 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
+/* Plate */
+
+.plateGrid {
+  width: 100%;
+}
+
+.plateGrid td {
+  padding: 1px;
+  border: 1px solid #ccc;
+  position: relative;
+}
+
+.plateGrid td>div {
+  width: 10px;
+  height: 10px;
+}

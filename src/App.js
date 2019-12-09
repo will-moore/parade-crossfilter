@@ -15,7 +15,8 @@ function App() {
             <Router>
                 <Home path="/" />
                 <CsvPage path="csv/:annId" />
-                <ProjectPage path="project/:projectId" />
+                <ProjectPage path=":dtype/:projectId" />
+                <CsvPage path=":dtype/:objectId/csv/:annId" />
             </Router>
 
         </div>
