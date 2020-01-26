@@ -5,7 +5,14 @@ import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
 
-function CsvPage({dtype, objectId, annId}) {
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(window.location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+function CsvPage() {
 
     const mainStyle = {
         flex: '1 1 auto',
@@ -16,6 +23,15 @@ function CsvPage({dtype, objectId, annId}) {
         width: '200',
         overflow: 'auto',
     }
+
+
+    let annId = getUrlParameter('annotation');
+    let dtype = getUrlParameter('dtype')
+    let objectId = getUrlParameter('id')
+    console.log('ann', annId);
+
+    // path="csv/:annId" 
+    // {dtype, objectId, annId}
 
     return (
         <DataContext annId={annId}>

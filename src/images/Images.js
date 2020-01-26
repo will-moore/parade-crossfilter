@@ -32,7 +32,7 @@ const Images = ({dtype, objectId}) => {
                 (<div>{dtype} {objectId}: {filteredData.length} images
                     {filteredData.length < 100 ? 
                         filteredData.map(d => (
-                            <img key={d.Image} src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.Image }/`} />
+                            <img key={d.roi_id + d.channel} src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.image_id }/`} />
                         )) : <div>(too many to show)</div>
                     }
                 </div>)}
