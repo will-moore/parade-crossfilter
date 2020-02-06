@@ -27,14 +27,19 @@ export class DataContext extends React.Component {
         }
 
         // Go through all rows in the table
-        data.forEach(function (d) {
+        data = data.map(function (d) {
             // Coerce strings to number for named columns
+            let empty = true;
             columns.forEach(col => {
                 // ignore empty cells
                 if (d[col.name].length === 0) return;
+                empty = false;
                 // coerce to number
                 if (col.type === 'number') {
-                    d[col.name] = +d[col.name];
+                    let numValue = +d[col.name];
+                    if (!isNaN(numValue)) {
+                        d[col.name] = numValue;
+                    }
                 } else if (col.type === undefined) {
                     // don't know type yet - check for number
                     let val = +d[col.name];
@@ -47,7 +52,11 @@ export class DataContext extends React.Component {
                     }
                 }
             });
-        });
+            // Return nothing if empty - filtered out below
+            if (!empty) {
+                return d;
+            }
+        }).filter(Boolean);
 
         // Filter for unique Images
         // let uniqueIds = new Set();
