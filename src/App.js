@@ -1,22 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import { Router } from "@reach/router";
 import CsvPage from './pages/CsvPage';
-// import ProjectPage from './pages/ProjectPage';
+import ProjectPage from './pages/ProjectPage';
 // import Home from './pages/Home';
+import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
 
+    const [annId, setAnnId] = useState(undefined);
+
+    let project = getUrlParameter('project')
+
     return (
         <div className="App">
             
             {/* <Router> */}
                 {/* <Home path="/" /> */}
-                <CsvPage />
-                {/* <ProjectPage path=":dtype/:projectId" />
-                <CsvPage path=":dtype/:objectId/csv/:annId" /> */}
+            { annId ? <CsvPage annId={annId} /> :
+                <ProjectPage 
+                    project={project}
+                    setAnnId={setAnnId} /> }
             {/* </Router> */}
 
         </div>

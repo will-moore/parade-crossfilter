@@ -5,9 +5,7 @@ import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
 
-import { getUrlParameter } from '../utils';
-
-function CsvPage() {
+function CsvPage(props) {
 
     const mainStyle = {
         flex: '1 1 auto',
@@ -20,9 +18,7 @@ function CsvPage() {
     }
 
 
-    let annId = getUrlParameter('annotation');
-    let dtype = getUrlParameter('dtype')
-    let objectId = getUrlParameter('id')
+    let annId = props.annId;
     console.log('ann', annId);
 
     // path="csv/:annId" 
@@ -42,10 +38,7 @@ function CsvPage() {
                             <PlotContainer />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images
-                                dtype={dtype}
-                                objectId={objectId}
-                            />
+                            <Images/>
                         </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>
