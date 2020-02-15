@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import { Router } from "@reach/router";
 import CsvPage from './pages/CsvPage';
 import ProjectPage from './pages/ProjectPage';
-// import Home from './pages/Home';
+import Home from './pages/Home';
 import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,14 +23,14 @@ function App() {
 
     return (
         <div className="App">
-            
-            {/* <Router> */}
-                {/* <Home path="/" /> */}
+
             { annId ? <CsvPage annId={annId} /> :
-                <ProjectPage 
-                    project={project}
-                    setAnnId={setAnnId} /> }
-            {/* </Router> */}
+                 project ?
+                    <ProjectPage 
+                        project={project}
+                        setAnnId={setAnnId} /> : 
+                    <Home />
+            }
 
         </div>
     );
