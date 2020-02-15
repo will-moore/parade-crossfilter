@@ -10,9 +10,16 @@ import './App.css';
 
 function App() {
 
-    const [annId, setAnnId] = useState(undefined);
+    // If we have ?annotation=1 then load that e.g. CSV
+    // Otherwise we can use ?project=1 to list CSVs on it
+    // Then the ProjectPage will call setAnnId()
+    let project = getUrlParameter('project');
+    let annotation = getUrlParameter('annotation');
+    if (annotation) {
+        annotation = parseInt(annotation, 10)
+    }
 
-    let project = getUrlParameter('project')
+    const [annId, setAnnId] = useState(annotation);
 
     return (
         <div className="App">
