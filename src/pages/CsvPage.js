@@ -1,6 +1,6 @@
 import React from 'react';
 import Drawer from '../Drawer.js'
-import DataTable from '../table/DataTable';
+import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
@@ -38,11 +38,11 @@ function CsvPage(props) {
                             <PlotContainer />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images/>
+                            {/* <Images/> */}
                         </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>
-                        <DataTable />
+                        <SimpleTable />
                     </div>
                 </main>
             </div>

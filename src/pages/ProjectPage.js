@@ -62,7 +62,7 @@ function ProjectPage({project, setAnnId}) {
                                     onChange={() => {}}  // kill warning
                                     onClick={handleClick}
                                     checked={selectedAnn == ann.id} />
-                                {ann.file.name}
+                                {ann.id}: {ann.file.name}
                             </label>
                         </div>
                     ))
