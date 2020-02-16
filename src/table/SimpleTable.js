@@ -45,7 +45,7 @@ const Images = ({dtype, objectId}) => {
                     }
                 </tr>
                 { filteredData.map(row => (
-                    <tr key={row.shape_id + row.channel + row.min + row.max}>
+                    <tr key={row.reactKey}>
                         {
                             colNames.map(col => (
                                 <td key={col} >{row[col]}</td>

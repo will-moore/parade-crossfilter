@@ -27,7 +27,7 @@ export class DataContext extends React.Component {
         }
 
         // Go through all rows in the table
-        data = data.map(function (d) {
+        data = data.map(function (d, index) {
             // Coerce strings to number for named columns
             let empty = true;
             columns.forEach(col => {
@@ -54,6 +54,7 @@ export class DataContext extends React.Component {
             });
             // Return nothing if empty - filtered out below
             if (!empty) {
+                d.reactKey = index;
                 return d;
             }
         }).filter(Boolean);
