@@ -27,8 +27,6 @@ const Images = ({dtype, objectId}) => {
         if (row.image_id) return row.image_id;
     }
 
-    console.log(filteredData.length, colNames);
-
     const Header = ({ columnIndex, rowIndex, style }) => (
         <div style={style}>
             {colNames[columnIndex]}
@@ -36,7 +34,7 @@ const Images = ({dtype, objectId}) => {
     );
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={style}>
+        <div style={{...style, overflow: 'hidden'}}>
             {filteredData[rowIndex][colNames[columnIndex]]}
         </div>
     );

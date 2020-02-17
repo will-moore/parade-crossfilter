@@ -33,7 +33,7 @@ function CsvPage(props) {
             <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
                 <Drawer />
                 <main className="column" style={mainStyle}>
-                    <div style={{background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
+                    <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
                         <div style={{ flex: '1 1 50%'}} >
                             <PlotContainer />
                         </div>
