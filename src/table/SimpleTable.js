@@ -1,6 +1,7 @@
 
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
+import { FixedSizeGrid as Grid } from 'react-window';
 
 const Images = ({dtype, objectId}) => {
 
@@ -21,40 +22,48 @@ const Images = ({dtype, objectId}) => {
         };
     }, []);
 
-    const getKey = (row) => {
-        return context.columns.map(col => row[col]).join("");
-    }
-
     const getImageId = (row) => {
         if (row.Image) return row.Image;
         if (row.image_id) return row.image_id;
     }
 
-    console.log(filteredData.length);
+    console.log(filteredData.length, colNames);
 
-    // src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.image_id }/`} />
+    const Header = ({ columnIndex, rowIndex, style }) => (
+        <div style={style}>
+            {colNames[columnIndex]}
+        </div>
+    );
 
+    const Cell = ({ columnIndex, rowIndex, style }) => (
+        <div style={style}>
+            {filteredData[rowIndex][colNames[columnIndex]]}
+        </div>
+    );
+       
     return (
-        <table>
-            <tbody>
-                <tr>
-                    {
-                        colNames.map(col => (
-                            <th key={col} >{col}</th>
-                        ))
-                    }
-                </tr>
-                { filteredData.map(row => (
-                    <tr key={row.reactKey}>
-                        {
-                            colNames.map(col => (
-                                <td key={col} >{row[col]}</td>
-                            ))
-                        }
-                    </tr>
-                )) }
-            </tbody>
-        </table>
+        <div>
+            <Grid
+                height={35}
+                columnCount={colNames.length}
+                columnWidth={100}
+                rowCount={1}
+                rowHeight={35}
+                width={900}
+            >
+                {Header}
+            </Grid>
+            <Grid
+                height={250}
+                columnCount={colNames.length}
+                columnWidth={100}
+                rowCount={filteredData.length}
+                rowHeight={35}
+                width={900}
+            >
+                {Cell}
+            </Grid>
+        </div>
     );
 };
 
