@@ -38,26 +38,28 @@ const Images = ({dtype, objectId}) => {
             {filteredData[rowIndex][colNames[columnIndex]]}
         </div>
     );
+
+    const colWidth = 100;
        
     return (
         <div>
             <Grid
                 height={35}
                 columnCount={colNames.length}
-                columnWidth={100}
+                columnWidth={colWidth}
                 rowCount={1}
                 rowHeight={35}
-                width={900}
+                width={colNames.length * colWidth + 20}
             >
                 {Header}
             </Grid>
             <Grid
                 height={250}
                 columnCount={colNames.length}
-                columnWidth={100}
+                columnWidth={colWidth}
                 rowCount={filteredData.length}
                 rowHeight={35}
-                width={900}
+                width={colNames.length * colWidth + 20}
             >
                 {Cell}
             </Grid>

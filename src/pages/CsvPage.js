@@ -41,7 +41,7 @@ function CsvPage(props) {
                             <Images/>
                         </div>
                     </div>
-                    <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 250}}>
+                    <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 310}}>
                         <SimpleTable />
                     </div>
                 </main>
