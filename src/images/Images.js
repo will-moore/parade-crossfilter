@@ -1,9 +1,12 @@
 
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
-import Screen from "./Screen";
 
-const Images = ({dtype, objectId}) => {
+const imgStyle = {
+    margin: 3,
+}
+
+const Images = () => {
 
     const context = React.useContext(CXContext);
     const [filteredData, setData] = React.useState([]);
@@ -23,19 +26,17 @@ const Images = ({dtype, objectId}) => {
 
     return (
         <div>
-            {dtype === "screen" ?
-                (<Screen
-                    filteredObjs={filteredData}
-                    dtype={dtype}
-                    objectId={objectId}/>)
-                :
-                (<div>{dtype} {objectId}: {filteredData.length} images
-                    {filteredData.length < 100 ? 
-                        filteredData.map(d => (
-                            <img key={d.reactKey} src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.image_id }/`} />
-                        )) : <div>(too many to show)</div>
-                    }
-                </div>)}
+            <div>{filteredData.length} images</div>
+            {
+                filteredData.length < 100 ? 
+                    filteredData.map(d => (
+                        <img
+                            key={d.reactKey}
+                            style={imgStyle}
+                            src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.image_id }/`} />
+                    ))
+                : <div>(too many to show)</div>
+            }
         </div>
     );
 };

@@ -11,6 +11,9 @@ const Images = ({dtype, objectId}) => {
     const ndx = context.ndx;
     React.useEffect(() => {
 
+        // initial render...
+        setData(ndx.allFiltered());
+
         var removeListener = ndx.onChange((event) => {
             // Listen for filtering changes and re-render
             setData(ndx.allFiltered());
@@ -22,11 +25,6 @@ const Images = ({dtype, objectId}) => {
         };
     }, []);
 
-    const getImageId = (row) => {
-        if (row.Image) return row.Image;
-        if (row.image_id) return row.image_id;
-    }
-
     const Header = ({ columnIndex, rowIndex, style }) => (
         <div style={style}>
             {colNames[columnIndex]}
@@ -34,13 +32,13 @@ const Images = ({dtype, objectId}) => {
     );
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style, overflow: 'hidden'}}>
+        <div style={{...style, overflow: 'hidden'}} title={filteredData[rowIndex][colNames[columnIndex]]}>
             {filteredData[rowIndex][colNames[columnIndex]]}
         </div>
     );
 
     const colWidth = 100;
-       
+
     return (
         <div>
             <Grid
