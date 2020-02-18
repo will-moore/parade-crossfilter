@@ -15,20 +15,22 @@ function App() {
     // Then the ProjectPage will call setAnnId()
     let project = getUrlParameter('project');
     let annotation = getUrlParameter('annotation');
+    let initialData = {}
     if (annotation) {
         annotation = parseInt(annotation, 10)
+        initialData.csvFiles = [annotation];
     }
 
-    const [annId, setAnnId] = useState(annotation);
+    const [toLoad, setData] = useState(initialData);
 
     return (
         <div className="App">
 
-            { annId ? <CsvPage annId={annId} /> :
+            { annotation ? <CsvPage toLoad={toLoad} /> :
                  project ?
                     <ProjectPage 
                         project={project}
-                        setAnnId={setAnnId} /> : 
+                        setAnnId={setData} /> : 
                     <Home />
             }
 

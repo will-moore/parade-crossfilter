@@ -17,15 +17,13 @@ function CsvPage(props) {
         overflow: 'auto',
     }
 
-
-    let annId = props.annId;
-    console.log('ann', annId);
-
-    // path="csv/:annId" 
-    // {dtype, objectId, annId}
+    // data to load.
+    // data.csvFiles = [annId]
+    let toLoad = props.toLoad;
+    console.log('csvFiles', toLoad.csvFiles);
 
     return (
-        <DataContext annId={annId}>
+        <DataContext toLoad={toLoad}>
             <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
                 <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
             </nav>

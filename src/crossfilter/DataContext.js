@@ -13,8 +13,9 @@ export class DataContext extends React.Component {
         super(props);
         this.chars = [];
         this.state={loading:false,hasNDX:false};
-        this.annId = props.annId;
-        console.log("DataContext annId", this.annId);
+        // toLoad.csvFiles = [annId]
+        this.toLoad = props.toLoad;
+        console.log("DataContext csvFiles", this.toLoad.csvFiles);
     }
 
     initCrossfilter(data) {
@@ -113,8 +114,9 @@ export class DataContext extends React.Component {
         }
         this.setState({loading:true});
 
-        // Load CSV file...
-        let url = window.OMEROWEB_INDEX + `webclient/annotation/${ this.annId }`;
+        // Load CSV files etc...
+        let annId = this.toLoad.csvFiles[0];
+        let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
         fetchText(url, (csvText => {
             this.initCrossfilter(d3.csvParse(csvText));
         }));
