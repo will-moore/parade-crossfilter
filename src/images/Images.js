@@ -6,6 +6,12 @@ const imgStyle = {
     margin: 3,
 }
 
+// Different CSV formats store Image ID in different column names
+const getImageId = (row) => {
+    if (row.image_id) return row.image_id;
+    if (row.Image) return row.Image;
+}
+
 const Images = () => {
 
     const context = React.useContext(CXContext);
@@ -33,7 +39,7 @@ const Images = () => {
                         <img
                             key={d.reactKey}
                             style={imgStyle}
-                            src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ d.image_id }/`} />
+                            src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ getImageId(d) }/`} />
                     ))
                 : <div>(too many to show)</div>
             }

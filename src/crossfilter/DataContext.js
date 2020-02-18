@@ -19,30 +19,35 @@ export class DataContext extends React.Component {
 
     initCrossfilter(data) {
         console.log('initCrossfilter...');
-        // First get column names...
-        let columns = [];
+        // We can get column names from first row of data
         let firstRow = data[0];
-        for (var name in firstRow) {
-            columns.push({name: name});
-        }
+
+        // keys (column names) may contain whitespace.
+        let columns = Object.keys(firstRow).map(name => {
+            return {name: name.trim(),
+                    origName: name,
+                    type: undefined}
+        });
 
         // Go through all rows in the table
-        data = data.map(function (d, index) {
+        // Read from data (using original col names)
+        // and create parsedData with new col names (no whitespace)
+        let parsedData = data.map(function (d, index) {
             // Coerce strings to number for named columns
             let empty = true;
             columns.forEach(col => {
                 // ignore empty cells
-                if (d[col.name].length === 0) return;
+                if (d[col.origName].length === 0) return;
                 empty = false;
                 // coerce to number
                 if (col.type === 'number') {
-                    let numValue = +d[col.name];
+                    let numValue = +d[col.origName];
                     if (!isNaN(numValue)) {
                         d[col.name] = numValue;
                     }
                 } else if (col.type === undefined) {
                     // don't know type yet - check for number
-                    let val = +d[col.name];
+                    let val = +d[col.origName];
                     if (isNaN(val)) {
                         col.type = 'string';
                     } else {
@@ -71,7 +76,7 @@ export class DataContext extends React.Component {
 
         // save columns and crossfilter for Context
         this.columns = columns;
-        this.ndx = crossfilter(data);
+        this.ndx = crossfilter(parsedData);
 
         // Example how to get e.g. average Bounding Box values per Dataset
         // let dsDim = this.ndx.dimension(r => r.Dataset);
