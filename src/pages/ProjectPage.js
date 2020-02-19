@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { Link } from "@reach/router"
 
 const gridStyle = {
     display: 'grid',
@@ -9,12 +8,13 @@ const gridStyle = {
     gridRowGap: 0,
 }
 
-function ProjectPage({project, setAnnId}) {
+function ProjectPage({project, setDataToLoad}) {
 
     let dtype = 'project';
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
     const [selectedAnn, selectFileAnn] = useState([]);
+    const [datasets, setDatasets] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -38,8 +38,22 @@ function ProjectPage({project, setAnnId}) {
         selectFileAnn(fid);
     }
 
+    const handleDatasets = (event) => {
+        // toggle datasets
+        if (datasets) {
+            setDatasets(undefined);
+        } else {
+            // pass in the project ID
+            setDatasets(project);
+        }
+    }
+
     const handleSubmit = (event) => {
-        setAnnId(selectedAnn);
+        event.preventDefault();
+        let dataToLoad = {};
+        dataToLoad.csvFiles = [selectedAnn];
+        dataToLoad.datasets = datasets;
+        setDataToLoad(dataToLoad);
     }
 
     return (
@@ -75,6 +89,16 @@ function ProjectPage({project, setAnnId}) {
                 </div>
                 <div>
                     <h3>Tags</h3>
+                    <label>
+                        <input name="tags" type="checkbox" />
+                        Load Tags
+                    </label>
+
+                    <h3>Datasets</h3>
+                    <label>
+                        <input name="datasets" type="checkbox" onChange={handleDatasets} />
+                        Load Datasets
+                    </label>
                 </div>
                 <div>
                     <h3>Map Annotations</h3>

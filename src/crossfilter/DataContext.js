@@ -1,7 +1,7 @@
 import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
-import {fetchText} from "./FetchData";
+import {fetchText, readText} from "./FetchData";
 
 import crossfilter from "crossfilter2";
 
@@ -117,9 +117,16 @@ export class DataContext extends React.Component {
         // Load CSV files etc...
         let annId = this.toLoad.csvFiles[0];
         let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
-        fetchText(url, (csvText => {
+        fetchText(url, csvText => {
+
+            // Load other data...
+            if (this.toLoad.datasets) {
+                let projectId = this.toLoad.datasets;
+                // we want imageId: datasetName for all images in Project
+            }
+
             this.initCrossfilter(d3.csvParse(csvText));
-        }));
+        });
     }
 
     render() {

@@ -21,16 +21,16 @@ function App() {
         initialData.csvFiles = [annotation];
     }
 
-    const [toLoad, setData] = useState(initialData);
+    const [toLoad, setDataToLoad] = useState(initialData);
 
     return (
         <div className="App">
 
-            { annotation ? <CsvPage toLoad={toLoad} /> :
+            { toLoad.csvFiles ? <CsvPage toLoad={toLoad} /> :
                  project ?
                     <ProjectPage 
                         project={project}
-                        setAnnId={setData} /> : 
+                        setDataToLoad={setDataToLoad} /> : 
                     <Home />
             }
 
