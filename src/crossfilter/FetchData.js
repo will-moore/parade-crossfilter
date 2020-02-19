@@ -11,7 +11,6 @@ export function readText(reader, callback) {
     let chars = [];
     reader.read()
         .then(function processText({ done, value }) {
-            console.log('done', done, value);
             if (done) {
                 callback(chars.join(""));
             } else {
@@ -22,5 +21,13 @@ export function readText(reader, callback) {
             }
         }
     );
+}
+
+export async function fetchJson(url) {
+    return await fetch(url, {mode: 'cors', credentials: 'include'})
+        .then(response => response.json())
+        .then(data => {
+            return data;
+        });
 }
 

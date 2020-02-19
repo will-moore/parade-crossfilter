@@ -1,7 +1,7 @@
 import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
-import {fetchText, readText} from "./FetchData";
+import {fetchText, fetchJson} from "./FetchData";
 
 import crossfilter from "crossfilter2";
 
@@ -15,17 +15,21 @@ export class DataContext extends React.Component {
         this.state={loading:false,hasNDX:false};
         // toLoad.csvFiles = [annId]
         this.toLoad = props.toLoad;
-        console.log("DataContext csvFiles", this.toLoad.csvFiles);
     }
 
-    initCrossfilter(data) {
+    initCrossfilter(data, datasetsInfo) {
         console.log('initCrossfilter...');
         // We can get column names from first row of data
         let firstRow = data[0];
 
-        // keys (column names) may contain whitespace.
+        // Process keys (column names):
+        // Remove whitespace, image_id -> Image
         let columns = Object.keys(firstRow).map(name => {
-            return {name: name.trim(),
+            let newName = name.trim();
+            if (newName == 'image_id') {
+                newName = 'Image';
+            }
+            return {name: newName,
                     origName: name,
                     type: undefined}
         });
@@ -64,6 +68,26 @@ export class DataContext extends React.Component {
                 return d;
             }
         }).filter(Boolean);
+
+
+        // If we have dict of {image: {id:1}, dataset:{name:'foo'}}
+        // Use it to populate the table using existing image colum
+        if (datasetsInfo) {
+            let imgToDataset = {};
+            datasetsInfo.forEach(link => {
+                imgToDataset[link.image.id] = link.dataset;
+            });
+
+            columns.push({name: 'Dataset', type: 'string'});
+
+            // Add Dataset names to data
+            parsedData = parsedData.map(row => {
+                if (row.image_id && imgToDataset[row.Image]) {
+                    return {...row, 'Dataset': imgToDataset[row.Image].name}
+                }
+                return row
+            });
+        }
 
         // Filter for unique Images
         // let uniqueIds = new Set();
@@ -117,16 +141,26 @@ export class DataContext extends React.Component {
         // Load CSV files etc...
         let annId = this.toLoad.csvFiles[0];
         let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
-        fetchText(url, csvText => {
 
-            // Load other data...
+        // Need to wrap the await below in async function
+        const fetchData = async () => {
+
+            // If loading Datastes info, wait....
+            let datasetsInfo;
             if (this.toLoad.datasets) {
                 let projectId = this.toLoad.datasets;
-                // we want imageId: datasetName for all images in Project
+                let u = window.OMEROWEB_INDEX + `parade_crossfilter/datasets/${ projectId }`;
+                let jsonData = await fetchJson(u);
+                datasetsInfo = jsonData.data;
             }
 
-            this.initCrossfilter(d3.csvParse(csvText));
-        });
+            // Load csv file, then process csv (and datasetInfo)
+            fetchText(url, csvText => {
+                this.initCrossfilter(d3.csvParse(csvText), datasetsInfo);
+            });
+        };
+        fetchData();
+
     }
 
     render() {
