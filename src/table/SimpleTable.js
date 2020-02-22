@@ -3,12 +3,13 @@ import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 
-const Images = ({dtype, objectId}) => {
+const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
-    const [filteredData, setData] = React.useState([]);
+    const [crossFilterData, setData] = React.useState([]);
     const ndx = context.ndx;
+
     React.useEffect(() => {
 
         // initial render...
@@ -24,6 +25,13 @@ const Images = ({dtype, objectId}) => {
             removeListener();
         };
     }, []);
+
+    // If some rows are selected, filter to only show them:
+    let filteredData = crossFilterData;
+    if (selectedIds.length > 0) {
+        console.log('filtering table rows...', selectedIds);
+        filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
+    }
 
     const Header = ({ columnIndex, rowIndex, style }) => (
         <div style={style}>
@@ -65,4 +73,4 @@ const Images = ({dtype, objectId}) => {
     );
 };
 
-export default Images;
+export default SimpleTable;

@@ -64,7 +64,8 @@ export class DataContext extends React.Component {
             });
             // Return nothing if empty - filtered out below
             if (!empty) {
-                d.reactKey = index;
+                // Add unique ID for each row
+                d._rowID = index;
                 return d;
             }
         }).filter(Boolean);

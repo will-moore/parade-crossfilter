@@ -1,9 +1,12 @@
 import React from "react";
 import ScatterPlot from "./ScatterPlot";
+import PlotlyPlot from "./PlotlyPlot";
 import BoxPlot from "./BoxPlot";
 import { CXContext } from "../crossfilter/DataContext";
 
-const PlotContainer = props => {
+const PlotContainer = ({setSelectdIds}) => {
+
+    console.log("PlotContainer render...");
 
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
@@ -36,9 +39,10 @@ const PlotContainer = props => {
         <div style={{ position: 'relative', padding: 30}}>
             {
                 xAxis.type === 'number' ? (
-                    <ScatterPlot
+                    <PlotlyPlot
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
+                        setSelectdIds={setSelectdIds}
                     />) : (
                     <BoxPlot
                         xAxis={xAxis.name}
