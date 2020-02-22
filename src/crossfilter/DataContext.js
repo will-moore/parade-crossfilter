@@ -29,6 +29,12 @@ export class DataContext extends React.Component {
             if (newName == 'image_id') {
                 newName = 'Image';
             }
+            if (newName == 'roi_id') {
+                newName = 'ROI';
+            }
+            if (newName == 'shape_id') {
+                newName = 'Shape';
+            }
             return {name: newName,
                     origName: name,
                     type: undefined}

@@ -3,6 +3,11 @@ import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 
+const thumbStyle = {
+    height: 33,
+    marginLeft: 10,
+    maxWidth: 55,
+}
 const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
     const context = React.useContext(CXContext);
@@ -29,7 +34,6 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     // If some rows are selected, filter to only show them:
     let filteredData = crossFilterData;
     if (selectedIds.length > 0) {
-        console.log('filtering table rows...', selectedIds);
         filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
     }
 
@@ -42,6 +46,12 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     const Cell = ({ columnIndex, rowIndex, style }) => (
         <div style={{...style, overflow: 'hidden'}} title={filteredData[rowIndex][colNames[columnIndex]]}>
             {filteredData[rowIndex][colNames[columnIndex]]}
+            {colNames[columnIndex] === 'Image' &&
+                <img
+                    src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/`}
+                    style={thumbStyle}
+                />
+            }
         </div>
     );
 
