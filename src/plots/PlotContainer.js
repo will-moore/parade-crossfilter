@@ -39,7 +39,7 @@ const PlotContainer = ({setSelectdIds}) => {
         <div style={{ position: 'relative', padding: 30}}>
             {
                 xAxis.type === 'number' ? (
-                    <PlotlyPlot
+                    <ScatterPlot
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
                         setSelectdIds={setSelectdIds}
@@ -47,6 +47,7 @@ const PlotContainer = ({setSelectdIds}) => {
                     <BoxPlot
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
+                        setSelectdIds={setSelectdIds}
                     />)
             }
 

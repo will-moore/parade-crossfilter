@@ -18,7 +18,7 @@ function ProjectPage({project, setDataToLoad}) {
 
     useEffect(() => {
         setLoading(true);
-        let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file&${ dtype }=${ project }`;
+        let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file&project=${ project }`;
         fetch(url, {mode: 'cors', credentials: 'include'})
             .then(rsp => rsp.json())
             .then(data => {

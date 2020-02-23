@@ -33,10 +33,17 @@ const PlotlyPlot = ({data, layout, onSelected}) => {
     const layoutWithRanges = {...layout, xaxis:xaxis, yaxis:yaxis}
 
     // When user pans, zooms etc. update the saved X and Y ranges
-    const handleUpdate = (figure) => {
+    const handleUpdate = (figure, b) => {
+        console.log('handleUdate', figure, b);
         setXRange(figure.layout.xaxis.range);
         setYRange(figure.layout.yaxis.range);
     }
+
+    const onInit = (figure, b) => {
+        console.log('onInit', figure, b);
+    }
+
+
 
     return (
         <div>
@@ -45,6 +52,7 @@ const PlotlyPlot = ({data, layout, onSelected}) => {
                 layout={layoutWithRanges}
                 onUpdate={handleUpdate}
                 onSelected={onSelected}
+                onInitialized={onInit}
             />
         </div>
     );
