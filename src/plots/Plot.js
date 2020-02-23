@@ -18,7 +18,7 @@ const PlotlyPlot = ({data, layout, onSelected}) => {
     React.useEffect(() => {
         let newX = layout.xaxis.title.text;
         let newY = layout.yaxis.title.text;
-        if (xLabel != newX || yLabel != newY) {
+        if (xLabel !== newX || yLabel !== newY) {
             // if so, clear the range (and remember the )
             setXRange(undefined);
             setYRange(undefined);

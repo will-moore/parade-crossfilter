@@ -26,13 +26,13 @@ export class DataContext extends React.Component {
         // Remove whitespace, image_id -> Image
         let columns = Object.keys(firstRow).map(name => {
             let newName = name.trim();
-            if (newName == 'image_id') {
+            if (newName === 'image_id') {
                 newName = 'Image';
             }
-            if (newName == 'roi_id') {
+            if (newName === 'roi_id') {
                 newName = 'ROI';
             }
-            if (newName == 'shape_id') {
+            if (newName === 'shape_id') {
                 newName = 'Shape';
             }
             return {name: newName,

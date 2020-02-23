@@ -10,7 +10,7 @@ const gridStyle = {
 
 function ProjectPage({project, setDataToLoad}) {
 
-    let dtype = 'project';
+    // let dtype = 'project';
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
     const [selectedAnn, selectFileAnn] = useState([]);
@@ -31,7 +31,7 @@ function ProjectPage({project, setDataToLoad}) {
 
     const handleClick = (event) => {
         let fid = parseInt(event.target.value);
-        if (selectedAnn == fid) {
+        if (selectedAnn === fid) {
             // toggle checkbox off
             fid = undefined;
         }
@@ -59,7 +59,7 @@ function ProjectPage({project, setDataToLoad}) {
     return (
         <div className="App">
             
-            <h1>{ dtype }</h1>
+            <h1>Project</h1>
 
             <div style={gridStyle}>
                 <div>
@@ -75,7 +75,7 @@ function ProjectPage({project, setDataToLoad}) {
                                     value={ann.id}
                                     onChange={() => {}}  // kill warning
                                     onClick={handleClick}
-                                    checked={selectedAnn == ann.id} />
+                                    checked={selectedAnn === ann.id} />
                                 {ann.id}: {ann.file.name}
                             </label>
                         </div>

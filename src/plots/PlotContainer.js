@@ -1,6 +1,6 @@
 import React from "react";
+// import ScatterPlot from "./ScatterPlot";
 import ScatterPlot from "./ScatterPlot";
-import PlotlyPlot from "./PlotlyPlot";
 import BoxPlot from "./BoxPlot";
 import { CXContext } from "../crossfilter/DataContext";
 
@@ -20,7 +20,7 @@ const PlotContainer = ({setSelectdIds}) => {
     }
     const [xAxis, setXAxis] = React.useState(initialXcol);
 
-    if (numberCols.length == 0) {
+    if (numberCols.length === 0) {
         return (<div>No number columns: plot not available</div>)
     }
 
