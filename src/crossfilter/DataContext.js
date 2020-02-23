@@ -52,23 +52,29 @@ export class DataContext extends React.Component {
                 if (d[col.origName].length === 0) return;
                 rowEmpty = false;
                 col.empty = false;
+                if (col.origName == ' Dataset') {
+                    console.log('val', d[col.origName])
+                }
+                let parsedValue = d[col.origName];
                 // coerce to number
                 if (col.type === 'number') {
-                    let numValue = +d[col.origName];
+                    let numValue = +parsedValue;
                     if (!isNaN(numValue)) {
-                        d[col.name] = numValue;
+                        parsedValue = numValue;
                     }
                 } else if (col.type === undefined) {
                     // don't know type yet - check for number
-                    let val = +d[col.origName];
+                    let val = +parsedValue;
                     if (isNaN(val)) {
                         col.type = 'string';
                     } else {
                         col.type = 'number';
                         // update the value to use number
-                        d[col.name] = val;
+                        parsedValue = val;
                     }
                 }
+                // assign using new column name
+                d[col.name] = parsedValue;
             });
             // Return nothing if empty - filtered out below
             if (!rowEmpty) {
