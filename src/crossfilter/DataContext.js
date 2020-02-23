@@ -37,7 +37,8 @@ export class DataContext extends React.Component {
             }
             return {name: newName,
                     origName: name,
-                    type: undefined}
+                    type: undefined,
+                    empty: true}
         });
 
         // Go through all rows in the table
@@ -45,11 +46,12 @@ export class DataContext extends React.Component {
         // and create parsedData with new col names (no whitespace)
         let parsedData = data.map(function (d, index) {
             // Coerce strings to number for named columns
-            let empty = true;
+            let rowEmpty = true;
             columns.forEach(col => {
                 // ignore empty cells
                 if (d[col.origName].length === 0) return;
-                empty = false;
+                rowEmpty = false;
+                col.empty = false;
                 // coerce to number
                 if (col.type === 'number') {
                     let numValue = +d[col.origName];
@@ -69,12 +71,17 @@ export class DataContext extends React.Component {
                 }
             });
             // Return nothing if empty - filtered out below
-            if (!empty) {
+            if (!rowEmpty) {
                 // Add unique ID for each row
                 d._rowID = index;
                 return d;
             }
         }).filter(Boolean);
+
+        // Now filter out any empty Columns
+        columns = columns.filter(col => {
+            return !col.empty;
+        });
 
 
         // If we have dict of {image: {id:1}, dataset:{name:'foo'}}
