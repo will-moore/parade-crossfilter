@@ -52,9 +52,6 @@ export class DataContext extends React.Component {
                 if (d[col.origName].length === 0) return;
                 rowEmpty = false;
                 col.empty = false;
-                if (col.origName == ' Dataset') {
-                    console.log('val', d[col.origName])
-                }
                 let parsedValue = d[col.origName];
                 // coerce to number
                 if (col.type === 'number') {

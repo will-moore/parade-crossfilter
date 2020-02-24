@@ -6,8 +6,6 @@ import { CXContext } from "../crossfilter/DataContext";
 
 const PlotContainer = ({setSelectdIds}) => {
 
-    console.log("PlotContainer render...");
-
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
     const stringCols = context.columns.filter(col => col.type !== 'number');
@@ -28,11 +26,13 @@ const PlotContainer = ({setSelectdIds}) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setXAxis(col);
+        setSelectdIds([]);
     }
     const handleChangeY = (event) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setYAxis(col);
+        setSelectdIds([]);
     }
 
     return (
