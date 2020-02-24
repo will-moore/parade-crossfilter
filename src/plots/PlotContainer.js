@@ -17,6 +17,7 @@ const PlotContainer = ({setSelectdIds}) => {
         initialXcol = numberCols[1];
     }
     const [xAxis, setXAxis] = React.useState(initialXcol);
+    const [groupBy, setGroupBy] = React.useState(undefined);
 
     if (numberCols.length === 0) {
         return (<div>No number columns: plot not available</div>)
@@ -35,6 +36,15 @@ const PlotContainer = ({setSelectdIds}) => {
         setSelectdIds([]);
     }
 
+    const handleChangeGroupBy = (event) => {
+        let name = event.target.value;
+        console.log("group by", name);
+        if (name === '-') {
+            name = undefined;
+        }
+        setGroupBy(name);
+    }
+
     return (
         <div style={{ position: 'relative', padding: 30}}>
             {
@@ -42,6 +52,7 @@ const PlotContainer = ({setSelectdIds}) => {
                     <ScatterPlot
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
+                        groupBy={groupBy}
                         setSelectdIds={setSelectdIds}
                     />) : (
                     <BoxPlot
@@ -51,7 +62,7 @@ const PlotContainer = ({setSelectdIds}) => {
                     />)
             }
 
-            <div style={{'position': 'absolute', top: 10, right: 10}}>
+            <div style={{'position': 'absolute', top: 10, left: 10}}>
                 <label>Y axis:</label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
@@ -76,6 +87,17 @@ const PlotContainer = ({setSelectdIds}) => {
                             </option>
                         ))}
                     </optgroup>
+                </select>
+                <label>Group by:</label>
+                <select onChange={handleChangeGroupBy}>
+                    <option value="-">-</option>
+                    {
+                        context.columns.map(col => (
+                            <option value={col.name} key={col.name}>
+                                {col.name}
+                            </option>
+                        ))
+                    }
                 </select>
             </div>
         </div>

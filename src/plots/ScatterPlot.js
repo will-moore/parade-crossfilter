@@ -2,20 +2,60 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const ScatterPlot = ({xAxis, yAxis, setSelectdIds}) => {
+const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectdIds}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
 
-    const [plotData, setData] = React.useState({});
+    const [plotData, setData] = React.useState([]);
 
     const getXYPoints = (rows) => {
 
-        let xData = rows.map(r => r[xAxis])
-        let yData = rows.map(r => r[yAxis])
-        let ids = rows.map(r => r._rowID)
+        let plotData = [];
+        if (groupBy) {
+            // Group data, similar to BoxPlot.js
+            let bins = {};
+            rows.forEach(row => {
+                let binName = row[groupBy];
+                if (!bins[binName]) {
+                    bins[binName] = [];
+                }
+                bins[binName].push({x: row[xAxis], y: row[yAxis], id: row._rowID});
+            });
+            let binNames = Object.keys(bins);
+            binNames.sort();
 
-        setData({x: xData, y: yData, customdata: ids})
+            plotData = binNames.map(name => {
+                let data = bins[name];
+                // sort points by x axis (in case it's a line plot)
+                data.sort((a, b) => a.x > b.x ? 1 : (a.x < b.x ? -1 : 0));
+                return {
+                    x: data.map(d => d.x),
+                    y: data.map(d => d.y),
+                    customdata: data.map(d => d.id),
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: name,
+                }
+            });
+
+        } else {
+            // Simply plot all points together
+            let xData = rows.map(r => r[xAxis])
+            let yData = rows.map(r => r[yAxis])
+            let ids = rows.map(r => r._rowID)
+            plotData = [
+                {
+                    x: xData,
+                    y: yData,
+                    customdata: ids,
+                    type: 'scatter',
+                    mode: 'markers',
+                    marker: {color: 'red'},
+                },
+            ]
+        }
+        setData(plotData);
     }
 
     const handleSelected = (event) => {
@@ -41,27 +81,17 @@ const ScatterPlot = ({xAxis, yAxis, setSelectdIds}) => {
         return () => {
             removeListener();
         };
-    }, [xAxis, yAxis]);
+    }, [xAxis, yAxis, groupBy]);
 
 
-    if (!plotData.x || !plotData.y) {
+    if (plotData.length === 0) {
         return(<div>No data</div>)
     }
 
     return (
         <div>
             <Plot
-                data={[
-                    {
-                        x: plotData.x,
-                        y: plotData.y,
-                        customdata: plotData.customdata,
-                        type: 'scatter',
-                        mode: 'markers',
-                        marker: {color: 'red'},
-                    },
-                    // {type: 'bar', x: [1, 2, 3], y: [2, 5, 3]},
-                ]}
+                data={plotData}
                 layout={{
                     width: 520,
                     height: 340, 
