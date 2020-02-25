@@ -2,6 +2,7 @@ import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
 import {fetchText, fetchJson} from "./FetchData";
+import {parseData} from "../utils";
 
 import crossfilter from "crossfilter2";
 
@@ -17,75 +18,39 @@ export class DataContext extends React.Component {
         this.toLoad = props.toLoad;
     }
 
-    initCrossfilter(data, datasetsInfo) {
+    initCrossfilter(data, datasetsInfo, mapAnnsInfo) {
         console.log('initCrossfilter...');
-        // We can get column names from first row of data
-        let firstRow = data[0];
 
-        // Process keys (column names):
-        // Remove whitespace, image_id -> Image
-        let columns = Object.keys(firstRow).map(name => {
-            let newName = name.trim();
-            if (newName === 'image_id') {
-                newName = 'Image';
-            }
-            if (newName === 'roi_id') {
-                newName = 'ROI';
-            }
-            if (newName === 'shape_id') {
-                newName = 'Shape';
-            }
-            return {name: newName,
-                    origName: name,
-                    type: undefined,
-                    empty: true}
-        });
+        let columns = [];
+        let parsedData = [];
 
-        // Go through all rows in the table
-        // Read from data (using original col names)
-        // and create parsedData with new col names (no whitespace)
-        let parsedData = data.map(function (d, index) {
-            // Coerce strings to number for named columns
-            let rowEmpty = true;
-            columns.forEach(col => {
-                // ignore empty cells
-                if (d[col.origName].length === 0) return;
-                rowEmpty = false;
-                col.empty = false;
-                let parsedValue = d[col.origName];
-                // coerce to number
-                if (col.type === 'number') {
-                    let numValue = +parsedValue;
-                    if (!isNaN(numValue)) {
-                        parsedValue = numValue;
-                    }
-                } else if (col.type === undefined) {
-                    // don't know type yet - check for number
-                    let val = +parsedValue;
-                    if (isNaN(val)) {
-                        col.type = 'string';
-                    } else {
-                        col.type = 'number';
-                        // update the value to use number
-                        parsedValue = val;
-                    }
-                }
-                // assign using new column name
-                d[col.name] = parsedValue;
+        if (data) {
+            let d = parseData(data);
+            columns = d.columns;
+            parsedData = d.parsedData;
+        }
+
+        // If we have map annotations, add a column for each Key
+        if (mapAnnsInfo) {
+            // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2}
+            // ONE row per image. Ignore duplicate keys for now...
+            // First make dict of imageID: {k:v}
+            let imgData = {};
+            mapAnnsInfo.forEach(mapAnn => {
+                let iid = mapAnn.link.parent.id;
+                imgData[iid] = {};
+                mapAnn.values.forEach(kv => {
+                    imgData[iid][kv[0]] = kv[1];
+                });
             });
-            // Return nothing if empty - filtered out below
-            if (!rowEmpty) {
-                // Add unique ID for each row
-                d._rowID = index;
-                return d;
-            }
-        }).filter(Boolean);
+            let rows = Object.keys(imgData).map(iid => {
+                return {...imgData[iid], Image: iid};
+            });
 
-        // Now filter out any empty Columns
-        columns = columns.filter(col => {
-            return !col.empty;
-        });
-
+            let d = parseData(rows);
+            columns = d.columns;
+            parsedData = d.parsedData;
+        }
 
         // If we have dict of {image: {id:1}, dataset:{name:'foo'}}
         // Use it to populate the table using existing image colum
@@ -155,10 +120,6 @@ export class DataContext extends React.Component {
         }
         this.setState({loading:true});
 
-        // Load CSV files etc...
-        let annId = this.toLoad.csvFiles[0];
-        let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
-
         // Need to wrap the await below in async function
         const fetchData = async () => {
 
@@ -171,10 +132,26 @@ export class DataContext extends React.Component {
                 datasetsInfo = jsonData.data;
             }
 
-            // Load csv file, then process csv (and datasetInfo)
-            fetchText(url, csvText => {
-                this.initCrossfilter(d3.csvParse(csvText), datasetsInfo);
-            });
+            let mapAnnsInfo;
+            if (this.toLoad.mapAnns) {
+                let objId = this.toLoad.mapAnns; // 'project-1'
+                let id = objId.split('-')[1];
+                let u = window.OMEROWEB_INDEX + `parade_crossfilter/annotations/project/${ id }/images/?type=map`;
+                let jsonData = await fetchJson(u);
+                mapAnnsInfo = jsonData.annotations;
+            }
+
+            if (this.toLoad.csvFiles) {
+                // Load CSV files etc...
+                let annId = this.toLoad.csvFiles[0];
+                let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
+                // Load csv file, then process csv (and datasetInfo)
+                fetchText(url, csvText => {
+                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, mapAnnsInfo);
+                });
+            } else {
+                this.initCrossfilter(undefined, datasetsInfo, mapAnnsInfo);
+            }
         };
         fetchData();
 

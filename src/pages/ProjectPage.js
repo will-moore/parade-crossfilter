@@ -14,7 +14,8 @@ function ProjectPage({project, setDataToLoad}) {
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
     const [selectedAnn, selectFileAnn] = useState([]);
-    const [datasets, setDatasets] = useState(false);
+    const [datasets, setDatasets] = useState(undefined);
+    const [mapAnns, setMapAnns] = useState(undefined);
 
     useEffect(() => {
         setLoading(true);
@@ -48,11 +49,22 @@ function ProjectPage({project, setDataToLoad}) {
         }
     }
 
+    const handleMapAnns = (event) => {
+        if (mapAnns) {
+            setMapAnns(undefined);
+        } else {
+            // pass in the project ID
+            // TODO: Support other dtypes
+            setMapAnns('project-' + project);
+        }
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         let dataToLoad = {};
         dataToLoad.csvFiles = [selectedAnn];
         dataToLoad.datasets = datasets;
+        dataToLoad.mapAnns = mapAnns;
         setDataToLoad(dataToLoad);
     }
 
@@ -88,10 +100,10 @@ function ProjectPage({project, setDataToLoad}) {
                 )}
                 </div>
                 <div>
-                    <h3>Tags</h3>
+                    <h3>Key-Value Pairs</h3>
                     <label>
-                        <input name="tags" type="checkbox" />
-                        Load Tags
+                        <input name="mapAnns" type="checkbox" onChange={handleMapAnns} />
+                        Load Key-Value Pairs
                     </label>
 
                     <h3>Datasets</h3>

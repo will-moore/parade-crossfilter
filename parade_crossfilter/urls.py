@@ -27,4 +27,8 @@ urlpatterns = [
     # get Dataset info for all images in Project
     url(r'^datasets/(?P<project>[0-9]+)/$', views.datasets,
         name='pc_datasets'),
+    
+    # Get annotations on images within a project e.g. ?type=map
+    url(r'^annotations/project/(?P<project>[0-9]+)/images/$',
+        views.annotations, name='pc_annotations'),
 ]
