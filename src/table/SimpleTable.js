@@ -3,11 +3,6 @@ import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 
-const thumbStyle = {
-    height: 33,
-    marginLeft: 10,
-    maxWidth: 55,
-}
 const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
     const context = React.useContext(CXContext);
@@ -44,12 +39,18 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     );
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style, overflow: 'hidden'}} title={filteredData[rowIndex][colNames[columnIndex]]}>
+        <div style={{...style}}
+             className='table_cell'
+             title={filteredData[rowIndex][colNames[columnIndex]]}>
             {filteredData[rowIndex][colNames[columnIndex]]}
             {colNames[columnIndex] === 'Image' &&
                 <img
                     src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/`}
-                    style={thumbStyle}
+                />
+            }
+            {colNames[columnIndex] === 'Shape' &&
+                <img
+                    src={`${ window.OMEROWEB_INDEX }webgateway/render_shape_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/?color=ff0`}
                 />
             }
         </div>
