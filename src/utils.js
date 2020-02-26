@@ -77,3 +77,30 @@ export function parseData(rows) {
 
     return {columns, parsedData}
 }
+
+export function isInt(n){
+    return typeof n== "number" && isFinite(n) && n%1===0;
+}
+
+export function filesizeformat(bytes, round) {
+    /*
+    Formats the value like a 'human-readable' file size (i.e. 13 KB, 4.1 MB,
+    102 bytes, etc).*/
+
+    if (round === undefined || !isInt(round)) round = 2;
+
+    if (bytes < 1024) {
+        return bytes + ' B';
+    } else if (bytes < (1024*1024)) {
+        return (bytes / 1024).toFixed(round) + ' KB';
+    } else if (bytes < (1024*1024*1024)) {
+        return (bytes / (1024*1024)).toFixed(round) + ' MB';
+    } else if (bytes < (1024*1024*1024*1024)) {
+        return (bytes / (1024*1024*1024)).toFixed(round) + ' GB';
+    } else if (bytes < (1024*1024*1024*1024*1024)) {
+        return (bytes / (1024*1024*1024*1024)).toFixed(round) + ' TB';
+    } else {
+        return (bytes / (1024*1024*1024*1024*1024)).toFixed(round) + ' PB';
+    }
+
+};

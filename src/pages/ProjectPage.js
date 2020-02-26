@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {filesizeformat} from '../utils';
 
 const gridStyle = {
     display: 'grid',
@@ -88,7 +89,7 @@ function ProjectPage({project, setDataToLoad}) {
                                     onChange={() => {}}  // kill warning
                                     onClick={handleClick}
                                     checked={selectedAnn === ann.id} />
-                                {ann.id}: {ann.file.name}
+                                {ann.id}: {ann.file.name} ({filesizeformat(ann.file.size)})
                             </label>
                         </div>
                     ))

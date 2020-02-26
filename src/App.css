@@ -129,7 +129,7 @@ body {
 /* Table */
 
 .table_cell {
-  overflow: 'hidden'
+  overflow: hidden;
 }
 .table_cell:hover {
   overflow: visible;
