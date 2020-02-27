@@ -70,7 +70,7 @@ function ProjectPage({project, setDataToLoad}) {
     }
 
     return (
-        <div className="App">
+        <div className="App" style={{padding: '80px 150px'}}>
             
             <h1>Project</h1>
 
