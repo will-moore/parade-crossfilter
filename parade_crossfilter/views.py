@@ -16,7 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, \
+    Http404, StreamingHttpResponse
+import re
 from django.core.urlresolvers import reverse
 from django.template import loader
 from django.templatetags import static
@@ -96,3 +98,83 @@ def annotations(request, project, conn=None, **kwargs):
                                      limit=100000)
 
     return JsonResponse({'annotations': anns, 'experimenters': exps})
+
+
+class TableClosingHttpResponse(StreamingHttpResponse):
+    """Extension of L{HttpResponse} which closes the OMERO connection."""
+
+    def close(self):
+        super(TableClosingHttpResponse, self).close()
+        try:
+            if self.table is not None:
+                print('closing table...')
+                self.table.close()
+            # logger.debug('Closing OMERO connection in %r' % self)
+            if self.conn is not None and self.conn.c is not None:
+                self.conn.close(hard=False)
+        except Exception:
+            print('Failed to clean up connection.', exc_info=True)
+
+
+@login_required(doConnectionCleanup=False)
+def omero_table_as_csv(request, file_id, conn=None, **kwargs):
+    """ Returns the OMERO.table as an http response to download csv"""
+
+    query = request.GET.get('query', '*')
+    ctx = conn.createServiceOptsDict()
+    ctx.setOmeroGroup("-1")
+
+    orig_file = conn.getQueryService().get('OriginalFile', int(file_id))
+    if not orig_file:
+        return Http404("File Not Found (id:%s)." % file_id, status=404)
+
+    file_name = orig_file.name.val
+    name = file_name.replace(" ", "_") + ".csv"
+    
+    r = conn.getSharedResources()
+    table = r.openTable(orig_file, ctx)
+
+    cols = table.getHeaders()
+    rows = table.getNumberOfRows()
+
+    offset = kwargs.get('offset', 0)
+
+    range_start = offset
+    range_size = kwargs.get('limit', rows)
+    range_end = min(rows, range_start + range_size)
+
+    if query == '*':
+        hits = range(range_start, range_end)
+    else:
+        match = re.match(r'^(\w+)-(\d+)', query)
+        if match:
+            query = '(%s==%s)' % (match.group(1), match.group(2))
+        hits = table.getWhereList(query, None, 0, rows, 1)
+        # paginate the hits
+        hits = hits[range_start: range_end]
+
+    def csv_row_gen(t, h):
+        if query == '*':
+            # hits are all consecutive rows - can load them in batches
+            idx = 0
+            batch = 1000
+            while(idx < len(h)):
+                batch = min(batch, len(h) - idx)
+                row_data = [[] for r in range(batch)]
+                for col in t.read(range(len(cols)), h[idx], h[idx] + batch).columns:
+                    for r in range(batch):
+                        row_data[r].append(str(col.values[r]))
+                idx += batch
+                yield '\n'.join([",".join(row) for row in row_data]) + '\n'
+        else:
+            for hit in h:
+                row_vals = [str(col.values[0]) for col in t.read(range(len(cols)), hit, hit+1).columns]
+                yield ",".join(row_vals) + '\n'
+
+    rsp = TableClosingHttpResponse(csv_row_gen(table, hits))
+    rsp.conn = conn
+    rsp.table = table
+    rsp['Content-Type'] = 'application/force-download'
+    # rsp['Content-Length'] = ann.getFileSize()
+    rsp['Content-Disposition'] = ('attachment; filename=%s' % name)
+    return rsp
