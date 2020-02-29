@@ -4,6 +4,7 @@ import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
+import Header from './Header';
 
 function CsvPage(props) {
 
@@ -31,7 +32,7 @@ function CsvPage(props) {
     return (
         <DataContext toLoad={toLoad}>
             <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-                <span className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">OMERO.parade</span>
+                <Header />
             </nav>
 
             <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
