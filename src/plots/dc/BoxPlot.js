@@ -1,7 +1,7 @@
 import React from "react";
 import * as dc from "dc";
 import * as d3 from "d3";
-import { CXContext } from "../crossfilter/DataContext";
+import { CXContext } from "../../crossfilter/DataContext";
 
 const scatterPlotFunction = (divRef, ndx, xAxis, yAxis) => {
 
