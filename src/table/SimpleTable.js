@@ -9,7 +9,7 @@ const headerStyle={
     cursor: 'pointer',
 }
 
-const SimpleTable = ({filteredIds}) => {
+const SimpleTable = ({filteredIds, selectedIds, setSelectedIds}) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
@@ -57,9 +57,19 @@ const SimpleTable = ({filteredIds}) => {
         setSortBy(colNames[colIndex]);
     }
 
+    const handleRowClick = (rowIndex) => {
+        let rowId = filteredData[rowIndex]._rowID;
+        console.log('handleRowClick', rowId);
+        setSelectedIds([rowId]);
+    }
+
     const sortIcon = (name) => (
         name !== sortBy ? faSort:
             sortReverse ? faSortUp: faSortDown
+    )
+
+    const isSelected = (rowIndex) => (
+        selectedIds.indexOf(filteredData[rowIndex]._rowID) > -1
     )
 
     const Header = ({ columnIndex, rowIndex, style }) => (
@@ -70,9 +80,10 @@ const SimpleTable = ({filteredIds}) => {
     );
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style}}
-             className='table_cell'
-             title={filteredData[rowIndex][colNames[columnIndex]]}>
+        <div style={{...style, background: isSelected(rowIndex) ? '#b1b3f4': 'white'}}
+            onClick={() => handleRowClick(rowIndex)}
+            className="table_cell"
+            title={filteredData[rowIndex][colNames[columnIndex]]}>
             {filteredData[rowIndex][colNames[columnIndex]]}
             {colNames[columnIndex] === 'Image' &&
                 <img
@@ -85,7 +96,7 @@ const SimpleTable = ({filteredIds}) => {
                 />
             }
         </div>
-    );
+    )
 
     const colWidth = 100;
 
