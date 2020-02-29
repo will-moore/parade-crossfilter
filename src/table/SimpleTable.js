@@ -2,6 +2,8 @@
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSort, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons';
 
 const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
@@ -45,13 +47,22 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     const handleHeaderClick = (colIndex) => {
         if (sortBy === colNames[colIndex]) {
             setSortReverse(!sortReverse);
+        } else {
+            setSortReverse(false)
         }
         setSortBy(colNames[colIndex]);
     }
 
+    const SortIcon = ({name, sortBy, sortReverse}) => (
+        name !== sortBy ? <FontAwesomeIcon icon={faSort} /> :
+            sortReverse ? <FontAwesomeIcon icon={faSortUp} /> :
+                <FontAwesomeIcon icon={faSortDown} />
+    )
+
     const Header = ({ columnIndex, rowIndex, style }) => (
         <div style={style} onClick={() => handleHeaderClick(columnIndex)}>
             {colNames[columnIndex]}
+            <SortIcon name={colNames[columnIndex]} sortBy={sortBy} sortReverse={sortReverse} />
         </div>
     );
 
