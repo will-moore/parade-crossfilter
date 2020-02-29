@@ -6,7 +6,7 @@ const imgStyle = {
     margin: 3,
 }
 
-const Images = ({filteredIds}) => {
+const Images = ({filteredIds, sortBy, sortReverse}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
@@ -31,6 +31,13 @@ const Images = ({filteredIds}) => {
     let filteredData = crossFilterData;
     if (filteredIds.length > 0) {
         filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
+    }
+
+    if (sortBy) {
+        let rev = (sortReverse ? -1 : 1);
+        filteredData.sort((a, b) => {
+            return a[sortBy] > b[sortBy] ? rev : -rev;
+        })
     }
 
     const imgSrc = (row) => (

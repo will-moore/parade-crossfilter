@@ -20,6 +20,8 @@ function CsvPage(props) {
 
     const [filteredIds, setFilteredIds] = React.useState([]);
     const [selectedIds, setSelectedIds] = React.useState([]);
+    const [sortBy, setSortBy] = React.useState(undefined);
+    const [sortReverse, setSortReverse] = React.useState(false);
 
     // data to load.
     // data.csvFiles = [annId]
@@ -40,14 +42,21 @@ function CsvPage(props) {
                             <PlotContainer setFilteredIds={setFilteredIds} />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images filteredIds={filteredIds} />
+                            <Images
+                                filteredIds={filteredIds}
+                                sortBy={sortBy}
+                                sortReverse={sortReverse} />
                         </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 310}}>
                         <SimpleTable
                             filteredIds={filteredIds}
                             setSelectedIds={setSelectedIds} 
-                            selectedIds={selectedIds} />
+                            selectedIds={selectedIds}
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                            sortReverse={sortReverse}
+                            setSortReverse={setSortReverse} />
                     </div>
                 </main>
             </div>

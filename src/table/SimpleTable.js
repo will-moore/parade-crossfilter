@@ -9,13 +9,14 @@ const headerStyle={
     cursor: 'pointer',
 }
 
-const SimpleTable = ({filteredIds, selectedIds, setSelectedIds}) => {
+const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
+                      sortBy, setSortBy,
+                      sortReverse, setSortReverse}) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
     const [crossFilterData, setData] = React.useState([]);
-    const [sortBy, setSortBy] = React.useState(undefined);
-    const [sortReverse, setSortReverse] = React.useState(false);
+
     const ndx = context.ndx;
 
     React.useEffect(() => {
@@ -40,7 +41,6 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds}) => {
         filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
     }
 
-    console.log('sortBy', sortBy);
     if (sortBy) {
         let rev = (sortReverse ? -1 : 1);
         filteredData.sort((a, b) => {
