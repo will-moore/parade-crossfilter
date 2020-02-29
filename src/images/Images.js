@@ -1,9 +1,13 @@
 
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
+import { FixedSizeGrid as Grid } from 'react-window';
 
 const imgStyle = {
-    margin: 3,
+    padding: 2,
+    height: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
 }
 
 const Images = ({filteredIds, sortBy, sortReverse}) => {
@@ -46,17 +50,26 @@ const Images = ({filteredIds, sortBy, sortReverse}) => {
         ''
     )
 
+    const Cell = ({ columnIndex, rowIndex, style }) => (
+        <div style={{...style}}>
+            <img
+                style={imgStyle}
+                src={imgSrc(filteredData[(rowIndex * 2) + columnIndex])} />
+        </div>
+    )
+
     return (
         <div>
-            <div>{filteredData.length} images</div>
-            {
-                filteredData.slice(0, 50).map(d => (
-                    <img
-                        key={d._rowID}
-                        style={imgStyle}
-                        src={imgSrc(d)} />
-                ))
-            }
+            <Grid
+                height={500}
+                columnCount={2}
+                columnWidth={250}
+                rowCount={parseInt(filteredData.length/2)}
+                rowHeight={170}
+                width={510}
+            >
+                {Cell}
+            </Grid>
         </div>
     );
 };
