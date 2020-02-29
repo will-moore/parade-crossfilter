@@ -6,12 +6,6 @@ const imgStyle = {
     margin: 3,
 }
 
-// Different CSV formats store Image ID in different column names
-const getImageId = (row) => {
-    if (row.image_id) return row.image_id;
-    if (row.Image) return row.Image;
-}
-
 const Images = ({selectedIds}) => {
 
     const context = React.useContext(CXContext);
@@ -36,9 +30,14 @@ const Images = ({selectedIds}) => {
     // If some rows are selected, filter to only show them:
     let filteredData = crossFilterData;
     if (selectedIds.length > 0) {
-        console.log('filtering table rows...', selectedIds);
         filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
     }
+
+    const imgSrc = (row) => (
+        row.Shape ? `${ window.OMEROWEB_INDEX }webgateway/render_shape_thumbnail/${ row.Shape }/?color=ff0` :
+        row.Image ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ row.Image }/` :
+        ''
+    )
 
     return (
         <div>
@@ -48,7 +47,7 @@ const Images = ({selectedIds}) => {
                     <img
                         key={d._rowID}
                         style={imgStyle}
-                        src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ getImageId(d) }/`} />
+                        src={imgSrc(d)} />
                 ))
             }
         </div>
