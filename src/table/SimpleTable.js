@@ -5,6 +5,10 @@ import { FixedSizeGrid as Grid } from 'react-window';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons';
 
+const headerStyle={
+    cursor: 'pointer',
+}
+
 const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
     const context = React.useContext(CXContext);
@@ -53,16 +57,15 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
         setSortBy(colNames[colIndex]);
     }
 
-    const SortIcon = ({name, sortBy, sortReverse}) => (
-        name !== sortBy ? <FontAwesomeIcon icon={faSort} /> :
-            sortReverse ? <FontAwesomeIcon icon={faSortUp} /> :
-                <FontAwesomeIcon icon={faSortDown} />
+    const sortIcon = (name) => (
+        name !== sortBy ? faSort:
+            sortReverse ? faSortUp: faSortDown
     )
 
     const Header = ({ columnIndex, rowIndex, style }) => (
-        <div style={style} onClick={() => handleHeaderClick(columnIndex)}>
+        <div style={{...style, ...headerStyle}} onClick={() => handleHeaderClick(columnIndex)}>
             {colNames[columnIndex]}
-            <SortIcon name={colNames[columnIndex]} sortBy={sortBy} sortReverse={sortReverse} />
+            <FontAwesomeIcon icon={sortIcon(colNames[columnIndex])} style={{marginLeft: 3}} />
         </div>
     );
 
