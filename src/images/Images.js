@@ -6,7 +6,7 @@ const imgStyle = {
     margin: 3,
 }
 
-const Images = ({selectedIds}) => {
+const Images = ({filteredIds}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
@@ -29,8 +29,8 @@ const Images = ({selectedIds}) => {
 
     // If some rows are selected, filter to only show them:
     let filteredData = crossFilterData;
-    if (selectedIds.length > 0) {
-        filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
+    if (filteredIds.length > 0) {
+        filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
     }
 
     const imgSrc = (row) => (

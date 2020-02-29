@@ -2,7 +2,7 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const BoxPlot = ({xAxis, yAxis, setSelectdIds}) => {
+const BoxPlot = ({xAxis, yAxis}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;

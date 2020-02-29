@@ -17,7 +17,8 @@ function CsvPage(props) {
         overflow: 'auto',
     }
 
-    const [selectedIds, setSelectdIds] = React.useState([]);
+
+    const [filteredIds, setFilteredIds] = React.useState([]);
 
     // data to load.
     // data.csvFiles = [annId]
@@ -35,14 +36,14 @@ function CsvPage(props) {
                 <main className="column" style={mainStyle}>
                     <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
                         <div style={{ flex: '1 1 50%'}} >
-                            <PlotContainer setSelectdIds={setSelectdIds} />
+                            <PlotContainer setFilteredIds={setFilteredIds} />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images selectedIds={selectedIds} />
+                            <Images filteredIds={filteredIds} />
                         </div>
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 310}}>
-                        <SimpleTable setSelectdIds={setSelectdIds} selectedIds={selectedIds} />
+                        <SimpleTable filteredIds={filteredIds} />
                     </div>
                 </main>
             </div>

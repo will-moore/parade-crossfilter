@@ -9,7 +9,7 @@ const headerStyle={
     cursor: 'pointer',
 }
 
-const SimpleTable = ({setSelectdIds, selectedIds}) => {
+const SimpleTable = ({filteredIds}) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
@@ -36,8 +36,8 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
 
     // If some rows are selected, filter to only show them:
     let filteredData = [...crossFilterData];
-    if (selectedIds.length > 0) {
-        filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
+    if (filteredIds.length > 0) {
+        filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
     }
 
     console.log('sortBy', sortBy);

@@ -2,7 +2,7 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectdIds}) => {
+const ScatterPlot = ({xAxis, yAxis, groupBy, setFilteredIds}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
@@ -68,7 +68,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectdIds}) => {
         // See https://github.com/plotly/react-plotly.js/issues/147
         if (event && event.points) {
             let selected = event.points.map(p => p.customdata);
-            setSelectdIds(selected);
+            setFilteredIds(selected);
         }
     }
 
