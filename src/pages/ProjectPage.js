@@ -26,7 +26,8 @@ function ProjectPage({project, setDataToLoad}) {
             .then(data => {
                 setLoading(false);
                 let csvFiles = data.annotations
-                    .filter(ann => ann.file && ann.file.name.endsWith(".csv"));
+                    .filter(ann => ann.file && (ann.file.name.endsWith(".csv") || 
+                        ann.file.mimetype == "OMERO.tables"));
                 setFileAnns(csvFiles);
             });
     }, []);

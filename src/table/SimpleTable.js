@@ -8,6 +8,8 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
     const [crossFilterData, setData] = React.useState([]);
+    const [sortBy, setSortBy] = React.useState(undefined);
+    const [sortReverse, setSortReverse] = React.useState(false);
     const ndx = context.ndx;
 
     React.useEffect(() => {
@@ -27,13 +29,28 @@ const SimpleTable = ({setSelectdIds, selectedIds}) => {
     }, []);
 
     // If some rows are selected, filter to only show them:
-    let filteredData = crossFilterData;
+    let filteredData = [...crossFilterData];
     if (selectedIds.length > 0) {
         filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
     }
 
+    console.log('sortBy', sortBy);
+    if (sortBy) {
+        let rev = (sortReverse ? -1 : 1);
+        filteredData.sort((a, b) => {
+            return a[sortBy] > b[sortBy] ? rev : -rev;
+        })
+    }
+
+    const handleHeaderClick = (colIndex) => {
+        if (sortBy === colNames[colIndex]) {
+            setSortReverse(!sortReverse);
+        }
+        setSortBy(colNames[colIndex]);
+    }
+
     const Header = ({ columnIndex, rowIndex, style }) => (
-        <div style={style}>
+        <div style={style} onClick={() => handleHeaderClick(columnIndex)}>
             {colNames[columnIndex]}
         </div>
     );
