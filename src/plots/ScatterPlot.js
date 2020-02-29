@@ -9,8 +9,13 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectdIds}) => {
 
     const [plotData, setData] = React.useState([]);
 
-    const getXYPoints = (rows) => {
+    const setPlotData = (rows) => {
 
+        // Don't try to plot too much data!
+        if (rows.length > 20000) {
+            setData([]);
+            return;
+        }
         let plotData = [];
         if (groupBy) {
             // Group data, similar to BoxPlot.js
@@ -70,11 +75,11 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectdIds}) => {
     React.useEffect(() => {
 
         // initial render...
-        getXYPoints(ndx.allFiltered());
+        setPlotData(ndx.allFiltered());
 
         var removeListener = ndx.onChange((event) => {
             // Listen for filtering changes and re-render
-            getXYPoints(ndx.allFiltered());
+            setPlotData(ndx.allFiltered());
         });
 
         // Specify how to clean up after this effect:
