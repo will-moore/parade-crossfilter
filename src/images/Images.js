@@ -2,6 +2,7 @@
 import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
+import ImageViewer from './ImageViewer';
 
 const imgStyle = {
     padding: 2,
@@ -10,7 +11,7 @@ const imgStyle = {
     maxHeight: '100%',
 }
 
-const Images = ({filteredIds, sortBy, sortReverse}) => {
+const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
@@ -58,6 +59,18 @@ const Images = ({filteredIds, sortBy, sortReverse}) => {
         </div>
     )
 
+    // If ONLY 1 Image selected - show ImageViewer
+    if (selectedIds.length === 1) {
+        let rowID = selectedIds[0];
+        let selectedRows = filteredData.filter(row => row._rowID == rowID);
+        if (selectedRows.length === 1) {
+            return (
+                <ImageViewer rowData={selectedRows[0]} />
+            )
+        }
+    }
+
+    // Otherwise show thumbnails...
     return (
         <div>
             <Grid

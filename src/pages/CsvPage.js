@@ -45,6 +45,7 @@ function CsvPage(props) {
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
                             <Images
                                 filteredIds={filteredIds}
+                                selectedIds={selectedIds}
                                 sortBy={sortBy}
                                 sortReverse={sortReverse} />
                         </div>

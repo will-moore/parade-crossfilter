@@ -58,9 +58,13 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
     }
 
     const handleRowClick = (rowIndex) => {
-        let rowId = filteredData[rowIndex]._rowID;
-        console.log('handleRowClick', rowId);
-        setSelectedIds([rowId]);
+        // Toggle selection - Only select single Row currently.
+        if (isSelected(rowIndex)) {
+            setSelectedIds([]);
+        } else {
+            let rowId = filteredData[rowIndex]._rowID;
+            setSelectedIds([rowId]);
+        }
     }
 
     const sortIcon = (name) => (
