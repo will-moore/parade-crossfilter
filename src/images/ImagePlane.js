@@ -20,8 +20,8 @@ const ImagePlane = ({imgData, roiData}) => {
                 let bbox = getShapeBbox(roiData);
                 size = Math.max(bbox.width, bbox.height);
                 size = Math.max(size * 3, bigImageViewportSize);  // show at least this region
-                let x = bbox.x + (bbox.width/2) - (size/2);
-                let y = bbox.y + (bbox.height/2) - (size/2);
+                let x = bbox.x + (bbox.width/2);
+                let y = bbox.y + (bbox.height/2);
                 setBigImageViewportSize(size);
                 setCentre({x, y});
             } else {
@@ -33,21 +33,43 @@ const ImagePlane = ({imgData, roiData}) => {
         }
     }, [imgData, roiData]);
 
+    const handleZoomClick = (event) => {
+        if (event.target.value == '+') {
+            // zoom in...
+            setBigImageViewportSize(bigImageViewportSize / 2);
+        } else {
+            // zoom out...
+            setBigImageViewportSize(bigImageViewportSize * 2);
+        }
+    }
+
     let src;
     // If Big image, render region
     if (imgData.tiles) {
         let size = bigImageViewportSize;
-        src = window.OMEROWEB_INDEX + `figure/render_scaled_region/${ imgId }/0/0/?region=${centre.x},${centre.y},${size},${size}`;
+        let x = centre.x - (size/2);
+        let y = centre.y - (size/2);
+        src = window.OMEROWEB_INDEX + `figure/render_scaled_region/${ imgId }/0/0/?region=${x},${y},${size},${size}`;
     } else {
         // Regular image...
         src = window.OMEROWEB_INDEX + `webclient/render_image/${ imgId }/`;
     }
 
     return (
+        <div>
         <img
             style={{width: 250, height: 250}}
             src={src}
         />
+        {
+            imgData.tiles && (
+                <span>
+                    <button value="-" onClick={handleZoomClick}>-</button>
+                    <button value="+" onClick={handleZoomClick}>+</button>
+                </span>
+            )
+        }
+        </div>
     );
 };
 
