@@ -104,3 +104,18 @@ export function filesizeformat(bytes, round) {
     }
 
 };
+
+export function getShapeBbox(roi) {
+    // Use first shape (only 1)
+    // Only support Points for now...
+    if (roi.shapes[0] && roi.shapes[0].Points) {
+        let xy = roi.shapes[0].Points.split(" ").map(coord => coord.split(','));
+        let xx = xy.map(coord => parseFloat(coord[0]));
+        let yy = xy.map(coord => parseFloat(coord[1]));
+        let xMin = xx.reduce((prev, x) => Math.min(prev, x));
+        let xMax = xx.reduce((prev, x) => Math.max(prev, x));
+        let yMin = yy.reduce((prev, y) => Math.min(prev, y));
+        let yMax = yy.reduce((prev, y) => Math.max(prev, y));
+        return {x:xMin, y:yMin, width:xMax-xMin, height: yMax-yMin}
+    }
+}
