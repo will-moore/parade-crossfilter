@@ -9,7 +9,7 @@ const gridStyle = {
     gridRowGap: 0,
 }
 
-function ProjectPage({project, setDataToLoad}) {
+function ObjectPage({project, plate, setDataToLoad}) {
 
     // let dtype = 'project';
     const [loading, setLoading] = useState(false);
@@ -20,14 +20,18 @@ function ProjectPage({project, setDataToLoad}) {
 
     useEffect(() => {
         setLoading(true);
-        let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file&project=${ project }`;
+        let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file`;
+        if (project) {
+            url += `&project=${ project }`
+        } else if (plate) {
+            url += `&plate=${ plate }`
+        }
         fetch(url, {mode: 'cors', credentials: 'include'})
             .then(rsp => rsp.json())
             .then(data => {
                 setLoading(false);
                 let csvFiles = data.annotations
-                    .filter(ann => ann.file && (ann.file.name.endsWith(".csv") || 
-                        ann.file.mimetype == "OMERO.tables"));
+                    .filter(ann => ann.file && (ann.file.name.endsWith(".csv")));
                 setFileAnns(csvFiles);
             });
     }, []);
@@ -55,9 +59,12 @@ function ProjectPage({project, setDataToLoad}) {
         if (mapAnns) {
             setMapAnns(undefined);
         } else {
-            // pass in the project ID
-            // TODO: Support other dtypes
-            setMapAnns('project-' + project);
+            // pass in the plate, project ID etc
+            if (plate) {
+                setMapAnns('plate-' + plate);
+            } else if (project) {
+                setMapAnns('project-' + project);
+            }
         }
     }
 
@@ -73,7 +80,10 @@ function ProjectPage({project, setDataToLoad}) {
     return (
         <div className="App" style={{padding: '80px 150px'}}>
             
-            <h1>Project</h1>
+            <h1>
+                { project && "Project" }
+                { plate && "Plate" }
+            </h1>
 
             <div style={gridStyle}>
                 <div>
@@ -122,4 +132,4 @@ function ProjectPage({project, setDataToLoad}) {
     );
 }
 
-export default ProjectPage;
+export default ObjectPage;
