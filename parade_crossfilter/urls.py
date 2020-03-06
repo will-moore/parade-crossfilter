@@ -22,7 +22,7 @@ from . import views
 urlpatterns = [
 
     # index 'home page' of the app
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.index, name='parade_crossfilter_index'),
 
     # get Dataset info for all images in Project
     url(r'^datasets/(?P<project>[0-9]+)/$', views.datasets,

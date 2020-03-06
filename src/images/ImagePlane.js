@@ -1,11 +1,12 @@
 import React from "react";
 import { getShapeBbox } from '../utils';
+import BirdsEye from './BirdsEye';
 
 const ImagePlane = ({imgData, roiData}) => {
 
     const imgId = imgData.id;
 
-    const [bigImageViewportSize, setBigImageViewportSize] = React.useState(300);
+    const [bigImageViewportSize, setBigImageViewportSize] = React.useState(400);
     const [centre, setCentre] = React.useState({x:0, y:0});
 
     React.useEffect(() => {
@@ -45,10 +46,11 @@ const ImagePlane = ({imgData, roiData}) => {
 
     let src;
     // If Big image, render region
+    let size, x, y;
     if (imgData.tiles) {
-        let size = bigImageViewportSize;
-        let x = centre.x - (size/2);
-        let y = centre.y - (size/2);
+        size = bigImageViewportSize;
+        x = centre.x - (size/2);
+        y = centre.y - (size/2);
         src = window.OMEROWEB_INDEX + `figure/render_scaled_region/${ imgId }/0/0/?region=${x},${y},${size},${size}`;
     } else {
         // Regular image...
@@ -58,7 +60,7 @@ const ImagePlane = ({imgData, roiData}) => {
     return (
         <div>
         <img
-            style={{width: 250, height: 250}}
+            style={{width: 350, height: 350, float: 'left'}}
             src={src}
         />
         {
@@ -66,6 +68,13 @@ const ImagePlane = ({imgData, roiData}) => {
                 <span>
                     <button value="-" onClick={handleZoomClick}>-</button>
                     <button value="+" onClick={handleZoomClick}>+</button>
+                    <br/>
+                    <BirdsEye
+                        imgData={imgData}
+                        size={size}
+                        x={x}
+                        y={y}
+                    />
                 </span>
             )
         }
