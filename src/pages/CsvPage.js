@@ -5,8 +5,9 @@ import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
 import Header from './Header';
+import Screen from '../images/Screen';
 
-function CsvPage(props) {
+function CsvPage({toLoad, screen}) {
 
     const mainStyle = {
         flex: '1 1 auto',
@@ -23,11 +24,7 @@ function CsvPage(props) {
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
-
-    // data to load.
-    // data.csvFiles = [annId]
-    let toLoad = props.toLoad;
-    console.log('csvFiles', toLoad.csvFiles);
+    const [showScreen, setShowScreen] = React.useState(true);
 
     return (
         <DataContext toLoad={toLoad}>
@@ -40,8 +37,19 @@ function CsvPage(props) {
                 <main className="column" style={mainStyle}>
                     <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
                         <div style={{ flex: '1 1 50%'}} >
-                            <div>Plot | Screens</div>
-                            <PlotContainer setFilteredIds={setFilteredIds} />
+                            {screen && <div>
+                                <span onClick={() => setShowScreen(true)}>Screen</span> | <span href='#' onClick={() => setShowScreen(false)}>Plot</span>
+                            </div>}
+                            {showScreen ?
+                                <Screen
+                                    screenId={screen}
+                                    filteredIds={filteredIds}
+                                    selectedIds={selectedIds}
+                                /> :
+                                <PlotContainer
+                                    setFilteredIds={setFilteredIds}
+                                />
+                            }
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
                             <Images

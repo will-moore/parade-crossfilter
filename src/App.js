@@ -27,7 +27,10 @@ function App() {
     return (
         <div className="App">
 
-            { toLoad.csvFiles ? <CsvPage toLoad={toLoad} /> :
+            { toLoad.csvFiles ? <CsvPage
+                                    toLoad={toLoad}
+                                    screen={screen}
+                                /> :
                  (project || screen) ?
                     <ObjectPage 
                         project={project}

@@ -24,6 +24,9 @@ export function parseData(rows) {
         if (newName === 'shape_id') {
             newName = 'Shape';
         }
+        if (newName === 'well_id') {
+            newName = 'Well';
+        }
         return {name: newName,
                 origName: name,
                 type: undefined,
