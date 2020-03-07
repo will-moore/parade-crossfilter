@@ -14,7 +14,7 @@ function App() {
     // Otherwise we can use ?project=1 to list CSVs on it
     // Then the ObjectPage will call setAnnId()
     let project = getUrlParameter('project');
-    let plate = getUrlParameter('plate');
+    let screen = getUrlParameter('screen');
     let annotation = getUrlParameter('annotation');
     let initialData = {}
     if (annotation) {
@@ -28,10 +28,10 @@ function App() {
         <div className="App">
 
             { toLoad.csvFiles ? <CsvPage toLoad={toLoad} /> :
-                 (project || plate) ?
+                 (project || screen) ?
                     <ObjectPage 
                         project={project}
-                        plate={plate}
+                        screen={screen}
                         setDataToLoad={setDataToLoad} /> : 
                     <Home />
             }

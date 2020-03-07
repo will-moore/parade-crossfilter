@@ -40,6 +40,7 @@ function CsvPage(props) {
                 <main className="column" style={mainStyle}>
                     <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
                         <div style={{ flex: '1 1 50%'}} >
+                            <div>Plot | Screens</div>
                             <PlotContainer setFilteredIds={setFilteredIds} />
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >

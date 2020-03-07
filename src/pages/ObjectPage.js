@@ -9,7 +9,7 @@ const gridStyle = {
     gridRowGap: 0,
 }
 
-function ObjectPage({project, plate, setDataToLoad}) {
+function ObjectPage({project, screen, setDataToLoad}) {
 
     // let dtype = 'project';
     const [loading, setLoading] = useState(false);
@@ -23,8 +23,8 @@ function ObjectPage({project, plate, setDataToLoad}) {
         let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file`;
         if (project) {
             url += `&project=${ project }`
-        } else if (plate) {
-            url += `&plate=${ plate }`
+        } else if (screen) {
+            url += `&screen=${ screen }`
         }
         fetch(url, {mode: 'cors', credentials: 'include'})
             .then(rsp => rsp.json())
@@ -59,9 +59,9 @@ function ObjectPage({project, plate, setDataToLoad}) {
         if (mapAnns) {
             setMapAnns(undefined);
         } else {
-            // pass in the plate, project ID etc
-            if (plate) {
-                setMapAnns('plate-' + plate);
+            // pass in the screen, project ID etc
+            if (screen) {
+                setMapAnns('screen-' + screen);
             } else if (project) {
                 setMapAnns('project-' + project);
             }
@@ -82,7 +82,7 @@ function ObjectPage({project, plate, setDataToLoad}) {
             
             <h1>
                 { project && "Project" }
-                { plate && "Plate" }
+                { screen && "Screen" }
             </h1>
 
             <div style={gridStyle}>
