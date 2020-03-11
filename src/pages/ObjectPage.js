@@ -14,7 +14,7 @@ function ObjectPage({project, screen, setDataToLoad}) {
     // let dtype = 'project';
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
-    const [selectedAnn, selectFileAnn] = useState([]);
+    const [selectedAnn, selectFileAnn] = useState(undefined);
     const [datasets, setDatasets] = useState(undefined);
     const [mapAnns, setMapAnns] = useState(undefined);
 
@@ -71,7 +71,9 @@ function ObjectPage({project, screen, setDataToLoad}) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let dataToLoad = {};
-        dataToLoad.csvFiles = [selectedAnn];
+        if (selectedAnn) {
+            dataToLoad.csvFiles = [selectedAnn];
+        }
         dataToLoad.datasets = datasets;
         dataToLoad.mapAnns = mapAnns;
         setDataToLoad(dataToLoad);

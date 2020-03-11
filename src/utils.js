@@ -8,12 +8,19 @@ export function getUrlParameter(name) {
 
 export function parseData(rows) {
 
-    // We can get column names from first row of data
-    let firstRow = rows[0];
+    // Various rows might have different keys (column names)
+    // if coming from Map Annotations...
+    // Compile column names from keys of ALL rows
+    let colnames = rows.reduce((prev, row) => {
+        Object.keys(row).forEach(c => {prev.add(c)});
+        return prev;
+    }, new Set());
+
 
     // Process keys (column names):
     // Remove whitespace, image_id -> Image
-    let columns = Object.keys(firstRow).map(name => {
+    let columns = [];
+    for(let name of colnames.values()) {
         let newName = name.trim();
         if (newName === 'image_id') {
             newName = 'Image';
@@ -27,11 +34,11 @@ export function parseData(rows) {
         if (newName === 'well_id') {
             newName = 'Well';
         }
-        return {name: newName,
+        columns.push({name: newName,
                 origName: name,
                 type: undefined,
-                empty: true}
-    });
+                empty: true});
+    };
 
     // Go through all rows in the table
     // Read from data (using original col names)
@@ -41,7 +48,7 @@ export function parseData(rows) {
         let rowEmpty = true;
         columns.forEach(col => {
             // ignore empty cells
-            if (d[col.origName].length === 0) return;
+            if (!d[col.origName] || d[col.origName].length === 0) return;
             rowEmpty = false;
             col.empty = false;
             let parsedValue = d[col.origName];

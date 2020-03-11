@@ -16,10 +16,10 @@ function App() {
     let project = getUrlParameter('project');
     let screen = getUrlParameter('screen');
     let annotation = getUrlParameter('annotation');
-    let initialData = {}
+    let initialData = undefined;
     if (annotation) {
         annotation = parseInt(annotation, 10)
-        initialData.csvFiles = [annotation];
+        initialData = {csvFiles: [annotation]};
     }
 
     const [toLoad, setDataToLoad] = useState(initialData);
@@ -27,7 +27,7 @@ function App() {
     return (
         <div className="App">
 
-            { toLoad.csvFiles ? <CsvPage
+            { toLoad ? <CsvPage
                                     toLoad={toLoad}
                                     screen={screen}
                                 /> :

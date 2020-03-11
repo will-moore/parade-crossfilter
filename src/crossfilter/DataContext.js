@@ -32,19 +32,26 @@ export class DataContext extends React.Component {
 
         // If we have map annotations, add a column for each Key
         if (mapAnnsInfo) {
-            // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2}
+            // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2} or
+            // {'Well': id, 'Key1': 'val', 'key2', 2}
             // ONE row per image. Ignore duplicate keys for now...
             // First make dict of imageID: {k:v}
             let imgData = {};
             mapAnnsInfo.forEach(mapAnn => {
                 let iid = mapAnn.link.parent.id;
-                imgData[iid] = {};
+                let dtype = mapAnn.link.parent.class.slice(0, -1);
+                if (!imgData[iid]) {
+                    imgData[iid] = {};
+                }
                 mapAnn.values.forEach(kv => {
                     imgData[iid][kv[0]] = kv[1];
                 });
+                // Add Image or Well column
+                imgData[iid][dtype] = iid;
             });
+            // For each Image or Well ID, we get a row
             let rows = Object.keys(imgData).map(iid => {
-                return {...imgData[iid], Image: iid};
+                return {...imgData[iid]};
             });
 
             let d = parseData(rows);
@@ -133,15 +140,19 @@ export class DataContext extends React.Component {
             }
 
             let mapAnnsInfo;
+            console.log('this.toLoad.mapAnns', this.toLoad.mapAnns)
             if (this.toLoad.mapAnns) {
                 let objId = this.toLoad.mapAnns; // 'project-1'
                 let id = objId.split('-')[1];
-                let u = window.OMEROWEB_INDEX + `parade_crossfilter/annotations/project/${ id }/images/?type=map`;
+                let dtype = objId.split('-')[0];
+                let childType = (dtype === 'project') ? 'images' : 'wells';
+                let u = window.OMEROWEB_INDEX + `parade_crossfilter/annotations/${ dtype }/${ id }/${ childType }/?type=map`;
                 let jsonData = await fetchJson(u);
                 mapAnnsInfo = jsonData.annotations;
             }
 
-            if (this.toLoad.csvFiles) {
+            console.log('this.toLoad.csvFiles', this.toLoad.csvFiles);
+            if (this.toLoad.csvFiles && this.toLoad.csvFiles.length > 0) {
                 // Load CSV files etc...
                 let annId = this.toLoad.csvFiles[0];
                 let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
