@@ -44,7 +44,11 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
     if (sortBy) {
         let rev = (sortReverse ? -1 : 1);
         filteredData.sort((a, b) => {
-            return a[sortBy] > b[sortBy] ? rev : -rev;
+            let valA = a[sortBy] === undefined ? '' : a[sortBy];
+            let valB = b[sortBy] === undefined ? '' : b[sortBy];
+            if (valA === valB) return 0;
+            let r = valA > valB ? rev : -rev;
+            return r;
         })
     }
 
