@@ -72,7 +72,7 @@ def datasets(request, project, conn=None, **kwargs):
 
 
 @login_required()
-def annotations(request, project, conn=None, **kwargs):
+def image_annotations(request, project, conn=None, **kwargs):
     """
     Return Annotations on child Images.
     JSON format same as for webclient/api/annotations/?type=map
@@ -94,6 +94,34 @@ def annotations(request, project, conn=None, **kwargs):
     iids = [r[0].val for r in result]
     anns, exps = marshal_annotations(conn,
                                      image_ids=iids,
+                                     ann_type=ann_type,
+                                     limit=100000)
+
+    return JsonResponse({'annotations': anns, 'experimenters': exps})
+
+
+@login_required()
+def well_annotations(request, screen, conn=None, **kwargs):
+    """
+    Return Annotations on child Wells.
+    JSON format same as for webclient/api/annotations/?type=map
+    """
+
+    ann_type = request.GET.get('type', None)
+
+    # get wells in Screen
+    queryService = conn.getQueryService()
+    params = ParametersI()
+    params.addId(screen)
+    query = """select well.id from Well as well
+               join well.plate plate
+               join plate.screenLinks screenLinks
+               where screenLinks.parent.id=:id
+            """
+    result = queryService.projection(query, params, conn.SERVICE_OPTS)
+    iids = [r[0].val for r in result]
+    anns, exps = marshal_annotations(conn,
+                                     well_ids=iids,
                                      ann_type=ann_type,
                                      limit=100000)
 

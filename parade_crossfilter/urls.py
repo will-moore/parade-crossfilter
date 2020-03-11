@@ -30,7 +30,9 @@ urlpatterns = [
     
     # Get annotations on images within a project e.g. ?type=map
     url(r'^annotations/project/(?P<project>[0-9]+)/images/$',
-        views.annotations, name='pc_annotations'),
+        views.image_annotations, name='pc_image_annotations'),
+    url(r'^annotations/screen/(?P<screen>[0-9]+)/wells/$',
+        views.well_annotations, name='pc_well_annotations'),
 
     url(r'^omero_table_as_csv/(?P<file_id>[0-9]+)/$',
         views.omero_table_as_csv, name='pc_omero_table_as_csv'),
