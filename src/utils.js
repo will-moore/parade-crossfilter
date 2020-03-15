@@ -6,21 +6,57 @@ export function getUrlParameter(name) {
 };
 
 
-export function parseData(rows) {
+export function parseMapAnns(mapAnnsInfo) {
+    // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2} or
+    // {'Well': id, 'Key1': 'val', 'key2', 2}
+    // ONE row per image. Ignore duplicate keys for now...
+    // First make dict of imageID: {k:v}
+    let imgData = {};
+    mapAnnsInfo.forEach(mapAnn => {
+        let iid = mapAnn.link.parent.id;
+        let dtype = mapAnn.link.parent.class.slice(0, -1);
+        if (!imgData[iid]) {
+            imgData[iid] = {};
+        }
+        mapAnn.values.forEach(kv => {
+            imgData[iid][kv[0]] = kv[1];
+        });
+        // Add Image or Well column
+        imgData[iid][dtype] = iid;
+    });
+    // For each Image or Well ID, we get a row
+    let rows = Object.keys(imgData).map(iid => {
+        return {...imgData[iid]};
+    });
 
     // Various rows might have different keys (column names)
-    // if coming from Map Annotations...
+    // coming from Map Annotations...
     // Compile column names from keys of ALL rows
-    let colnames = rows.reduce((prev, row) => {
+    let colnamesSet = rows.reduce((prev, row) => {
         Object.keys(row).forEach(c => {prev.add(c)});
         return prev;
     }, new Set());
 
+    // Set to list
+    let colnames = [];
+    for (let name of colnamesSet.values()) {
+        colnames.push(name);
+    }
+
+    return parseData(rows, colnames);
+}
+
+
+export function parseData(rows, colnames) {
+
+    if (!colnames) {
+        // Table: use first row for column names
+        colnames = Object.keys(rows[0]);
+    }
 
     // Process keys (column names):
     // Remove whitespace, image_id -> Image
-    let columns = [];
-    for(let name of colnames.values()) {
+    let columns = colnames.map(name => {
         let newName = name.trim();
         if (newName === 'image_id') {
             newName = 'Image';
@@ -34,11 +70,11 @@ export function parseData(rows) {
         if (newName === 'well_id') {
             newName = 'Well';
         }
-        columns.push({name: newName,
+        return {name: newName,
                 origName: name,
                 type: undefined,
-                empty: true});
-    };
+                empty: true};
+    });
 
     // Go through all rows in the table
     // Read from data (using original col names)

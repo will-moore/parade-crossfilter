@@ -2,7 +2,7 @@ import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
 import {fetchText, fetchJson} from "./FetchData";
-import {parseData} from "../utils";
+import {parseData, parseMapAnns} from "../utils";
 
 import crossfilter from "crossfilter2";
 
@@ -21,40 +21,17 @@ export class DataContext extends React.Component {
     initCrossfilter(data, datasetsInfo, mapAnnsInfo) {
         console.log('initCrossfilter...');
 
-        let columns = [];
-        let parsedData = [];
+        // Handle csv data, rows of dicts
+        let columns;
+        let parsedData;
 
         if (data) {
             let d = parseData(data);
             columns = d.columns;
             parsedData = d.parsedData;
-        }
-
-        // If we have map annotations, add a column for each Key
-        if (mapAnnsInfo) {
-            // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2} or
-            // {'Well': id, 'Key1': 'val', 'key2', 2}
-            // ONE row per image. Ignore duplicate keys for now...
-            // First make dict of imageID: {k:v}
-            let imgData = {};
-            mapAnnsInfo.forEach(mapAnn => {
-                let iid = mapAnn.link.parent.id;
-                let dtype = mapAnn.link.parent.class.slice(0, -1);
-                if (!imgData[iid]) {
-                    imgData[iid] = {};
-                }
-                mapAnn.values.forEach(kv => {
-                    imgData[iid][kv[0]] = kv[1];
-                });
-                // Add Image or Well column
-                imgData[iid][dtype] = iid;
-            });
-            // For each Image or Well ID, we get a row
-            let rows = Object.keys(imgData).map(iid => {
-                return {...imgData[iid]};
-            });
-
-            let d = parseData(rows);
+        } else if (mapAnnsInfo) {
+            // OR, if we have map annotations, add a column for each Key
+            let d = parseMapAnns(mapAnnsInfo);
             columns = d.columns;
             parsedData = d.parsedData;
         }
@@ -78,15 +55,6 @@ export class DataContext extends React.Component {
             });
         }
 
-        // Filter for unique Images
-        // let uniqueIds = new Set();
-        // data = data.filter(d => {
-        //     if (uniqueIds.has(d.Image)) {
-        //         return false;
-        //     }
-        //     uniqueIds.add(d.Image);
-        //     return true;
-        // });
 
         // save columns and crossfilter for Context
         this.columns = columns;
