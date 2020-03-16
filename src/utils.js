@@ -6,6 +6,53 @@ export function getUrlParameter(name) {
 };
 
 
+export function groupCrossfilterData(data, columns, groupBy, groupedCols) {
+    let dsDim = data.dimension(r => r[groupBy]);
+    let dsGrouping = dsDim.group();
+    dsGrouping.reduce(
+        function(prev, row) { // add
+            groupedCols.forEach(c => {
+                prev[c] = prev[c] + row[c];
+            })
+            prev.count = prev.count + 1;
+            return prev;
+        },
+        function(prev, row) { // remove - Don't expect this to be used
+            groupedCols.forEach(c => {
+                prev[c] = prev[c] + row[c];
+            })
+            prev.count = prev.count - 1;
+            return prev;
+        },
+        function() { // init
+            // for each key, keep track of sum
+            let init = {count: 0};
+            groupedCols.forEach(c => {
+                init[c] = 0;
+            });
+            return init;
+        }
+    )
+
+    let groupedTable = dsGrouping.all().map(group => {
+        let row = {};
+        row[groupBy] = group.key;
+        row.count = group.value.count;
+        groupedCols.forEach(c => {
+            row[c] = group.value[c] / row.count;
+        });
+        return row;
+    });
+
+    columns = columns.filter(c => {
+        return c.name == groupBy || groupedCols.indexOf(c.name) > -1;
+    });
+    columns.push({name: 'count', type: 'number'});
+
+    return {columns, data: groupedTable}
+}
+
+
 export function parseMapAnns(mapAnnsInfo) {
     // we want rows of {'Image': id, 'Key1': 'val', 'key2', 2} or
     // {'Well': id, 'Key1': 'val', 'key2', 2}

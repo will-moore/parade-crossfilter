@@ -2,7 +2,7 @@ import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
 import {fetchText, fetchJson} from "./FetchData";
-import {parseData, parseMapAnns} from "../utils";
+import {parseData, parseMapAnns, groupCrossfilterData} from "../utils";
 
 import crossfilter from "crossfilter2";
 
@@ -57,30 +57,22 @@ export class DataContext extends React.Component {
 
 
         // save columns and crossfilter for Context
-        this.columns = columns;
-        this.ndx = crossfilter(parsedData);
+        let cfdata = crossfilter(parsedData);
 
-        // Example how to get e.g. average Bounding Box values per Dataset
-        // let dsDim = this.ndx.dimension(r => r.Dataset);
-        // let dsGrouping = dsDim.group();
-        // dsGrouping.reduce(
-        //     function(p, v) { // add
-        //         p.sum = p.sum + v.Bounding_Box;
-        //         p.count = p.count + 1;
-        //         p.avg = p.sum / p.count;
-        //         return p;
-        //     },
-        //     function(p, v) { // remove
-        //         p.sum = p.sum - v.Bounding_Box;
-        //         p.count = p.count - 1;
-        //         p.avg = p.sum / p.count;
-        //         return p;
-        //     },
-        //     function() { // init
-        //         return {sum: 0, count: 0, avg: 0};
-        //     }
-        // )
-        // console.log('ds', dsGrouping.all());
+        // Example how to get e.g. average Bounding Box values per...
+        let groupBy;
+        
+        // groupBy = 'Image';
+        let groupedCols = ['area (pixels)', 'min', 'max', 'sum', 'mean']
+
+        if (groupBy) {
+            let g = groupCrossfilterData(cfdata, columns, groupBy, groupedCols);
+            cfdata = crossfilter(g.data);
+            columns = g.columns;
+        }
+
+        this.columns = columns;
+        this.ndx = cfdata;
 
         // setState to render...
         this.setState({loading:false, hasNDX:true});
