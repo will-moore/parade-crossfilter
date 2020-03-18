@@ -25,6 +25,7 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
                         key={p.id}
                         plate={p}
                         filteredIds={filteredIds}
+                        selectedIds={selectedIds}
                     />)
             }
         </div>

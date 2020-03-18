@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import Well from './Well';
 
-const Plate = ({plate, filteredIds}) => {
+const Plate = ({plate, filteredIds, selectedIds}) => {
 
     const[wells, setWells] = useState([]);
     const [crossFilterData, setData] = React.useState([]);
@@ -11,7 +11,6 @@ const Plate = ({plate, filteredIds}) => {
     const ndx = context.ndx;
 
     React.useEffect(() => {
-        console.log("Plate.js add listeners")
         // Initial load
         setData(ndx.allFiltered());
 
@@ -80,6 +79,16 @@ const Plate = ({plate, filteredIds}) => {
         grid.push(wells);
     }
 
+    const selected = function(wellId) {
+        let rows = wellData[wellId];
+        if (!rows) return false;
+        let rowIds = rows.map(r => r._rowID);
+        let selected = selectedIds.reduce((prev, id) => {
+            return prev || rowIds.indexOf(id) > -1;
+        }, false);
+        return selected;
+    }
+
     return (
         <div>
             <div>{plate.Name} ({wells.length}) </div>
@@ -91,10 +100,14 @@ const Plate = ({plate, filteredIds}) => {
                         <tr key={row[0]['@id']}>
                             {
                                 row.map(well => (
-                                    <td key={well['@id']}>
+                                    <td key={well['@id']}
+                                        style={{background: selected(well['@id']) ? 'rgb(177, 179, 244)' : ''}}
+                                    >
                                         <Well
                                             well={well}
-                                            rows={wellData[well['@id']]} />
+                                            rows={wellData[well['@id']]}
+                                            selectedIds={selectedIds}
+                                        />
                                     </td>)
                                 )
                             }

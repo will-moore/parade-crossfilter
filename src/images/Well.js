@@ -19,7 +19,10 @@ const Well = ({well, rows}) => {
     }
 
     return (
-        <img style={style} src={loadThumbs ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/` : ''} />
+        <img
+            style={style}
+            src={loadThumbs ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/` : ''}
+        />
     )
 }
 

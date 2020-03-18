@@ -39,18 +39,16 @@ export function groupCrossfilterData(data, columns, groupBy) {
     )
 
     let newColName = "Rows per " + groupBy;
-    console.log('newColName', newColName);
 
     // Convert grouped data back to new 'table' (rows of objects)
-    let groupedTable = dsGrouping.all().map(group => {
-        let row = {};
+    let groupedTable = dsGrouping.all().map((group, idx) => {
+        let row = {'_rowID': idx};
         row[groupBy] = group.key;
         // Add new column, e.g. 'Rows per Image': 10
         row[newColName] = group.value.count;
         columns.forEach(c => {
             row[c.name] = group.value[c.name] / group.value.count;
         });
-        console.log('row', row);
         return row;
     });
 
