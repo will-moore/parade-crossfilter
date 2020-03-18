@@ -13,14 +13,21 @@ export class DataContext extends React.Component {
     constructor(props) {
         super(props);
         this.chars = [];
-        this.state={loading:false,hasNDX:false};
+        this.state={loading:false, hasNDX:false, groupBy:[]};
         // toLoad.csvFiles = [annId]
         this.toLoad = props.toLoad;
     }
 
-    initCrossfilter(data, datasetsInfo, mapAnnsInfo) {
-        console.log('initCrossfilter...');
+    addGroupBy(colname) {
+        let groupBy = [...this.state.groupBy, colname];
+        // Hack! to orce all Children to re-render with new crossfilter(grouped)
+        this.setState({hasNDX:false, loading:true, groupBy});
+        setTimeout(() => {
+            this.setState({hasNDX:true, loading:false, groupBy});
+        }, 100);
+    }
 
+    initCrossfilter(data, datasetsInfo, mapAnnsInfo) {
         // Handle csv data, rows of dicts
         let columns;
         let parsedData;
@@ -57,22 +64,9 @@ export class DataContext extends React.Component {
 
 
         // save columns and crossfilter for Context
-        let cfdata = crossfilter(parsedData);
-
-        // Example how to get e.g. average Bounding Box values per...
-        let groupBy;
-        
-        // groupBy = 'Image';
-        let groupedCols = ['area (pixels)', 'min', 'max', 'sum', 'mean']
-
-        if (groupBy) {
-            let g = groupCrossfilterData(cfdata, columns, groupBy, groupedCols);
-            cfdata = crossfilter(g.data);
-            columns = g.columns;
-        }
-
+        this.orig_data = crossfilter(parsedData);
         this.columns = columns;
-        this.ndx = cfdata;
+        this.ndx = this.orig_data;
 
         // setState to render...
         this.setState({loading:false, hasNDX:true});
@@ -100,7 +94,6 @@ export class DataContext extends React.Component {
             }
 
             let mapAnnsInfo;
-            console.log('this.toLoad.mapAnns', this.toLoad.mapAnns)
             if (this.toLoad.mapAnns) {
                 let objId = this.toLoad.mapAnns; // 'project-1'
                 let id = objId.split('-')[1];
@@ -111,7 +104,6 @@ export class DataContext extends React.Component {
                 mapAnnsInfo = jsonData.annotations;
             }
 
-            console.log('this.toLoad.csvFiles', this.toLoad.csvFiles);
             if (this.toLoad.csvFiles && this.toLoad.csvFiles.length > 0) {
                 // Load CSV files etc...
                 let annId = this.toLoad.csvFiles[0];
@@ -132,8 +124,26 @@ export class DataContext extends React.Component {
         if(!this.state.hasNDX){
             return (<div>Loading...</div>);
         }
+
+        let cfdata = this.orig_data;
+        let columns = this.columns;
+
+        let groupBy = this.state.groupBy;
+        if (groupBy) {
+            groupBy.forEach(groupName => {
+                let g = groupCrossfilterData(cfdata, columns, groupName);
+                cfdata = crossfilter(g.data);
+                columns = g.columns;
+            });
+        }
+
         return (
-            <CXContext.Provider value={{ndx:this.ndx, columns: this.columns}}>
+            <CXContext.Provider
+                value={{
+                    ndx: cfdata,
+                    columns: columns,
+                    addGroupBy: (groupBy) => {this.addGroupBy(groupBy)},
+                }}>
                 <div ref={this.parent}>
                     {this.props.children}
                 </div>

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Filters from './filters/Filters';
+import GroupBy from './grouping/GroupBy';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -42,6 +43,7 @@ function Drawer() {
   return (
     <React.Fragment>
       <nav className="bg-light" style={drawerStyle}>
+        <GroupBy />
         <Filters />
       </nav>
 

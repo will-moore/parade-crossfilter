@@ -6,48 +6,55 @@ export function getUrlParameter(name) {
 };
 
 
-export function groupCrossfilterData(data, columns, groupBy, groupedCols) {
+export function groupCrossfilterData(data, columns, groupBy) {
     let dsDim = data.dimension(r => r[groupBy]);
     let dsGrouping = dsDim.group();
+    // We only want to group 'number' columns
+    columns = columns.filter(c => c.type === 'number');
     dsGrouping.reduce(
         function(prev, row) { // add
-            groupedCols.forEach(c => {
-                prev[c] = prev[c] + row[c];
-            })
+            columns.forEach(c => {
+                prev[c.name] = prev[c.name] + row[c.name];
+            });
             prev.count = prev.count + 1;
             return prev;
         },
         function(prev, row) { // remove - Don't expect this to be used
-            groupedCols.forEach(c => {
-                prev[c] = prev[c] + row[c];
-            })
+        columns.forEach(c => {
+                if (c.type === 'number') {
+                    prev[c.name] = prev[c.name] - row[c.name];
+                }
+            });
             prev.count = prev.count - 1;
             return prev;
         },
         function() { // init
-            // for each key, keep track of sum
+            // for each columns, keep track of sum
             let init = {count: 0};
-            groupedCols.forEach(c => {
-                init[c] = 0;
+            columns.forEach(c => {
+                init[c.name] = 0;
             });
             return init;
         }
     )
 
+    let newColName = "Rows per " + groupBy;
+    console.log('newColName', newColName);
+
+    // Convert grouped data back to new 'table' (rows of objects)
     let groupedTable = dsGrouping.all().map(group => {
         let row = {};
         row[groupBy] = group.key;
-        row.count = group.value.count;
-        groupedCols.forEach(c => {
-            row[c] = group.value[c] / row.count;
+        // Add new column, e.g. 'Rows per Image': 10
+        row[newColName] = group.value.count;
+        columns.forEach(c => {
+            row[c.name] = group.value[c.name] / group.value.count;
         });
+        console.log('row', row);
         return row;
     });
 
-    columns = columns.filter(c => {
-        return c.name == groupBy || groupedCols.indexOf(c.name) > -1;
-    });
-    columns.push({name: 'count', type: 'number'});
+    columns.splice(1, 0, {name: newColName, type: 'number'});
 
     return {columns, data: groupedTable}
 }
