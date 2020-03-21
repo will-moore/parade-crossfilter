@@ -5,7 +5,7 @@ import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import {DataContext} from '../crossfilter/DataContext';
 import Header from './Header';
-import Screen from '../images/Screen';
+import Screen from '../screen/Screen';
 
 function CsvPage({toLoad, screen}) {
 
