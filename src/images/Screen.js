@@ -14,7 +14,7 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
                 let plates = data.data.map(p => {return {id: p['@id'], Name: p.Name}});
                 setPlates(plates);
             });
-    }, []);
+    }, [screenId]);
 
     return (
         <div>

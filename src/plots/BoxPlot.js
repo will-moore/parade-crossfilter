@@ -47,7 +47,7 @@ const BoxPlot = ({xAxis, yAxis}) => {
         return () => {
             removeListener();
         };
-    }, [xAxis, yAxis]);
+    }, [xAxis, yAxis, ndx]);
 
 
     if (plotData.length == 0) {

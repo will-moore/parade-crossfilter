@@ -30,7 +30,7 @@ const GroupFilter = props => {
             newChart.dimension().dispose();
             dc.redrawAll();
         };
-    }, []);
+    }, [dimName, ndx]);
     
     const chartStyles = {
         width:'100%',

@@ -166,6 +166,7 @@ export function parseData(rows, colnames) {
             d._rowID = index;
             return d;
         }
+        return false;
     }).filter(Boolean);
 
     // Now filter out any empty Columns

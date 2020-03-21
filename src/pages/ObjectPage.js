@@ -34,7 +34,7 @@ function ObjectPage({project, screen, setDataToLoad}) {
                     .filter(ann => ann.file && (ann.file.name.endsWith(".csv")));
                 setFileAnns(csvFiles);
             });
-    }, []);
+    }, [project, screen]);
 
     const handleClick = (event) => {
         let fid = parseInt(event.target.value);

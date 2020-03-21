@@ -22,6 +22,7 @@ const Well = ({well, rows}) => {
         <img
             style={style}
             src={loadThumbs ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/` : ''}
+            alt="Well Thumbnail"
         />
     )
 }

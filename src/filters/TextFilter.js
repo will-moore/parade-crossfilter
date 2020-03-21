@@ -19,7 +19,7 @@ const TextFilter = ({dimName}) => {
             d.dispose();
             dc.redrawAll();
         };
-    }, []);
+    }, [dimName, ndx]);
 
     const handleChange = (event) => {
         let text = event.target.value;

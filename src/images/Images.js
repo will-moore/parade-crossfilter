@@ -30,7 +30,7 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
         return () => {
             removeListener();
         };
-    }, []);
+    }, [ndx]);
 
     // If some rows are selected, filter to only show them:
     let filteredData = crossFilterData;
@@ -54,6 +54,7 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
     const Cell = ({ columnIndex, rowIndex, style }) => (
         <div style={{...style}}>
             <img
+                alt={""}
                 style={imgStyle}
                 src={imgSrc(filteredData[(rowIndex * 2) + columnIndex])} />
         </div>
@@ -62,7 +63,7 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
     // If ONLY 1 Image selected - show ImageViewer
     if (selectedIds.length === 1) {
         let rowID = selectedIds[0];
-        let selectedRows = filteredData.filter(row => row._rowID == rowID);
+        let selectedRows = filteredData.filter(row => row._rowID === rowID);
         if (selectedRows.length === 1) {
             return (
                 <ImageViewer rowData={selectedRows[0]} />

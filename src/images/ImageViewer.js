@@ -46,6 +46,7 @@ const ImageViewer = ({rowData}) => {
                             wellData.data.WellSamples.map(ws => (
                                 <img src={window.OMEROWEB_INDEX + `webclient/render_image/${ ws.Image['@id'] }/0/0/`}
                                     style={{maxWidth: 250, margin: 5}}
+                                    alt=""
                                 />
                             ))
                         }

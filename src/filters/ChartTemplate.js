@@ -37,7 +37,7 @@ export const ChartTemplate = props => {
             newChart.dimension().dispose();
             dc.redrawAll();
         };
-    }, []);
+    }, [chartFunction, dimName, ndx, setSubheading]);
     
     const chartStyles = {
         width:'100%',

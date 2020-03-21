@@ -19,6 +19,7 @@ const BirdsEye = ({imgData, size, x, y}) => {
             <img
                 style={{width: thumb_width, height: thumb_height, position: 'absolute', top: 0, left: 0}}
                 src={window.OMEROWEB_INDEX + `webclient/render_thumbnail/${imgId}`}
+                alt="Bird's eye view"
             />
             <div
                 style={{position: 'absolute',

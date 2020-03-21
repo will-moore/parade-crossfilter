@@ -25,7 +25,7 @@ const PlotlyPlot = ({data, layout, onSelected}) => {
             setXLabel(newX);
             setYLabel(newY);
         }
-    }, [layout]);
+    }, [layout, xLabel, yLabel]);
 
     // combine x and y range with layout from props
     let xaxis = {...layout.xaxis, range: xRange}

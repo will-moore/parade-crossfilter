@@ -33,7 +33,7 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
         return () => {
             removeListener();
         };
-    }, []);
+    }, [ndx]);
 
     // If some rows are selected, filter to only show them:
     let filteredData = [...crossFilterData];
@@ -95,11 +95,13 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
             {filteredData[rowIndex][colNames[columnIndex]]}
             {colNames[columnIndex] === 'Image' &&
                 <img
+                    alt="Thumbnail"
                     src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/`}
                 />
             }
             {colNames[columnIndex] === 'Shape' &&
                 <img
+                    alt="Shape Thumbnail"
                     src={`${ window.OMEROWEB_INDEX }webgateway/render_shape_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/?color=ff0`}
                 />
             }

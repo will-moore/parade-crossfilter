@@ -86,7 +86,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setFilteredIds}) => {
         return () => {
             removeListener();
         };
-    }, [xAxis, yAxis, groupBy]);
+    }, [xAxis, yAxis, groupBy, ndx]);
 
 
     if (plotData.length === 0) {

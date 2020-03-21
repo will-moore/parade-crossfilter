@@ -12,7 +12,6 @@ const ImagePlane = ({imgData, roiData}) => {
     React.useEffect(() => {
         // On load, calculate initial viewport...
 
-        let src;
         // If Big image...and we have an ROI, render that region
         if (imgData.tiles) {
             let size;
@@ -35,7 +34,7 @@ const ImagePlane = ({imgData, roiData}) => {
     }, [imgData, roiData]);
 
     const handleZoomClick = (event) => {
-        if (event.target.value == '+') {
+        if (event.target.value === '+') {
             // zoom in...
             setBigImageViewportSize(bigImageViewportSize / 2);
         } else {
@@ -61,6 +60,7 @@ const ImagePlane = ({imgData, roiData}) => {
         <div>
         <img
             style={{width: 350, height: 350, float: 'left'}}
+            alt="Full rendered plane"
             src={src}
         />
         {
