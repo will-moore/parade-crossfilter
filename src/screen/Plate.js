@@ -31,7 +31,6 @@ const Plate = ({plate, filteredIds, selectedIds}) => {
         fetch(url, {mode: 'cors', credentials: 'include'})
             .then(rsp => rsp.json())
             .then(data => {
-                console.log('wells', data);
                 setWells(data.data);
             });
     }, [plate]);

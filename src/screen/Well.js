@@ -7,24 +7,29 @@ const Well = ({well, rows}) => {
 
     let imgId = well['WellSamples'][0]['Image']['@id'];
 
-    let showWell = (rows);  // imgIds.has(imgId);
+    let showWell = (true);  // imgIds.has(imgId);
 
     // load thumbnails if showing < 100 Images
-    let loadThumbs = true;  // (imgIds.size <= 100 && showWell);
+    let loadThumbs = false;  // (imgIds.size <= 100 && showWell);
 
     let style = {
         opacity: showWell ? 1 : 0.1,
         width: 15,
         height: 15,
+        background: 'black',
     }
 
-    return (
+    if (loadThumbs) {
+      return (
         <img
             style={style}
-            src={loadThumbs ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/` : ''}
+            src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/`}
             alt="Well Thumbnail"
         />
-    )
+      )
+    } else {
+        return <div style={style} />
+    }
 }
 
 export default Well;
