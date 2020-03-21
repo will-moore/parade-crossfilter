@@ -19,7 +19,7 @@ export const ChartTemplate = props => {
     const {dimName, chartFunction, setSubheading} = props;
     React.useEffect(() => {
         const newChart = chartFunction(div.current, ndx, dimName); // chartfunction takes the ref and does something with it
-        
+
         newChart.render();
 
         newChart.on('filtered', function(chart, filter){
@@ -31,14 +31,14 @@ export const ChartTemplate = props => {
         })
 
         updateChart(newChart);
-        
+
         // Specify how to clean up after this effect:
         return () => {
             newChart.dimension().dispose();
             dc.redrawAll();
         };
-    }, [chartFunction, dimName, ndx, setSubheading]);
-    
+    }, []);
+
     const chartStyles = {
         width:'100%',
         height:'auto',

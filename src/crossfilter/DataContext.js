@@ -19,11 +19,24 @@ export class DataContext extends React.Component {
     }
 
     addGroupBy(colname) {
-        let groupBy = [...this.state.groupBy, colname];
+        // let groupBy = [...this.state.groupBy, colname];
+
+        // let cfdata = this.orig_data;
+        // let columns = this.columns;
+
+        // let groupBy = this.state.groupBy;
+        // if (groupBy) {
+        //     groupBy.forEach(groupName => {
+        let g = groupCrossfilterData(this.orig_data, this.columns, colname);
+        this.orig_data = crossfilter(g.data);
+        this.columns = g.columns;
+        //     });
+        // }
+
         // Hack! to orce all Children to re-render with new crossfilter(grouped)
-        this.setState({hasNDX:false, loading:true, groupBy});
+        this.setState({hasNDX:false, loading:true});
         setTimeout(() => {
-            this.setState({hasNDX:true, loading:false, groupBy});
+            this.setState({hasNDX:true, loading:false});
         }, 100);
     }
 
@@ -128,14 +141,15 @@ export class DataContext extends React.Component {
         let cfdata = this.orig_data;
         let columns = this.columns;
 
-        let groupBy = this.state.groupBy;
-        if (groupBy) {
-            groupBy.forEach(groupName => {
-                let g = groupCrossfilterData(cfdata, columns, groupName);
-                cfdata = crossfilter(g.data);
-                columns = g.columns;
-            });
-        }
+        // let groupBy = this.state.groupBy;
+        // if (groupBy) {
+        //     groupBy.forEach(groupName => {
+        //         let g = groupCrossfilterData(cfdata, columns, groupName);
+        //         cfdata = crossfilter(g.data);
+        //         columns = g.columns;
+        //     });
+        // }
+        console.log("Render DataContext, groupBy");
 
         return (
             <CXContext.Provider

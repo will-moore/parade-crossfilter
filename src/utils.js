@@ -1,3 +1,6 @@
+
+import crossfilter from "crossfilter2";
+
 export function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -7,7 +10,8 @@ export function getUrlParameter(name) {
 
 
 export function groupCrossfilterData(data, columns, groupBy) {
-    let dsDim = data.dimension(r => r[groupBy]);
+    // create a new crossfilter from ALL data, then group...
+    let dsDim = crossfilter(data.all()).dimension(r => r[groupBy]);
     let dsGrouping = dsDim.group();
     // We only want to group 'number' columns
     columns = columns.filter(c => c.type === 'number');

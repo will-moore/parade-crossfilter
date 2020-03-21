@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import Well from './Well';
 
-const Plate = ({plate, filteredIds, selectedIds}) => {
+const Plate = ({plate, showFields, filteredIds, selectedIds}) => {
 
     const[wells, setWells] = useState([]);
     const [crossFilterData, setData] = React.useState([]);
@@ -35,11 +35,10 @@ const Plate = ({plate, filteredIds, selectedIds}) => {
             });
     }, [plate]);
 
-    // Sort Wells into grid... (2D dict, instead of 2D array)
+    // Sort Wells into grid... (2D dict, instead of array)
     let gridDict = {};
     let maxRow = -1
     let maxCol = -1;
-
     wells.forEach(well => {
         let row = well.Row;
         let col = well.Column;
@@ -104,6 +103,7 @@ const Plate = ({plate, filteredIds, selectedIds}) => {
                                     >
                                         <Well
                                             well={well}
+                                            showFields={showFields}
                                             rows={wellData[well['@id']]}
                                             selectedIds={selectedIds}
                                         />

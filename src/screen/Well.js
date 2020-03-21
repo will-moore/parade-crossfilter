@@ -1,34 +1,45 @@
 import React from "react";
+import WellSample from "./WellSample";
 
-const Well = ({well, rows}) => {
+const Well = ({well, showFields, rows}) => {
+    // well - api json for Well
+    // showFields? - Do we show individual fields for the Well
+    // rows - crossfilter rows that match this Well ID
 
-    // Set() of image IDs
-    // let imgIds = filteredIds.Image;
 
-    let imgId = well['WellSamples'][0]['Image']['@id'];
-
-    let showWell = (true);  // imgIds.has(imgId);
-
-    // load thumbnails if showing < 100 Images
-    let loadThumbs = false;  // (imgIds.size <= 100 && showWell);
-
-    let style = {
-        opacity: showWell ? 1 : 0.1,
-        width: 15,
-        height: 15,
-        background: 'black',
-    }
-
-    if (loadThumbs) {
-      return (
-        <img
-            style={style}
-            src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/`}
-            alt="Well Thumbnail"
-        />
-      )
+    if (!showFields) {
+        return (
+            <WellSample
+                wellSample={well['WellSamples'][0]}
+                rows={rows}
+            />
+        )
     } else {
-        return <div style={style} />
+        // need to group rows by Image ID
+        let fields = {};
+        if (rows) {
+            for (let r=0; r<rows.length; r++) {
+                let row=rows[r];
+                if (!fields[row.Image]) {
+                    fields[row.Image] = [];
+                }
+                fields[row.Image].push(row);
+            }
+        }
+
+        return (
+            <React.Fragment>
+                {
+                    well['WellSamples'].map(ws => (
+                        <WellSample
+                            key={ws['Image']['@id']}
+                            wellSample={ws}
+                            rows={fields[ws['Image']['@id']] || []}
+                        />
+                    ))
+                }
+            </React.Fragment>
+        )
     }
 }
 

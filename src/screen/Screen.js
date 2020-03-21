@@ -1,10 +1,12 @@
 
 import React, {useEffect, useState} from "react";
 import Plate from "./Plate";
+import SpwControls from "./SpwControls";
 
 const Screen = ({screenId, filteredIds, selectedIds}) => {
 
     const[plates, setPlates] = useState([]);
+    const[showFields, setShowFields] = useState(false);
 
     useEffect(() => {
         let url = window.OMEROWEB_INDEX + `api/v0/m/screens/${ screenId }/plates/`;
@@ -17,13 +19,17 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
     }, [screenId]);
 
     return (
-        <div>
+        <div style={{position: 'relative'}}>
+            <SpwControls
+                setShowFields={setShowFields}
+            />
             { plates.length === 0 ? "Loading plates..." : `${ plates.length } plates:`}
             {
                 plates.map(p =>
                     <Plate
                         key={p.id}
                         plate={p}
+                        showFields={showFields}
                         filteredIds={filteredIds}
                         selectedIds={selectedIds}
                     />)
