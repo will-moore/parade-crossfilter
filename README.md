@@ -1,4 +1,4 @@
-## OMERO parade-crossfilter
+# OMERO parade-crossfilter
 
 This is a prototype OMERO.web app, exploring the use of https://github.com/crossfilter/crossfilter in a new implementation of https://github.com/ome/omero-parade.
 
@@ -6,7 +6,7 @@ It uses [Create React App](https://github.com/facebook/create-react-app)
 with the cross-filter, https://dc-js.github.io/dc.js/ and React interaction
 based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 
-# Questions to Answer
+## Questions to Answer
 
 This prototype aims to investigate the scope and technical solutions for a
 data-visualization app based on ```omero-parade```.
@@ -24,7 +24,7 @@ Particular questions:
  - How do we handle hierarchy of multiple Images per Well, or ROIs per Image?
  - How much data processing is possible, while still being usable / generic?
 
-# Development
+## Development
 
 You can run this project in development mode or as an OMERO.web Django app.
 
