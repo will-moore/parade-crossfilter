@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import Well from './Well';
 
-const Plate = ({plate, showFields, filteredIds, selectedIds}) => {
+const Plate = ({plate, showFields, heatmap, filteredIds, selectedIds}) => {
 
     const[wells, setWells] = useState([]);
     const [crossFilterData, setData] = React.useState([]);
@@ -26,7 +26,6 @@ const Plate = ({plate, showFields, filteredIds, selectedIds}) => {
     }, [ndx]);
 
     useEffect(() => {
-        console.log("Plate.js loading wells....")
         let url = window.OMEROWEB_INDEX + `api/v0/m/plates/${ plate.id }/wells/`;
         fetch(url, {mode: 'cors', credentials: 'include'})
             .then(rsp => rsp.json())
@@ -87,6 +86,16 @@ const Plate = ({plate, showFields, filteredIds, selectedIds}) => {
         return selected;
     }
 
+    let heatmapMin;
+    let heatmapMax;
+    if (heatmap !== '--') {
+        // get min and max values for 'heatmap' column
+        let dim = ndx.dimension(function(d) { return d[heatmap]; });
+        heatmapMin = dim.bottom(1)[0][heatmap];
+        heatmapMax = dim.top(1)[0][heatmap];
+        console.log('heatmap', heatmapMin, heatmapMax);
+    }
+
     return (
         <div>
             <div>{plate.Name} ({wells.length}) </div>
@@ -104,7 +113,10 @@ const Plate = ({plate, showFields, filteredIds, selectedIds}) => {
                                         <Well
                                             well={well}
                                             showFields={showFields}
-                                            rows={wellData[well['@id']]}
+                                            heatmap={heatmap}
+                                            heatmapMin={heatmapMin}
+                                            heatmapMax={heatmapMax}
+                                            rows={wellData[well['@id']] || []}
                                             selectedIds={selectedIds}
                                         />
                                     </td>)

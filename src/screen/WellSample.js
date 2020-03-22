@@ -1,6 +1,6 @@
 import React from "react";
 
-const Well = ({wellSample, rows}) => {
+const Well = ({wellSample, rows, color}) => {
 
     // Set() of image IDs
     // let imgIds = filteredIds.Image;
@@ -16,7 +16,7 @@ const Well = ({wellSample, rows}) => {
         opacity: showWell ? 1 : 0.1,
         width: 15,
         height: 15,
-        background: 'black',
+        background: color,
         float: 'left',
         margin: 1,
     }

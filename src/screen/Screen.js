@@ -5,8 +5,9 @@ import SpwControls from "./SpwControls";
 
 const Screen = ({screenId, filteredIds, selectedIds}) => {
 
-    const[plates, setPlates] = useState([]);
-    const[showFields, setShowFields] = useState(false);
+    const [plates, setPlates] = useState([]);
+    const [showFields, setShowFields] = useState(false);
+    const [heatmap, setHeatmap] = React.useState('--');
 
     useEffect(() => {
         let url = window.OMEROWEB_INDEX + `api/v0/m/screens/${ screenId }/plates/`;
@@ -22,6 +23,8 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
         <div style={{position: 'relative'}}>
             <SpwControls
                 setShowFields={setShowFields}
+                heatmap={heatmap}
+                setHeatmap={setHeatmap}
             />
             { plates.length === 0 ? "Loading plates..." : `${ plates.length } plates:`}
             {
@@ -30,6 +33,7 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
                         key={p.id}
                         plate={p}
                         showFields={showFields}
+                        heatmap={heatmap}
                         filteredIds={filteredIds}
                         selectedIds={selectedIds}
                     />)
