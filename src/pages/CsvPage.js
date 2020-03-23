@@ -24,7 +24,7 @@ function CsvPage({toLoad, screen}) {
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
-    const [showScreen, setShowScreen] = React.useState(true);
+    const [showScreen, setShowScreen] = React.useState(false);
 
     return (
         <DataContext toLoad={toLoad}>

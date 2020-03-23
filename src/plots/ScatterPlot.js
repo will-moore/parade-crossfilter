@@ -10,12 +10,6 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setFilteredIds}) => {
     const [plotData, setData] = React.useState([]);
 
     const setPlotData = (rows) => {
-
-        // Don't try to plot too much data!
-        if (rows.length > 20000) {
-            setData([]);
-            return;
-        }
         let plotData = [];
         if (groupBy) {
             // Group data, similar to BoxPlot.js
@@ -38,7 +32,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setFilteredIds}) => {
                     x: data.map(d => d.x),
                     y: data.map(d => d.y),
                     customdata: data.map(d => d.id),
-                    type: 'scatter',
+                    type: 'scattergl',
                     mode: 'lines+markers',
                     name: name,
                 }
@@ -54,7 +48,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setFilteredIds}) => {
                     x: xData,
                     y: yData,
                     customdata: ids,
-                    type: 'scatter',
+                    type: 'scattergl',
                     mode: 'markers',
                     marker: {color: 'red'},
                 },

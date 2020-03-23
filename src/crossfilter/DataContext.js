@@ -123,7 +123,7 @@ export class DataContext extends React.Component {
                 let url = window.OMEROWEB_INDEX + `webclient/annotation/${ annId }`;
                 // Load csv file, then process csv (and datasetInfo)
                 fetchText(url, csvText => {
-                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, mapAnnsInfo);
+                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo);
                 });
             } else {
                 this.initCrossfilter(undefined, datasetsInfo, mapAnnsInfo);
