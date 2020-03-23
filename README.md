@@ -11,7 +11,7 @@ based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 This prototype aims to investigate the scope and technical solutions for a
 data-visualization app based on ```omero-parade```.
 
-Limitations of ```omero-parade``` include:
+Limitations of the current ```omero-parade``` app include:
 
  - Data is tied to Images (in Dataset) or Wells (in Plate). Can't handle data linked to ROIS or to multiple Images in a Well.
  - Loads the same data from the server for filtering *again* for display.
@@ -19,8 +19,8 @@ Limitations of ```omero-parade``` include:
 
 Particular questions:
 
- - Is crossfilter.js a suitable tool for filtering/grouping data?
- - What to use for Plots?
+ - Is crossfilter.js a suitable tool for filtering/grouping data? (A: mostly good)
+ - What to use for Plots? (A: Plotly.js is looking pretty good)
  - How do we handle hierarchy of multiple Images per Well, or ROIs per Image?
  - How much data processing is possible, while still being usable / generic?
 
