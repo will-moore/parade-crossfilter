@@ -24,10 +24,8 @@ export function groupCrossfilterData(data, columns, groupBy) {
             return prev;
         },
         function(prev, row) { // remove - Don't expect this to be used
-        columns.forEach(c => {
-                if (c.type === 'number') {
-                    prev[c.name] = prev[c.name] - row[c.name];
-                }
+            columns.forEach(c => {
+                prev[c.name] = prev[c.name] - row[c.name];
             });
             prev.count = prev.count - 1;
             return prev;
@@ -45,6 +43,7 @@ export function groupCrossfilterData(data, columns, groupBy) {
     let newColName = "Rows per " + groupBy;
 
     // Convert grouped data back to new 'table' (rows of objects)
+    let nonIntegerCols = {};
     let groupedTable = dsGrouping.all().map((group, idx) => {
         let row = {'_rowID': idx};
         row[groupBy] = group.key;
@@ -52,9 +51,18 @@ export function groupCrossfilterData(data, columns, groupBy) {
         row[newColName] = group.value.count;
         columns.forEach(c => {
             row[c.name] = group.value[c.name] / group.value.count;
+            if (!nonIntegerCols[c.name] && !Number.isInteger(row[c.name])) {
+                nonIntegerCols[c.name] = true;
+            }
         });
         return row;
     });
+
+    // Remove any ID columns that have been averaged
+    // E.g. group ROIs by Image - ROI column will contain average ROI IDs which makes no sense
+    // BUT we don't want to remove e.g. Well ID column
+    const idNames = ['Screen', 'Plate', 'Well', 'Project', 'Dataset', 'Image', 'ROI', 'Shape'];
+    columns = columns.filter(c => !(idNames.indexOf(c.name) > -1 && nonIntegerCols[c.name]));
 
     columns.splice(1, 0, {name: newColName, type: 'number'});
 
