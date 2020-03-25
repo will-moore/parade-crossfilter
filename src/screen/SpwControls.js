@@ -10,7 +10,26 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
         top: 0, right: 0,
     }
 
+    const [crossFilterData, setData] = React.useState([]);
     const context = React.useContext(CXContext);
+    const ndx = context.ndx;
+
+    React.useEffect(() => {
+        // Initial load
+        setData(ndx.allFiltered());
+
+        var removeListener = ndx.onChange((event) => {
+            // Listen for filtering changes and re-render
+            setData(ndx.allFiltered());
+        });
+
+        // Specify how to clean up after this effect:
+        return () => {
+            removeListener();
+        };
+    }, [ndx]);
+
+
     const numCols = context.columns.filter(c => c.type === 'number');
 
     const handleShowFields = (event) => {
@@ -19,6 +38,13 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
 
     const handleChange = (event) => {
         setHeatmap(event.target.value);
+    }
+
+    let heatmapRange = '';
+    if (heatmap !== '--') {
+        // get min and max values for 'heatmap' column
+        let dim = ndx.dimension(function(d) { return d[heatmap]; });
+        heatmapRange = dim.bottom(1)[0][heatmap] + ' - ' + dim.top(1)[0][heatmap];
     }
 
     return (
@@ -37,6 +63,7 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
                         </option>
                     ))}
                 </select>
+                { heatmapRange }
 
             </label>
         </div>
