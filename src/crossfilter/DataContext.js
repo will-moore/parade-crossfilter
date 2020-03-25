@@ -141,16 +141,6 @@ export class DataContext extends React.Component {
         let cfdata = this.orig_data;
         let columns = this.columns;
 
-        // let groupBy = this.state.groupBy;
-        // if (groupBy) {
-        //     groupBy.forEach(groupName => {
-        //         let g = groupCrossfilterData(cfdata, columns, groupName);
-        //         cfdata = crossfilter(g.data);
-        //         columns = g.columns;
-        //     });
-        // }
-        console.log("Render DataContext, groupBy");
-
         return (
             <CXContext.Provider
                 value={{
