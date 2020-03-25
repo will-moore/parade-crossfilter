@@ -4,7 +4,7 @@ import ScatterPlot from "./ScatterPlot";
 import BoxPlot from "./BoxPlot";
 import { CXContext } from "../crossfilter/DataContext";
 
-const PlotContainer = ({setFilteredIds}) => {
+const PlotContainer = ({setSelectedIds}) => {
 
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
@@ -27,13 +27,13 @@ const PlotContainer = ({setFilteredIds}) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setXAxis(col);
-        setFilteredIds([]);
+        setSelectedIds([]);
     }
     const handleChangeY = (event) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setYAxis(col);
-        setFilteredIds([]);
+        setSelectedIds([]);
     }
 
     const handleChangeGroupBy = (event) => {
@@ -53,12 +53,12 @@ const PlotContainer = ({setFilteredIds}) => {
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
                         groupBy={groupBy}
-                        setFilteredIds={setFilteredIds}
+                        setSelectedIds={setSelectedIds}
                     />) : (
                     <BoxPlot
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
-                        setFilteredIds={setFilteredIds}
+                        setSelectedIds={setSelectedIds}
                     />)
             }
 

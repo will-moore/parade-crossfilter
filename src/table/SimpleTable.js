@@ -9,13 +9,13 @@ const headerStyle={
     cursor: 'pointer',
 }
 
-const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
+const SimpleTable = ({selectedIds, setSelectedIds,
                       sortBy, setSortBy,
                       sortReverse, setSortReverse}) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
-    const [crossFilterData, setData] = React.useState([]);
+    const [filteredData, setData] = React.useState([]);
 
     const ndx = context.ndx;
 
@@ -35,11 +35,18 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
         };
     }, [ndx]);
 
-    // If some rows are selected, filter to only show them:
-    let filteredData = [...crossFilterData];
-    if (filteredIds.length > 0) {
-        filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
-    }
+
+    const gridRef = React.useRef(null);
+    React.useEffect(() => {
+        if (selectedIds.length > 0) {
+            let rowIDs = filteredData.map(r => r._rowID);
+            let selectedIndexes = selectedIds.map(id => rowIDs.indexOf(id));
+            gridRef.current.scrollToItem({
+                align: 'center',
+                rowIndex: selectedIndexes[0],
+            });
+        }
+    }, [selectedIds, sortBy, sortReverse]);
 
     if (sortBy) {
         let rev = (sortReverse ? -1 : 1);
@@ -123,6 +130,7 @@ const SimpleTable = ({filteredIds, selectedIds, setSelectedIds,
                 {Header}
             </Grid>
             <Grid
+                ref={gridRef}
                 height={250}
                 columnCount={colNames.length}
                 columnWidth={colWidth}

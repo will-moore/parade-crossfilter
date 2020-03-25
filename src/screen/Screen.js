@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import Plate from "./Plate";
 import SpwControls from "./SpwControls";
 
-const Screen = ({screenId, filteredIds, selectedIds}) => {
+const Screen = ({screenId, selectedIds}) => {
 
     const [plates, setPlates] = useState([]);
     const [showFields, setShowFields] = useState(false);
@@ -34,7 +34,6 @@ const Screen = ({screenId, filteredIds, selectedIds}) => {
                         plate={p}
                         showFields={showFields}
                         heatmap={heatmap}
-                        filteredIds={filteredIds}
                         selectedIds={selectedIds}
                     />)
             }

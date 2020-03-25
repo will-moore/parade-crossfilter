@@ -11,7 +11,7 @@ const imgStyle = {
     maxHeight: '100%',
 }
 
-const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
+const Images = ({selectedIds, sortBy, sortReverse}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
@@ -34,8 +34,8 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
 
     // If some rows are selected, filter to only show them:
     let filteredData = crossFilterData;
-    if (filteredIds.length > 0) {
-        filteredData = crossFilterData.filter(row => filteredIds.indexOf(row._rowID) > -1);
+    if (selectedIds.length > 0) {
+        filteredData = crossFilterData.filter(row => selectedIds.indexOf(row._rowID) > -1);
     }
 
     if (sortBy) {
@@ -51,14 +51,18 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
         ''
     )
 
-    const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style}}>
-            <img
-                alt={""}
-                style={imgStyle}
-                src={imgSrc(filteredData[(rowIndex * 2) + columnIndex])} />
-        </div>
-    )
+    const Cell = ({ columnIndex, rowIndex, style }) => {
+        let row = filteredData[(rowIndex * 2) + columnIndex];
+        if (!row) return (<span></span>)
+        return (
+            <div style={{...style}}>
+                <img
+                    alt={""}
+                    style={imgStyle}
+                    src={imgSrc(row)} />
+            </div>
+        )
+    }
 
     // If ONLY 1 Image selected - show ImageViewer
     if (selectedIds.length === 1) {
@@ -78,7 +82,7 @@ const Images = ({filteredIds, selectedIds, sortBy, sortReverse}) => {
                 height={500}
                 columnCount={2}
                 columnWidth={250}
-                rowCount={parseInt(filteredData.length/2)}
+                rowCount={Math.ceil(filteredData.length/2)}
                 rowHeight={170}
                 width={510}
             >

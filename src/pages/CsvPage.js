@@ -19,8 +19,6 @@ function CsvPage({toLoad, screen}) {
         overflow: 'auto',
     }
 
-
-    const [filteredIds, setFilteredIds] = React.useState([]);
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
@@ -43,17 +41,15 @@ function CsvPage({toLoad, screen}) {
                             {showScreen ?
                                 <Screen
                                     screenId={screen}
-                                    filteredIds={filteredIds}
                                     selectedIds={selectedIds}
                                 /> :
                                 <PlotContainer
-                                    setFilteredIds={setFilteredIds}
+                                    setSelectedIds={setSelectedIds}
                                 />
                             }
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
                             <Images
-                                filteredIds={filteredIds}
                                 selectedIds={selectedIds}
                                 sortBy={sortBy}
                                 sortReverse={sortReverse} />
@@ -61,7 +57,6 @@ function CsvPage({toLoad, screen}) {
                     </div>
                     <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 310}}>
                         <SimpleTable
-                            filteredIds={filteredIds}
                             setSelectedIds={setSelectedIds} 
                             selectedIds={selectedIds}
                             sortBy={sortBy}

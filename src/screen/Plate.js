@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import Well from './Well';
 
-const Plate = ({plate, showFields, heatmap, filteredIds, selectedIds}) => {
+const Plate = ({plate, showFields, heatmap, selectedIds}) => {
 
     const[wells, setWells] = useState([]);
     const [crossFilterData, setData] = React.useState([]);
