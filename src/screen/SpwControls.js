@@ -6,8 +6,8 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
 
     const style = {
         position: 'absolute',
-        width: 300,
-        top: 0, right: 0,
+        width: 350,
+        top: -12, right: 0,
     }
 
     const [crossFilterData, setData] = React.useState([]);
@@ -44,7 +44,8 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
     if (heatmap !== '--') {
         // get min and max values for 'heatmap' column
         let dim = ndx.dimension(function(d) { return d[heatmap]; });
-        heatmapRange = dim.bottom(1)[0][heatmap] + ' - ' + dim.top(1)[0][heatmap];
+        heatmapRange = parseInt(dim.bottom(1)[0][heatmap])
+            + ' - ' + parseInt(dim.top(1)[0][heatmap]);
     }
 
     return (
@@ -63,6 +64,7 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
                         </option>
                     ))}
                 </select>
+                <br />
                 { heatmapRange }
 
             </label>
