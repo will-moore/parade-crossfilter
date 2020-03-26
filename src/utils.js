@@ -62,8 +62,18 @@ export function groupCrossfilterData(data, columns, groupBy) {
     // E.g. group ROIs by Image - ROI column will contain average ROI IDs which makes no sense
     // BUT we don't want to remove e.g. Well ID column
     const idNames = ['Screen', 'Plate', 'Well', 'Project', 'Dataset', 'Image', 'ROI', 'Shape'];
-    columns = columns.filter(c => !(idNames.indexOf(c.name) > -1 && nonIntegerCols[c.name]));
+    let toRemove = idNames.filter(name => nonIntegerCols[name]);
 
+    // remove columns AND remove data
+    columns = columns.filter(c => toRemove.indexOf(c.name) === -1);
+    groupedTable = groupedTable.map(row => {
+        toRemove.forEach(name => {
+            delete row[name];
+        });
+        return row;
+    });
+
+    // Add new column
     columns.splice(1, 0, {name: newColName, type: 'number'});
 
     return {columns, data: groupedTable}
