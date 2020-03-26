@@ -3,7 +3,8 @@ import React, {useEffect, useState} from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import Well from './Well';
 
-const Plate = ({plate, showFields, heatmap, selectedIds}) => {
+const Plate = ({plate, showFields, heatmap,
+                selectedIds, setSelectedIds}) => {
 
     const[wells, setWells] = useState([]);
     const [crossFilterData, setData] = React.useState([]);
@@ -93,7 +94,6 @@ const Plate = ({plate, showFields, heatmap, selectedIds}) => {
         let dim = ndx.dimension(function(d) { return d[heatmap]; });
         heatmapMin = dim.bottom(1)[0][heatmap];
         heatmapMax = dim.top(1)[0][heatmap];
-        console.log('heatmap', heatmapMin, heatmapMax);
     }
 
     return (
@@ -118,6 +118,7 @@ const Plate = ({plate, showFields, heatmap, selectedIds}) => {
                                             heatmapMax={heatmapMax}
                                             rows={wellData[well['@id']] || []}
                                             selectedIds={selectedIds}
+                                            setSelectedIds={setSelectedIds}
                                         />
                                     </td>)
                                 )

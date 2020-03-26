@@ -1,6 +1,8 @@
 import React from "react";
 
-const Well = ({wellSample, rows, heatmap, heatmapMin, heatmapMax}) => {
+const Well = ({wellSample, rows,
+               heatmap, heatmapMin, heatmapMax,
+               setSelectedIds}) => {
 
     // Set() of image IDs
     // let imgIds = filteredIds.Image;
@@ -20,13 +22,17 @@ const Well = ({wellSample, rows, heatmap, heatmapMin, heatmapMax}) => {
         margin: 1,
     }
 
+    const handleClick = () => {
+        setSelectedIds(rows.map(r => r._rowID));
+    }
+
     const getHeatmapValue = (rows) => {
         if (rows.length === 0 || heatmap === '--') return 'rgba(1,1,1,1)';
         let vals = rows.map(r => r[heatmap]).filter(v => !isNaN(v));
         let sum = vals.reduce((prev, val) => prev + val, 0);
         let avg = sum / vals.length;
         return avg;
-  }
+    }
 
     const getHeatmapColor = (value) => {
         let fraction = (value - heatmapMin) / (heatmapMax - heatmapMin);
@@ -51,6 +57,7 @@ const Well = ({wellSample, rows, heatmap, heatmapMin, heatmapMax}) => {
     if (loadThumbs) {
       return (
         <img
+            onClick={handleClick}
             title={title}
             style={style}
             src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ imgId }/`}
@@ -59,6 +66,7 @@ const Well = ({wellSample, rows, heatmap, heatmapMin, heatmapMax}) => {
       )
     } else {
         return (<div
+            onClick={handleClick}
             title={title}
             style={style}
         />)

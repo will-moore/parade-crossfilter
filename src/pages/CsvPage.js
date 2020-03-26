@@ -42,6 +42,7 @@ function CsvPage({toLoad, screen}) {
                                 <Screen
                                     screenId={screen}
                                     selectedIds={selectedIds}
+                                    setSelectedIds={setSelectedIds}
                                 /> :
                                 <PlotContainer
                                     setSelectedIds={setSelectedIds}

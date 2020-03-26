@@ -1,7 +1,9 @@
 import React from "react";
 import WellSample from "./WellSample";
 
-const Well = ({well, showFields, rows, heatmap, heatmapMin, heatmapMax}) => {
+const Well = ({well, showFields, rows,
+               heatmap, heatmapMin, heatmapMax,
+               setSelectedIds}) => {
     // well - api json for Well
     // showFields? - Do we show individual fields for the Well
     // rows - crossfilter rows that match this Well ID
@@ -16,6 +18,7 @@ const Well = ({well, showFields, rows, heatmap, heatmapMin, heatmapMax}) => {
                 heatmap={heatmap}
                 heatmapMin={heatmapMin}
                 heatmapMax={heatmapMax}
+                setSelectedIds={setSelectedIds}
             />
         )
     } else {
@@ -42,6 +45,7 @@ const Well = ({well, showFields, rows, heatmap, heatmapMin, heatmapMax}) => {
                             heatmap={heatmap}
                             heatmapMin={heatmapMin}
                             heatmapMax={heatmapMax}
+                            setSelectedIds={setSelectedIds}
                         />
                     ))
                 }
