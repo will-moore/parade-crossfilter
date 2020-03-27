@@ -23,6 +23,7 @@ Particular questions:
  - What to use for Plots? (A: Plotly.js is looking pretty good)
  - How do we handle hierarchy of multiple Images per Well, or ROIs per Image?
  - How much data processing is possible, while still being usable / generic?
+ - Is Parade primarily for **exploring** or **presenting** data (like figure)?
 
 ## Development
 
