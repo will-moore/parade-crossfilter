@@ -38,7 +38,6 @@ const PlotContainer = ({setSelectedIds}) => {
 
     const handleChangeGroupBy = (event) => {
         let name = event.target.value;
-        console.log("group by", name);
         if (name === '-') {
             name = undefined;
         }
@@ -46,7 +45,7 @@ const PlotContainer = ({setSelectedIds}) => {
     }
 
     return (
-        <div style={{ position: 'relative', padding: 30}}>
+        <div style={{ position: 'relative', paddingTop: 30}}>
             {
                 xAxis.type === 'number' ? (
                     <ScatterPlot

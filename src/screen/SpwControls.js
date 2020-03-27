@@ -7,7 +7,7 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
     const style = {
         position: 'absolute',
         width: 350,
-        top: -12, right: 0,
+        top: 0, right: 0,
     }
 
     const [crossFilterData, setData] = React.useState([]);
@@ -64,7 +64,6 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
                         </option>
                     ))}
                 </select>
-                <br />
                 { heatmapRange }
 
             </label>

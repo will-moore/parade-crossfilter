@@ -22,7 +22,6 @@ function CsvPage({toLoad, screen}) {
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
-    const [showScreen, setShowScreen] = React.useState(false);
 
     return (
         <DataContext toLoad={toLoad}>
@@ -35,18 +34,16 @@ function CsvPage({toLoad, screen}) {
                 <main className="column" style={mainStyle}>
                     <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
                         <div style={{ flex: '1 1 50%'}} >
-                            {screen && <div>
-                                <span onClick={() => setShowScreen(true)}>Screen</span> | <span href='#' onClick={() => setShowScreen(false)}>Plot</span>
-                            </div>}
-                            {showScreen ?
+                            {screen &&
                                 <Screen
                                     screenId={screen}
                                     selectedIds={selectedIds}
                                     setSelectedIds={setSelectedIds}
-                                /> :
-                                <PlotContainer
-                                    setSelectedIds={setSelectedIds}
                                 />
+                            }
+                            <PlotContainer
+                                setSelectedIds={setSelectedIds}
+                            />
                             }
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
