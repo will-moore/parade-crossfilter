@@ -25,6 +25,9 @@ Particular questions:
  - How much data processing is possible, while still being usable / generic?
  - Is Parade primarily for **exploring** or **presenting** data (like figure)?
 
+
+<img src="https://user-images.githubusercontent.com/900055/77835025-66d0e300-7141-11ea-9b4a-ba1fe5885e57.png" />
+
 ## Development
 
 You can run this project in development mode or as an OMERO.web Django app.
