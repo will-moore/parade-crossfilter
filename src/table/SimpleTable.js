@@ -95,7 +95,9 @@ const SimpleTable = ({selectedIds, setSelectedIds,
     );
 
     const Cell = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style, background: isSelected(rowIndex) ? '#b1b3f4': 'white'}}
+        <div style={{...style,
+                background: isSelected(rowIndex) ? '#b1b3f4': 'white',
+                padding: 5}}
             onClick={() => handleRowClick(rowIndex)}
             className="table_cell"
             title={filteredData[rowIndex][colNames[columnIndex]]}>

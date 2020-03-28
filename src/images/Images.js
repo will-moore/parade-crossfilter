@@ -78,6 +78,10 @@ const Images = ({selectedIds, sortBy, sortReverse}) => {
     // Otherwise show thumbnails...
     return (
         <div>
+            <h6 className="text-muted px-3" style={{'marginTop': '0.7rem'}}>
+                { filteredData.length }
+                {selectedIds.length > 0 ? ' selected' : ' rows'}
+            </h6>
             <Grid
                 height={500}
                 columnCount={2}
