@@ -2,14 +2,13 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectedIds}) => {
+const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
 
-    const [plotData, setData] = React.useState([]);
+    const [rows, setData] = React.useState([]);
 
-    const setPlotData = (rows) => {
         let plotData = [];
         if (groupBy) {
             // Group data, similar to BoxPlot.js
@@ -39,23 +38,31 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectedIds}) => {
             });
 
         } else {
-            // Simply plot all points together
-            let xData = rows.map(r => r[xAxis])
-            let yData = rows.map(r => r[yAxis])
-            let ids = rows.map(r => r._rowID)
-            plotData = [
-                {
-                    x: xData,
-                    y: yData,
-                    customdata: ids,
+            // Since we can't plot 'selected' vv 'non-selected' (see https://github.com/plotly/plotly.js/issues/1848)
+            // we group them into 2 "traces".
+            let bins = {'selected': [], 'notselected': []}
+            rows.forEach(row => {
+                let binName = row[groupBy];
+                if (selectedIds.indexOf(row._rowID) > -1) {
+                    bins.selected.push({x: row[xAxis], y: row[yAxis], id: row._rowID});
+                } else {
+                    bins.notselected.push({x: row[xAxis], y: row[yAxis], id: row._rowID});
+                }
+            });
+
+            plotData = ['notselected', 'selected'].map(name => {
+                let data = bins[name];
+                return {
+                    x: data.map(d => d.x),
+                    y: data.map(d => d.y),
+                    customdata: data.map(d => d.id),
                     type: 'scattergl',
                     mode: 'markers',
-                    marker: {color: 'red'},
-                },
-            ]
+                    name: name,
+                    marker: {color: (name === 'selected' ? 'green': 'red')}
+                }
+            });
         }
-        setData(plotData);
-    }
 
     const handleSelected = (event) => {
         // Unfortunately selection is LOST when this is re-rendered
@@ -69,11 +76,11 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectedIds}) => {
     React.useEffect(() => {
 
         // initial render...
-        setPlotData(ndx.allFiltered());
+        setData(ndx.allFiltered());
 
         var removeListener = ndx.onChange((event) => {
             // Listen for filtering changes and re-render
-            setPlotData(ndx.allFiltered());
+            setData(ndx.allFiltered());
         });
 
         // Specify how to clean up after this effect:
@@ -92,6 +99,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, setSelectedIds}) => {
             <Plot
                 data={plotData}
                 layout={{
+                    showlegend: Boolean(groupBy),
                     width: 520,
                     height: 340, 
                     xaxis: {
