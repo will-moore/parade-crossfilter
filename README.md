@@ -59,7 +59,7 @@ html and static files to the Django app in `parade_crossfilter`.<br>
 
 You will need to have the app configured in your OMERO.web install:
 
-    $ omero config append omero.web.apps '"react_webapp"'
+    $ omero config append omero.web.apps '"parade_crossfilter"'
 
 The app will be run as an OMERO.web app at e.g. http://localhost:4080/parade_crossfilter/.
 
