@@ -31,7 +31,7 @@ def require_npm(command, strict=False):
     class WrappedCommand(command):
         def run(self):
             if strict or not os.path.isdir(
-                    'omero_parade/static/omero_parade/js'):
+                    'parade_crossfilter/static/parade_crossfilter/js'):
                 self.spawn(['npm', 'install'])
                 self.spawn(['npm', 'run', 'build'])
             command.run(self)
