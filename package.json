@@ -25,8 +25,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && ./deploy_build.sh",
+    "start": "react-scripts --max_old_space_size=4096 start",
+    "build": "react-scripts --max_old_space_size=4096 build && ./deploy_build.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
