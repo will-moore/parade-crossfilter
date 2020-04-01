@@ -7,3 +7,8 @@ mkdir -p parade_crossfilter/static/parade_crossfilter/
 
 cp build/index.html parade_crossfilter/templates/parade_crossfilter/
 cp -r build/static/* parade_crossfilter/static/parade_crossfilter
+
+echo "Listing templates..."
+ls parade_crossfilter/templates/parade_crossfilter/
+echo "Listing static..."
+ls parade_crossfilter/static/parade_crossfilter
