@@ -2,7 +2,7 @@ import React from "react";
 import { getShapeBbox } from '../utils';
 import BirdsEye from './BirdsEye';
 
-const ImagePlane = ({imgData, roiData}) => {
+const ImagePlane = ({imgData, roiData, rowData}) => {
 
     const imgId = imgData.id;
 
@@ -52,14 +52,18 @@ const ImagePlane = ({imgData, roiData}) => {
         y = centre.y - (size/2);
         src = window.OMEROWEB_INDEX + `figure/render_scaled_region/${ imgId }/0/0/?region=${x},${y},${size},${size}`;
     } else {
-        // Regular image...
-        src = window.OMEROWEB_INDEX + `webclient/render_image/${ imgId }/`;
+        // Regular image... Show Shape if we have it
+        if (Number.isInteger(rowData.Shape)) {
+            src = window.OMEROWEB_INDEX + `webgateway/render_shape_thumbnail/${ rowData.Shape }/?color=ff0`;
+        } else {
+            src = window.OMEROWEB_INDEX + `webclient/render_image/${ imgId }/`;
+        }
     }
 
     return (
         <div>
         <img
-            style={{width: 350, height: 350, float: 'left'}}
+            style={{width: 350, float: 'left'}}
             alt="Full rendered plane"
             src={src}
         />

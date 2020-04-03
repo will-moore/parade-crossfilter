@@ -38,7 +38,11 @@ const ImageViewer = ({rowData}) => {
             {imgData ?
                 (<div>
                     <p>{imgData.meta.imageName}</p>
-                    <ImagePlane imgData={imgData} roiData={roiData} />
+                    <ImagePlane
+                        imgData={imgData}
+                        roiData={roiData}
+                        rowData={rowData}
+                    />
                 </div>) :
                 wellData ? (
                     <div>
