@@ -11,11 +11,12 @@ const imgStyle = {
     maxHeight: '100%',
 }
 
-const Images = ({selectedIds, sortBy, sortReverse}) => {
+const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
     const ndx = context.ndx;
+    const columns = context.columns;
     React.useEffect(() => {
 
         // Initial load
@@ -51,12 +52,21 @@ const Images = ({selectedIds, sortBy, sortReverse}) => {
         ''
     )
 
+    const getTitle = (row) => {
+        return columns.map(col => col.name)
+            .filter(k => ("" + row[k]).length > 0)
+            .map(k => `${ k }: ${ row[k] }`)
+            .join("   ");
+    }
+
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let row = filteredData[(rowIndex * 2) + columnIndex];
         if (!row) return (<span></span>)
         return (
             <div style={{...style}}>
                 <img
+                    title={getTitle(row)}
+                    onClick={() => setSelectedIds([row._rowID])}
                     alt={""}
                     style={imgStyle}
                     src={imgSrc(row)} />

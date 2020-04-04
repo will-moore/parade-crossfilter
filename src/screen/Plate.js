@@ -98,7 +98,7 @@ const Plate = ({plate, showFields, heatmap,
 
     return (
         <div>
-            <div>{plate.Name} ({wells.length}) </div>
+            <div>{plate.Name} ({wells.length} Wells) </div>
 
             <table className="plateGrid">
                 <tbody>

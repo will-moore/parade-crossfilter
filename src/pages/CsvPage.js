@@ -45,11 +45,11 @@ function CsvPage({toLoad, screen}) {
                                 selectedIds={selectedIds}
                                 setSelectedIds={setSelectedIds}
                             />
-                            }
                         </div>
                         <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
                             <Images
                                 selectedIds={selectedIds}
+                                setSelectedIds={setSelectedIds}
                                 sortBy={sortBy}
                                 sortReverse={sortReverse} />
                         </div>

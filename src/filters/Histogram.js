@@ -6,7 +6,7 @@ import { ChartTemplate } from "./ChartTemplate";
 const histogramFunc = (divRef, ndx, dimName) => {
 
     var x = ndx.dimension(function(d) {return d[dimName];});
-    var max_value = x.top(1)[0][dimName];
+    var max_value = x.top(1)[0][dimName] * 1.01;  // extend beyond 'max' to allow brush to include max
     var min_value = x.bottom(1)[0][dimName];
 
     var value_range = max_value-min_value;
