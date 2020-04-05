@@ -40,17 +40,17 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
         } else {
             // Since we can't plot 'selected' vv 'non-selected' (see https://github.com/plotly/plotly.js/issues/1848)
             // we group them into 2 "traces".
-            let bins = {'selected': [], 'notselected': []}
+            let bins = {'selected': [], ' ': []}
             rows.forEach(row => {
                 let binName = row[groupBy];
                 if (selectedIds.indexOf(row._rowID) > -1) {
                     bins.selected.push({x: row[xAxis], y: row[yAxis], id: row._rowID});
                 } else {
-                    bins.notselected.push({x: row[xAxis], y: row[yAxis], id: row._rowID});
+                    bins[' '].push({x: row[xAxis], y: row[yAxis], id: row._rowID});
                 }
             });
 
-            plotData = ['notselected', 'selected'].map(name => {
+            plotData = [' ', 'selected'].map(name => {
                 let data = bins[name];
                 return {
                     x: data.map(d => d.x),
@@ -59,7 +59,7 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
                     type: 'scattergl',
                     mode: 'markers',
                     name: name,
-                    marker: {color: (name === 'selected' ? 'green': 'red')}
+                    marker: {color: (name === 'selected' ? 'red': 'rgb(31, 119, 180)')}
                 }
             });
         }

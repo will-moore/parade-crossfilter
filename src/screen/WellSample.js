@@ -27,7 +27,7 @@ const Well = ({wellSample, rows,
     }
 
     const getHeatmapValue = (rows) => {
-        if (rows.length === 0 || heatmap === '--') return 'rgba(1,1,1,1)';
+        if (rows.length === 0 || heatmap === '--') return '';
         let vals = rows.map(r => r[heatmap]).filter(v => !isNaN(v));
         let sum = vals.reduce((prev, val) => prev + val, 0);
         let avg = sum / vals.length;
