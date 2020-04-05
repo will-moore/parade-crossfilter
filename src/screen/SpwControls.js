@@ -44,8 +44,10 @@ const SpwControls = ({setShowFields, heatmap, setHeatmap}) => {
     if (heatmap !== '--') {
         // get min and max values for 'heatmap' column
         let dim = ndx.dimension(function(d) { return d[heatmap]; });
-        heatmapRange = parseInt(dim.bottom(1)[0][heatmap])
+        if (dim.bottom(1).length > 0) {
+            heatmapRange = parseInt(dim.bottom(1)[0][heatmap])
             + ' - ' + parseInt(dim.top(1)[0][heatmap]);
+        }
     }
 
     return (

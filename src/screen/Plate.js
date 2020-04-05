@@ -92,8 +92,10 @@ const Plate = ({plate, showFields, heatmap,
     if (heatmap !== '--') {
         // get min and max values for 'heatmap' column
         let dim = ndx.dimension(function(d) { return d[heatmap]; });
-        heatmapMin = dim.bottom(1)[0][heatmap];
-        heatmapMax = dim.top(1)[0][heatmap];
+        if (dim.bottom(1).length > 0) {
+            heatmapMin = dim.bottom(1)[0][heatmap];
+            heatmapMax = dim.top(1)[0][heatmap];
+        }
     }
 
     return (

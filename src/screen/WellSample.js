@@ -35,6 +35,7 @@ const Well = ({wellSample, rows,
     }
 
     const getHeatmapColor = (value) => {
+        if (value === '' || value === undefined) return "rgba(0,0,0,1)";
         let fraction = (value - heatmapMin) / (heatmapMax - heatmapMin);
         var red = 0,
             green = 0,
