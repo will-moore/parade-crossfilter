@@ -6,6 +6,12 @@ It uses [Create React App](https://github.com/facebook/create-react-app)
 with the cross-filter, https://dc-js.github.io/dc.js/ and React interaction
 based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 
+
+<a href="https://www.youtube.com/watch?v=FyjGhZxx6es&feature=youtu.be">
+    <img src="https://user-images.githubusercontent.com/900055/78835005-57765300-79e7-11ea-873d-a5a2f3a07638.png" width="650px">
+</a>
+
+
 ## Questions to Answer
 
 This prototype aims to investigate the scope and technical solutions for a
