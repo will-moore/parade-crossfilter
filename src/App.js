@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 // import { Router } from "@reach/router";
 import CsvPage from './pages/CsvPage';
+import Header from './pages/Header';
 import ObjectPage from './pages/ObjectPage';
 import Home from './pages/Home';
 import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 
 function App() {
 
@@ -26,19 +30,10 @@ function App() {
 
     return (
         <div className="App">
-
-            { toLoad ? <CsvPage
-                                    toLoad={toLoad}
-                                    screen={screen}
-                                /> :
-                 (project || screen) ?
-                    <ObjectPage 
-                        project={project}
-                        screen={screen}
-                        setDataToLoad={setDataToLoad} /> : 
-                    <Home />
-            }
-
+            <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+                <Header />
+            </nav>
+            <CsvPage/>
         </div>
     );
 }

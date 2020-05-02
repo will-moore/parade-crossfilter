@@ -25,9 +25,6 @@ function CsvPage({toLoad, screen}) {
 
     return (
         <DataContext toLoad={toLoad}>
-            <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-                <Header />
-            </nav>
 
             <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
                 <Drawer />
