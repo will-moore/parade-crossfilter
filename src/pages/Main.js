@@ -1,7 +1,6 @@
 
 import React, {useState} from 'react';
-// import Modal from 'react-bootstrap/Modal';
-// import Button from 'react-bootstrap/Button';
+import CsvPage from './CsvPage';
 import ChooseData from '../dialogs/ChooseData';
 import { getUrlParameter } from '../utils';
 
@@ -13,15 +12,20 @@ export default () => {
     let screen = getUrlParameter('screen');
 
     return (
-    <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
-
+    <React.Fragment>
         <ChooseData
             screen={screen}
             project={project}
             setDataToLoad={setDataToLoad}
         />
 
-        { toLoad ? <div>Loading...</div> : <div>Welcome to OMERO.parade</div>}
+        { toLoad ?
+            <CsvPage
+                toLoad={toLoad}
+                screen={screen}
+            />
+        
+        : <div>Welcome to OMERO.parade</div>}
 
-    </div>
+    </React.Fragment>
 )}
