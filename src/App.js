@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 // import { Router } from "@reach/router";
-import CsvPage from './pages/CsvPage';
 import Header from './pages/Header';
-import ObjectPage from './pages/ObjectPage';
-import Home from './pages/Home';
+import Main from './pages/Main';
 import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,14 +24,12 @@ function App() {
         initialData = {csvFiles: [annotation]};
     }
 
-    const [toLoad, setDataToLoad] = useState(initialData);
-
     return (
         <div className="App">
             <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
                 <Header />
             </nav>
-            <CsvPage/>
+            <Main/>
         </div>
     );
 }
