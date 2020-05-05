@@ -23,8 +23,8 @@ function CsvPage({toLoad, screen}) {
     }
 
     const cellStyle = {
-        background: 'green',
-        border: 'solid black 1px',
+        // background: 'green',
+        border: 'solid #ccc 1px',
         // overflow: 'hidden',
     }
 
@@ -47,7 +47,7 @@ function CsvPage({toLoad, screen}) {
                 
                 
 
-      <ReactGridLayout className="layout" layout={layout} cols={12} rowHeight={50} width={1200}>
+      <ReactGridLayout className="layout" layout={layout} cols={12} rowHeight={45} width={1200}>
         <div key="a" style={cellStyle}>
             <PlotContainer
                 selectedIds={selectedIds}

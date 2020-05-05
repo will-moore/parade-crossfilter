@@ -150,3 +150,8 @@ body {
   max-width: 142px;
   border: solid white 2px;
 }
+
+.js-plotly-plot .plotly .modebar {
+  top: 50px !important;
+  right: 20px !important;
+}

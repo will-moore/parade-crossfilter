@@ -2,7 +2,11 @@ import React from "react";
 // import ScatterPlot from "./ScatterPlot";
 import ScatterPlot from "./ScatterPlot";
 import BoxPlot from "./BoxPlot";
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
 import { CXContext } from "../crossfilter/DataContext";
+
+const labelStyle = {marginLeft: 10, marginRight: 5};
 
 const PlotContainer = ({selectedIds, setSelectedIds}) => {
 
@@ -45,7 +49,7 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div style={{ position: 'relative', paddingTop: 30}}>
+        <div style={{ position: 'relative'}}>
             {
                 xAxis.type === 'number' ? (
                     <ScatterPlot
@@ -62,8 +66,8 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                     />)
             }
 
-            <div style={{'position': 'absolute', top: 10, left: 10}}>
-                <label>Y axis:</label>
+            <div style={{position: 'absolute', marginTop: 10, top: 0}}>
+                <label style={labelStyle}>Y: </label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
                         <option value={col.name} key={col.name}>
@@ -71,7 +75,7 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                         </option>
                     ))}
                 </select>
-                <label>X axis:</label>
+                <label style={labelStyle}>X: </label>
                 <select onChange={handleChangeX} value={xAxis.name}>
                     <optgroup label="Scatter Plot">
                         {numberCols.map(col => (
@@ -88,7 +92,7 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                         ))}
                     </optgroup>
                 </select>
-                <label>Group by:</label>
+                <label style={labelStyle}>Group by:</label>
                 <select onChange={handleChangeGroupBy}>
                     <option value="-">-</option>
                     {
