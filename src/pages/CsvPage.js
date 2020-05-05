@@ -7,6 +7,9 @@ import {DataContext} from '../crossfilter/DataContext';
 import Header from './Header';
 import Screen from '../screen/Screen';
 
+import RGL, { WidthProvider } from "react-grid-layout";
+const ReactGridLayout = WidthProvider(RGL);
+
 function CsvPage({toLoad, screen}) {
 
     const mainStyle = {
@@ -19,9 +22,21 @@ function CsvPage({toLoad, screen}) {
         overflow: 'auto',
     }
 
+    const cellStyle = {
+        background: 'green',
+        border: 'solid black 1px',
+        // overflow: 'hidden',
+    }
+
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
+
+    const layout = [
+        {i: 'a', x: 0, y: 0, w: 6, h: 6},
+        {i: 'b', x: 6, y: 0, w: 6, h: 6, minW: 2, maxW: 4},
+        {i: 'c', x: 0, y: 7, w: 12, h: 4}
+      ];
 
     return (
         <DataContext toLoad={toLoad}>
@@ -29,37 +44,23 @@ function CsvPage({toLoad, screen}) {
             <div style={{display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%'}}>
                 <Drawer />
                 <main className="column" style={mainStyle}>
-                    <div style={{height: 300, background: '', flex: '1 1 auto', display: 'flex', flexDirection: 'row',}}>
-                        <div style={{ flex: '1 1 50%'}} >
-                            {screen &&
-                                <Screen
-                                    screenId={screen}
-                                    selectedIds={selectedIds}
-                                    setSelectedIds={setSelectedIds}
-                                />
-                            }
-                            <PlotContainer
-                                selectedIds={selectedIds}
-                                setSelectedIds={setSelectedIds}
-                            />
-                        </div>
-                        <div style={{ flex: '1 1 50%', overflow: 'auto'}} >
-                            <Images
-                                selectedIds={selectedIds}
-                                setSelectedIds={setSelectedIds}
-                                sortBy={sortBy}
-                                sortReverse={sortReverse} />
-                        </div>
-                    </div>
-                    <div style={{overflow: 'auto', flexGrow: 0, flexShrink: 0, height: 310}}>
-                        <SimpleTable
-                            setSelectedIds={setSelectedIds} 
-                            selectedIds={selectedIds}
-                            sortBy={sortBy}
-                            setSortBy={setSortBy}
-                            sortReverse={sortReverse}
-                            setSortReverse={setSortReverse} />
-                    </div>
+                
+                
+
+      <ReactGridLayout className="layout" layout={layout} cols={12} rowHeight={50} width={1200}>
+        <div key="a" style={cellStyle}>
+            <PlotContainer
+                selectedIds={selectedIds}
+                setSelectedIds={setSelectedIds}
+            />
+        </div>
+        <div key="b" style={cellStyle}>b</div>
+        <div key="c" style={cellStyle}>c</div>
+      </ReactGridLayout>
+
+
+                
+                    
                 </main>
             </div>
         </DataContext>

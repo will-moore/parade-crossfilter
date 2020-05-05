@@ -95,13 +95,13 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div>
+        <div style={{'width': '100%'}}>
             <Plot
                 data={plotData}
+                config={{responsive: true, displayModeBar: true}}
                 layout={{
-                    showlegend: Boolean(groupBy),
-                    width: 520,
-                    height: 340, 
+                    autosize: true,
+                    showlegend: Boolean(groupBy), 
                     xaxis: {
                         title: {
                           text: xAxis,
