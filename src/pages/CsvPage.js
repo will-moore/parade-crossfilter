@@ -24,6 +24,7 @@ function CsvPage({toLoad, screen}) {
 
     const cellStyle = {
         // background: 'green',
+        padding: 5,
         border: 'solid #ccc 1px',
         // overflow: 'hidden',
     }
@@ -33,7 +34,7 @@ function CsvPage({toLoad, screen}) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const layout = [
-        {i: 'a', x: 0, y: 0, w: 6, h: 6},
+        {i: 'a', x: 0, y: 0, w: 6, h: 7},
         {i: 'b', x: 6, y: 0, w: 6, h: 6, minW: 2, maxW: 4},
         {i: 'c', x: 0, y: 7, w: 12, h: 4}
       ];

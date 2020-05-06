@@ -49,24 +49,8 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div style={{ position: 'relative'}}>
-            {
-                xAxis.type === 'number' ? (
-                    <ScatterPlot
-                        xAxis={xAxis.name}
-                        yAxis={yAxis.name}
-                        groupBy={groupBy}
-                        selectedIds={selectedIds}
-                        setSelectedIds={setSelectedIds}
-                    />) : (
-                    <BoxPlot
-                        xAxis={xAxis.name}
-                        yAxis={yAxis.name}
-                        setSelectedIds={setSelectedIds}
-                    />)
-            }
-
-            <div style={{position: 'absolute', marginTop: 10, top: 0}}>
+        <div>
+            <div style={{marginTop: 10}}>
                 <label style={labelStyle}>Y: </label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
@@ -104,6 +88,22 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                     }
                 </select>
             </div>
+
+            {
+                xAxis.type === 'number' ? (
+                    <ScatterPlot
+                        xAxis={xAxis.name}
+                        yAxis={yAxis.name}
+                        groupBy={groupBy}
+                        selectedIds={selectedIds}
+                        setSelectedIds={setSelectedIds}
+                    />) : (
+                    <BoxPlot
+                        xAxis={xAxis.name}
+                        yAxis={yAxis.name}
+                        setSelectedIds={setSelectedIds}
+                    />)
+            }
         </div>
     )
 }

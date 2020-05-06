@@ -101,7 +101,14 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
                 config={{responsive: true, displayModeBar: true}}
                 layout={{
                     autosize: true,
-                    showlegend: Boolean(groupBy), 
+                    showlegend: Boolean(groupBy),
+                    margin: {
+                        l: 60,
+                        r: 10,
+                        b: 40,
+                        t: 40,
+                        pad: 4
+                    },
                     xaxis: {
                         title: {
                           text: xAxis,
