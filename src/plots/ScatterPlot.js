@@ -2,7 +2,7 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
+const ScatterPlot = ({height, xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
@@ -95,44 +95,43 @@ const ScatterPlot = ({xAxis, yAxis, groupBy, selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div style={{'width': '100%'}}>
-            <Plot
-                data={plotData}
-                config={{responsive: true, displayModeBar: true}}
-                layout={{
-                    autosize: true,
-                    showlegend: Boolean(groupBy),
-                    margin: {
-                        l: 60,
-                        r: 10,
-                        b: 40,
-                        t: 40,
-                        pad: 4
-                    },
-                    xaxis: {
-                        title: {
-                          text: xAxis,
-                          font: {
-                            family: 'Courier New, monospace',
-                            size: 18,
-                            color: '#7f7f7f'
-                          }
-                        },
-                      },
-                      yaxis: {
-                        title: {
-                          text: yAxis,
-                          font: {
-                            family: 'Courier New, monospace',
-                            size: 18,
-                            color: '#7f7f7f'
-                          }
+        <Plot
+            style={{width: "100%", height: height}}
+            data={plotData}
+            config={{responsive: true, displayModeBar: true}}
+            layout={{
+                autosize: true,
+                showlegend: Boolean(groupBy),
+                margin: {
+                    l: 60,
+                    r: 10,
+                    b: 40,
+                    t: 40,
+                    pad: 4
+                },
+                xaxis: {
+                    title: {
+                        text: xAxis,
+                        font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
                         }
-                      }
-                } }
-                onSelected={handleSelected}
-            />
-        </div>
+                    },
+                    },
+                    yaxis: {
+                    title: {
+                        text: yAxis,
+                        font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
+                        }
+                    }
+                    }
+            } }
+            onSelected={handleSelected}
+        />
     );
 };
 

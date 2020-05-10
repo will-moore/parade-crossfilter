@@ -2,7 +2,7 @@
 import React from "react";
 import Plot from 'react-plotly.js';
 
-const PlotlyPlot = ({data, layout, config, onSelected}) => {
+const PlotlyPlot = ({data, layout, config, onSelected, style}) => {
     // This whole component wraps the Plotly <Plot> simply to prevent
     // loss of the current x and y ranges on re-render...
 
@@ -47,7 +47,7 @@ const PlotlyPlot = ({data, layout, config, onSelected}) => {
                 onUpdate={handleUpdate}
                 onSelected={onSelected}
                 useResizeHandler={true}
-                style={{width: "100%", height: 300}}
+                style={style}
             />
         </div>
     );

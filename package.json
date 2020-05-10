@@ -22,6 +22,7 @@
     "react-grid-layout": "^0.18.3",
     "react-plotly.js": "^2.4.0",
     "react-scripts": "3.1.1",
+    "react-sizeme": "^2.6.12",
     "react-window": "^1.8.5",
     "typescript": "^3.8.3"
   },

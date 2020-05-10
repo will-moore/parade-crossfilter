@@ -1,4 +1,5 @@
 import React from "react";
+import sizeMe from 'react-sizeme'
 // import ScatterPlot from "./ScatterPlot";
 import ScatterPlot from "./ScatterPlot";
 import BoxPlot from "./BoxPlot";
@@ -8,7 +9,8 @@ import { CXContext } from "../crossfilter/DataContext";
 
 const labelStyle = {marginLeft: 10, marginRight: 5};
 
-const PlotContainer = ({selectedIds, setSelectedIds}) => {
+// size props come from sizeMe() HOC below
+const PlotContainer = ({size, selectedIds, setSelectedIds}) => {
 
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
@@ -49,8 +51,8 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div>
-            <div style={{marginTop: 10}}>
+        <div style={{height: '100%', padding: 5}}>
+            <div style={{paddingTop: 5, position: 'absolute', zIndex:10}}>
                 <label style={labelStyle}>Y: </label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
@@ -88,10 +90,11 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                     }
                 </select>
             </div>
-
+            <div style={{width: 'calc(100% - 10px)', position: 'absolute', top: 49, zIndex:1}}>
             {
                 xAxis.type === 'number' ? (
                     <ScatterPlot
+                        height={size.height - 60}
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
                         groupBy={groupBy}
@@ -99,13 +102,16 @@ const PlotContainer = ({selectedIds, setSelectedIds}) => {
                         setSelectedIds={setSelectedIds}
                     />) : (
                     <BoxPlot
+                        height={size.height - 60}
                         xAxis={xAxis.name}
                         yAxis={yAxis.name}
                         setSelectedIds={setSelectedIds}
                     />)
             }
+            </div>
         </div>
     )
 }
 
-export default PlotContainer;
+// Wrap component in sizeMe so we get 'size' props
+export default sizeMe({ monitorHeight: true })(PlotContainer);

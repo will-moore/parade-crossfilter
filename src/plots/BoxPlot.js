@@ -2,7 +2,7 @@ import React from "react";
 import Plot from './Plot';
 import { CXContext } from "../crossfilter/DataContext";
 
-const BoxPlot = ({xAxis, yAxis}) => {
+const BoxPlot = ({height, xAxis, yAxis}) => {
 
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
@@ -55,36 +55,28 @@ const BoxPlot = ({xAxis, yAxis}) => {
     }
 
     return (
-        <div>
-            <Plot
-                data={plotData}
-                layout={{
-                    showlegend: false,
-                    width: 520,
-                    height: 340, 
-                    xaxis: {
-                        title: {
-                          text: xAxis,
-                          font: {
-                            family: 'Courier New, monospace',
-                            size: 18,
-                            color: '#7f7f7f'
-                          }
-                        },
-                      },
-                      yaxis: {
-                        title: {
-                          text: yAxis,
-                          font: {
-                            family: 'Courier New, monospace',
-                            size: 18,
-                            color: '#7f7f7f'
-                          }
+        <Plot
+            style={{width: "100%", height: height}}
+            config={{responsive: true, displayModeBar: true}}
+            data={plotData}
+            layout={{
+                autosize: true,
+                showlegend: false,
+                xaxis: {
+                    title: {},
+                },
+                yaxis: {
+                    title: {
+                        text: yAxis,
+                        font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f'
                         }
-                      }
-                } }
-            />
-        </div>
+                    }
+                }
+            } }
+        />
     );
 };
 
