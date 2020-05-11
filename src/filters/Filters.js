@@ -18,7 +18,7 @@ const Filters = () => {
 
     return (
 
-        <div className="sidebar-sticky">
+        <div>
             <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                 <span>Filters</span>
             </h6>
