@@ -32,9 +32,9 @@ function CsvPage({toLoad, screen}) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const layout = [
-        {i: 'a', x: 0, y: 0, w: 6, h: 7},
-        {i: 'b', x: 6, y: 0, w: 6, h: 6, minW: 4, maxW: 6},
-        {i: 'c', x: 0, y: 7, w: 12, h: 4}
+        {i: 'a', x: 0, y: 0, w: 6, h: 7, minW: 4},
+        {i: 'b', x: 7, y: 0, w: 6, h: 7, minW: 4},
+        {i: 'c', x: 0, y: 7, w: 12, h: 6}
       ];
 
     return (
@@ -55,6 +55,16 @@ function CsvPage({toLoad, screen}) {
         </div>
         <div key="b" style={cellStyle}>
             <SizeMe monitorHeight>{({ size }) => <div style={{height: '100%', background: 'yellow' }}>WIDTH {size.width}px, HEIGHT {size.height}px</div>}</SizeMe>
+        </div>
+        <div key="c" style={cellStyle}>
+            <SimpleTable
+                setSelectedIds={setSelectedIds} 
+                selectedIds={selectedIds}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortReverse={sortReverse}
+                setSortReverse={setSortReverse}
+            />
         </div>
         
       </ReactGridLayout>

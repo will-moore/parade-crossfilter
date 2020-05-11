@@ -120,7 +120,7 @@ const SimpleTable = ({selectedIds, setSelectedIds,
     const colWidth = 100;
 
     return (
-        <div>
+        <div style={{width: 'calc(100%-10px)', height: '100%', padding: '0 5px', margin: 2, overflowX: 'auto'}}>
             <Grid
                 height={35}
                 columnCount={colNames.length}
