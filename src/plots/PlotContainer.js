@@ -52,7 +52,7 @@ const PlotContainer = ({size, selectedIds, setSelectedIds}) => {
 
     return (
         <div style={{height: '100%', padding: 5}}>
-            <div style={{paddingTop: 5, position: 'absolute', zIndex:10}}>
+            <div style={{paddingTop: 5, position: 'absolute', zIndex:10, fontSize: '90%'}}>
                 <label style={labelStyle}>Y: </label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
