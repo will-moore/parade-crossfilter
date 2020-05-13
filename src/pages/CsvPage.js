@@ -54,7 +54,12 @@ function CsvPage({toLoad, screen}) {
             />
         </div>
         <div key="b" style={cellStyle}>
-            <SizeMe monitorHeight>{({ size }) => <div style={{height: '100%', background: 'yellow' }}>WIDTH {size.width}px, HEIGHT {size.height}px</div>}</SizeMe>
+            <Images
+                selectedIds={selectedIds}
+                setSelectedIds={setSelectedIds}
+                sortBy={sortBy}
+                sortReverse={sortReverse}
+            />
         </div>
         <div key="c" style={cellStyle}>
             <SimpleTable

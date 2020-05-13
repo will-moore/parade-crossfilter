@@ -3,20 +3,23 @@ import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 import ImageViewer from './ImageViewer';
+import sizeMe from 'react-sizeme'
 
 const imgStyle = {
     padding: 2,
-    height: '100%',
+    width: '100%',
     maxWidth: '100%',
     maxHeight: '100%',
 }
 
-const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse}) => {
+const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse, size}) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
     const ndx = context.ndx;
     const columns = context.columns;
+    const thumbSize = 192;
+
     React.useEffect(() => {
 
         // Initial load
@@ -59,8 +62,23 @@ const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse}) => {
             .join("   ");
     }
 
+    // If ONLY 1 Image selected - show ImageViewer
+    if (selectedIds.length === 1) {
+        let rowID = selectedIds[0];
+        let selectedRows = filteredData.filter(row => row._rowID === rowID);
+        if (selectedRows.length === 1) {
+            return (
+                <ImageViewer rowData={selectedRows[0]} />
+            )
+        }
+    }
+
+    // Otherwise show thumbnails...
+    const width = size.width;
+    const colCount = parseInt(width/thumbSize);
+
     const Cell = ({ columnIndex, rowIndex, style }) => {
-        let row = filteredData[(rowIndex * 2) + columnIndex];
+        let row = filteredData[(rowIndex * colCount) + columnIndex];
         if (!row) return (<span></span>)
         return (
             <div style={{...style}}>
@@ -74,36 +92,27 @@ const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse}) => {
         )
     }
 
-    // If ONLY 1 Image selected - show ImageViewer
-    if (selectedIds.length === 1) {
-        let rowID = selectedIds[0];
-        let selectedRows = filteredData.filter(row => row._rowID === rowID);
-        if (selectedRows.length === 1) {
-            return (
-                <ImageViewer rowData={selectedRows[0]} />
-            )
-        }
-    }
-
-    // Otherwise show thumbnails...
     return (
-        <div>
-            <h6 className="text-muted px-3" style={{'marginTop': '0.7rem'}}>
+        <div style={{width:'100%', height:'100%'}}>
+            <h6 className="text-muted px-3" style={{'paddingTop': '0.7rem'}}>
                 { filteredData.length }
                 {selectedIds.length > 0 ? ' selected' : ' rows'}
             </h6>
-            <Grid
-                height={500}
-                columnCount={2}
-                columnWidth={250}
-                rowCount={Math.ceil(filteredData.length/2)}
-                rowHeight={170}
-                width={510}
-            >
-                {Cell}
-            </Grid>
+            <div style={{width:'100%', position: 'absolute', top: 40}}>
+                <Grid
+                    height={size.height - 40}
+                    columnCount={colCount}
+                    columnWidth={thumbSize}
+                    rowCount={Math.ceil(filteredData.length/colCount)}
+                    rowHeight={thumbSize}
+                    width={width}
+                >
+                    {Cell}
+                </Grid>
+            </div>
         </div>
     );
 };
 
-export default Images;
+// Wrap component in sizeMe so we get 'size' props
+export default sizeMe({ monitorHeight: true })(Images);
