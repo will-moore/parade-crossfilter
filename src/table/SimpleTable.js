@@ -4,16 +4,16 @@ import sizeMe from 'react-sizeme'
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSort, faSortUp, faSortDown} from '@fortawesome/free-solid-svg-icons';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
-const headerStyle={
+const headerStyle = {
     cursor: 'pointer',
 }
 
-const SimpleTable = ({selectedIds, setSelectedIds,
-                      sortBy, setSortBy,
-                      sortReverse, setSortReverse,
-                      size}) => {
+const SimpleTable = ({ selectedIds, setSelectedIds,
+    sortBy, setSortBy,
+    sortReverse, setSortReverse,
+    size }) => {
 
     const context = React.useContext(CXContext);
     const colNames = context.columns.map(c => c.name);
@@ -81,8 +81,8 @@ const SimpleTable = ({selectedIds, setSelectedIds,
     }
 
     const sortIcon = (name) => (
-        name !== sortBy ? faSort:
-            sortReverse ? faSortUp: faSortDown
+        name !== sortBy ? faSort :
+            sortReverse ? faSortUp : faSortDown
     )
 
     const isSelected = (rowIndex) => (
@@ -90,9 +90,9 @@ const SimpleTable = ({selectedIds, setSelectedIds,
     )
 
     const Header = ({ columnIndex, rowIndex, style }) => (
-        <div style={{...style, ...headerStyle}} onClick={() => handleHeaderClick(columnIndex)}>
+        <div style={{ ...style, ...headerStyle }} onClick={() => handleHeaderClick(columnIndex)}>
             {colNames[columnIndex]}
-            <FontAwesomeIcon icon={sortIcon(colNames[columnIndex])} style={{marginLeft: 3}} />
+            <FontAwesomeIcon icon={sortIcon(colNames[columnIndex])} style={{ marginLeft: 3 }} />
         </div>
     );
 
@@ -104,9 +104,11 @@ const SimpleTable = ({selectedIds, setSelectedIds,
             displayVal = value.toPrecision(4);
         }
         return (
-            <div style={{...style,
-                    background: isSelected(rowIndex) ? '#b1b3f4': 'white',
-                    padding: 5}}
+            <div style={{
+                ...style,
+                background: isSelected(rowIndex) ? '#b1b3f4' : 'white',
+                padding: 5
+            }}
                 onClick={() => handleRowClick(rowIndex)}
                 className="table_cell"
                 title={value}
@@ -115,13 +117,13 @@ const SimpleTable = ({selectedIds, setSelectedIds,
                 {colNames[columnIndex] === 'Image' &&
                     <img
                         alt="Thumbnail"
-                        src={`${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/`}
+                        src={`${window.OMEROWEB_INDEX}webclient/render_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/`}
                     />
                 }
                 {colNames[columnIndex] === 'Shape' &&
                     <img
                         alt="Shape Thumbnail"
-                        src={`${ window.OMEROWEB_INDEX }webgateway/render_shape_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/?color=ff0`}
+                        src={`${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${filteredData[rowIndex][colNames[columnIndex]]}/?color=ff0`}
                     />
                 }
             </div>
@@ -131,7 +133,7 @@ const SimpleTable = ({selectedIds, setSelectedIds,
     const colWidth = 100;
 
     return (
-        <div style={{width: 'calc(100%-10px)', height: '100%', padding: '0 5px', margin: 2, overflowX: 'auto'}}>
+        <div style={{ width: 'calc(100%-10px)', height: '100%', padding: '0 5px', margin: 2, overflowX: 'auto' }}>
             <Grid
                 height={35}
                 columnCount={colNames.length}

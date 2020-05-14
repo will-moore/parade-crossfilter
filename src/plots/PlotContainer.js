@@ -7,10 +7,10 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import { CXContext } from "../crossfilter/DataContext";
 
-const labelStyle = {marginLeft: 10, marginRight: 5};
+const labelStyle = { marginLeft: 10, marginRight: 5 };
 
 // size props come from sizeMe() HOC below
-const PlotContainer = ({size, selectedIds, setSelectedIds}) => {
+const PlotContainer = ({ size, selectedIds, setSelectedIds }) => {
 
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
@@ -51,8 +51,8 @@ const PlotContainer = ({size, selectedIds, setSelectedIds}) => {
     }
 
     return (
-        <div style={{height: '100%', padding: 5}}>
-            <div style={{paddingTop: 5, position: 'absolute', zIndex:10, fontSize: '90%'}}>
+        <div style={{ height: '100%', padding: 5 }}>
+            <div style={{ paddingTop: 5, position: 'absolute', zIndex: 10, fontSize: '90%' }}>
                 <label style={labelStyle}>Y: </label>
                 <select onChange={handleChangeY} value={yAxis.name}>
                     {numberCols.map(col => (
@@ -90,24 +90,26 @@ const PlotContainer = ({size, selectedIds, setSelectedIds}) => {
                     }
                 </select>
             </div>
-            <div style={{width: 'calc(100% - 10px)', position: 'absolute', top: 49, zIndex:1}}>
-            {
-                xAxis.type === 'number' ? (
-                    <ScatterPlot
-                        height={size.height - 60}
-                        xAxis={xAxis.name}
-                        yAxis={yAxis.name}
-                        groupBy={groupBy}
-                        selectedIds={selectedIds}
-                        setSelectedIds={setSelectedIds}
-                    />) : (
-                    <BoxPlot
-                        height={size.height - 60}
-                        xAxis={xAxis.name}
-                        yAxis={yAxis.name}
-                        setSelectedIds={setSelectedIds}
-                    />)
-            }
+            <div style={{ width: 'calc(100% - 10px)', position: 'absolute', top: 49, zIndex: 1 }}
+                className="draggableCancel"
+            >
+                {
+                    xAxis.type === 'number' ? (
+                        <ScatterPlot
+                            height={size.height - 60}
+                            xAxis={xAxis.name}
+                            yAxis={yAxis.name}
+                            groupBy={groupBy}
+                            selectedIds={selectedIds}
+                            setSelectedIds={setSelectedIds}
+                        />) : (
+                            <BoxPlot
+                                height={size.height - 60}
+                                xAxis={xAxis.name}
+                                yAxis={yAxis.name}
+                                setSelectedIds={setSelectedIds}
+                            />)
+                }
             </div>
         </div>
     )

@@ -12,7 +12,7 @@ const imgStyle = {
     maxHeight: '100%',
 }
 
-const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse, size}) => {
+const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
@@ -50,15 +50,15 @@ const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse, size}) => {
     }
 
     const imgSrc = (row) => (
-        row.Shape ? `${ window.OMEROWEB_INDEX }webgateway/render_shape_thumbnail/${ row.Shape }/?color=ff0` :
-        row.Image ? `${ window.OMEROWEB_INDEX }webclient/render_thumbnail/${ row.Image }/` :
-        ''
+        row.Shape ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${row.Shape}/?color=ff0` :
+            row.Image ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${row.Image}/` :
+                ''
     )
 
     const getTitle = (row) => {
         return columns.map(col => col.name)
             .filter(k => ("" + row[k]).length > 0)
-            .map(k => `${ k }: ${ row[k] }`)
+            .map(k => `${k}: ${row[k]}`)
             .join("   ");
     }
 
@@ -75,13 +75,13 @@ const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse, size}) => {
 
     // Otherwise show thumbnails...
     const width = size.width;
-    const colCount = parseInt(width/thumbSize);
+    const colCount = parseInt(width / thumbSize);
 
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let row = filteredData[(rowIndex * colCount) + columnIndex];
         if (!row) return (<span></span>)
         return (
-            <div style={{...style}}>
+            <div style={{ ...style }}>
                 <img
                     title={getTitle(row)}
                     onClick={() => setSelectedIds([row._rowID])}
@@ -93,17 +93,17 @@ const Images = ({selectedIds, setSelectedIds, sortBy, sortReverse, size}) => {
     }
 
     return (
-        <div style={{width:'100%', height:'100%'}}>
-            <h6 className="text-muted px-3" style={{'paddingTop': '0.7rem'}}>
-                { filteredData.length }
+        <div style={{ width: '100%', height: '100%' }}>
+            <h6 className="text-muted px-3" style={{ 'paddingTop': '0.7rem' }}>
+                {filteredData.length}
                 {selectedIds.length > 0 ? ' selected' : ' rows'}
             </h6>
-            <div style={{width:'100%', position: 'absolute', top: 40}}>
+            <div style={{ width: '100%', position: 'absolute', top: 40 }}>
                 <Grid
                     height={size.height - 40}
                     columnCount={colCount}
                     columnWidth={thumbSize}
-                    rowCount={Math.ceil(filteredData.length/colCount)}
+                    rowCount={Math.ceil(filteredData.length / colCount)}
                     rowHeight={thumbSize}
                     width={width}
                 >
