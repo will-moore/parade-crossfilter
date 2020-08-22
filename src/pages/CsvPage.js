@@ -5,8 +5,6 @@ import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
 import Images from '../images/Images';
 import { DataContext } from '../crossfilter/DataContext';
-import Header from './Header';
-import Screen from '../screen/Screen';
 
 import RGL, { WidthProvider } from "react-grid-layout";
 const ReactGridLayout = WidthProvider(RGL);
@@ -21,20 +19,26 @@ function CsvPage({ toLoad, screen }) {
         flexDirection: 'column',
         width: '200',
         overflow: 'auto',
+        background: 'rgb(240, 240, 240)',
     }
 
     const cellStyle = {
-        border: 'solid #ccc 1px',
+        border: 'solid rgb(240, 240, 240) 1px',
+        background: 'white',
+        borderRadius: '6px',
+        padding: 15,
     }
 
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
 
+
     const layout = [
-        { i: 'a', x: 0, y: 0, w: 6, h: 7, minW: 4 },
-        { i: 'b', x: 7, y: 0, w: 6, h: 7, minW: 4 },
-        { i: 'c', x: 0, y: 7, w: 12, h: 6 }
+        { i: 'a', x: 0, y: 0, w: 8, h: 8, minW: 4 },
+        { i: 'b', x: 10, y: 0, w: 4, h: 8, minW: 4 },
+        { i: 'c', x: 0, y: 7, w: 12, h: 8 },
+        { i: 'screen', x: 0, y: 5, w: 3, h: 5 }
     ];
 
     return (
@@ -48,6 +52,18 @@ function CsvPage({ toLoad, screen }) {
                         draggableCancel=".draggableCancel"
                         className="layout"
                         layout={layout} cols={12} rowHeight={45} >
+
+                        {/* {screen &&
+                            <div
+                                key="screen"
+                                style={cellStyle}>
+                                <Screen
+                                    screenId={screen}
+                                    selectedIds={selectedIds}
+                                    setSelectedIds={setSelectedIds}
+                                />
+                            </div>
+                        } */}
                         <div
                             key="a"
                             style={cellStyle}>

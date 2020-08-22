@@ -12,13 +12,14 @@ const imgStyle = {
     maxHeight: '100%',
 }
 
+// size props come from sizeMe() HOC below
 const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
     const ndx = context.ndx;
     const columns = context.columns;
-    const thumbSize = 192;
+    let thumbSize = 192;
 
     React.useEffect(() => {
 
@@ -75,7 +76,12 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
 
     // Otherwise show thumbnails...
     const width = size.width;
-    const colCount = parseInt(width / thumbSize);
+    const colCount = parseInt(Math.round(width / thumbSize));
+    // adjust thumbSize to fit columns
+    thumbSize = width/colCount;
+    // Known dimensions of roi-thumbnails
+    const roiThumbAspect = 250 / 166;
+    const thumbHeight = thumbSize / roiThumbAspect;
 
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let row = filteredData[(rowIndex * colCount) + columnIndex];
@@ -104,7 +110,7 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
                     columnCount={colCount}
                     columnWidth={thumbSize}
                     rowCount={Math.ceil(filteredData.length / colCount)}
-                    rowHeight={thumbSize}
+                    rowHeight={thumbHeight}
                     width={width}
                 >
                     {Cell}
