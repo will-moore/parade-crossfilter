@@ -42,7 +42,6 @@ const ScatterPlot = ({height, xAxis, yAxis, groupBy, selectedIds, setSelectedIds
             // we group them into 2 "traces".
             let bins = {'selected': [], ' ': []}
             rows.forEach(row => {
-                let binName = row[groupBy];
                 if (selectedIds.indexOf(row._rowID) > -1) {
                     bins.selected.push({x: row[xAxis], y: row[yAxis], id: row._rowID});
                 } else {

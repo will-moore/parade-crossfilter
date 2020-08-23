@@ -31,7 +31,7 @@ const ImagePlane = ({imgData, roiData, rowData}) => {
                 setCentre({x: imgData.size.width/2, y: imgData.size.height/2});
             }
         }
-    }, [imgData, roiData]);
+    }, [imgData, roiData, bigImageViewportSize]);
 
     const handleZoomClick = (event) => {
         if (event.target.value === '+') {

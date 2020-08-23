@@ -48,7 +48,7 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
                 rowIndex: selectedIndexes[0],
             });
         }
-    }, [selectedIds, sortBy, sortReverse]);
+    }, [selectedIds, sortBy, sortReverse, filteredData]);
 
     if (sortBy) {
         let rev = (sortReverse ? -1 : 1);

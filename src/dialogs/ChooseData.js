@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { getUrlParameter, filesizeformat} from '../utils';
+import {filesizeformat} from '../utils';
 
 
 function ChooseData({project, screen, setDataToLoad}) {
@@ -11,7 +11,7 @@ function ChooseData({project, screen, setDataToLoad}) {
     // dialog state
     const [show, setShow] = React.useState(true);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    // const handleShow = () => setShow(true);
 
 
     // let dtype = 'project';

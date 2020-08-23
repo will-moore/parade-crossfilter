@@ -112,10 +112,7 @@ export function parseMapAnns(mapAnnsInfo) {
     }, new Set());
 
     // Set to list
-    let colnames = [];
-    for (let name of colnamesSet.values()) {
-        colnames.push(name);
-    }
+    let colnames = [...colnamesSet.values()];
 
     return parseData(rows, colnames);
 }

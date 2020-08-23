@@ -1,5 +1,4 @@
 import React from 'react';
-import { SizeMe } from 'react-sizeme';
 import Drawer from '../Drawer.js'
 import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
