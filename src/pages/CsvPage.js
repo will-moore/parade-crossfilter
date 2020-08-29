@@ -45,9 +45,9 @@ function CsvPage({ toLoad, screen }) {
     const screenW = showScreen ? 8 : 0
 
     const layout = [
-        { i: 'a', x: 0, y: 0, w: 8, h: plotH, minW: 4 },
-        { i: 'b', x: 10, y: 0, w: 4, h: imgsH, minW: 4 },
-        { i: 'c', x: 0, y: 7, w: 12, h: tableH },
+        { i: 'plot', x: 0, y: 0, w: 8, h: plotH, minW: 4 },
+        { i: 'images', x: 10, y: 0, w: 4, h: imgsH, minW: 4 },
+        { i: 'table', x: 0, y: 7, w: 12, h: tableH },
         { i: 'screen', x: 0, y: 5, w: screenH, h: screenH }
     ];
 
@@ -59,6 +59,49 @@ function CsvPage({ toLoad, screen }) {
                     selectedIds={selectedIds}
                     setSelectedIds={setSelectedIds}
                 />
+        )
+    }
+
+    const plot = (
+        <PlotContainer
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+        />)
+    const images = (
+        <Images
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            sortBy={sortBy}
+            sortReverse={sortReverse}
+        />
+    )
+    const table = (
+        <SimpleTable
+            setSelectedIds={setSelectedIds}
+            selectedIds={selectedIds}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            sortReverse={sortReverse}
+            setSortReverse={setSortReverse}
+        />
+    )
+    const panels = {
+        'plot': plot,
+        'images': images,
+        'table': table,
+        'screen': screenComponent,
+    }
+
+    function createElement(el) {
+
+        return (
+            <div
+                key={el.i}
+                data-grid={el}
+                style={cellStyle}
+                >
+                {panels[el.i]}
+            </div>
         )
     }
 
@@ -80,39 +123,9 @@ function CsvPage({ toLoad, screen }) {
                         className="layout"
                         layout={layout} cols={12} rowHeight={45} >
 
-                        <div
-                            key="screen"
-                            style={cellStyle}>
-                            {screenComponent}
-                        </div>
-
-                        <div
-                            key="a"
-                            style={cellStyle}>
-                            <PlotContainer
-                                selectedIds={selectedIds}
-                                setSelectedIds={setSelectedIds}
-                            />
-                        </div>
-                        <div key="b" style={cellStyle}>
-                            <Images
-                                selectedIds={selectedIds}
-                                setSelectedIds={setSelectedIds}
-                                sortBy={sortBy}
-                                sortReverse={sortReverse}
-                            />
-                        </div>
-                        <div key="c" style={cellStyle}>
-                            <SimpleTable
-                                setSelectedIds={setSelectedIds}
-                                selectedIds={selectedIds}
-                                sortBy={sortBy}
-                                setSortBy={setSortBy}
-                                sortReverse={sortReverse}
-                                setSortReverse={setSortReverse}
-                            />
-                        </div>
-
+                        {
+                            layout.map(el => createElement(el))
+                        }
                     </ReactGridLayout>
 
 
