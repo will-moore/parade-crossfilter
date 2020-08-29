@@ -2,6 +2,7 @@ import React from 'react';
 import Drawer from '../Drawer.js'
 import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
+import Screen from '../screen/Screen';
 import Images from '../images/Images';
 import { DataContext } from '../crossfilter/DataContext';
 
@@ -31,14 +32,35 @@ function CsvPage({ toLoad, screen }) {
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
+    const [showScreen, setShowScreen] = React.useState(true);
 
+    const handleShowScreen = () => {
+        setShowScreen(!showScreen);
+    }
+
+    const plotH = showScreen ? 5 : 8;
+    const tableH = showScreen ? 6 : 8;
+    const imgsH = showScreen ? 10 : 8;
+    const screenH = showScreen ? plotH : 0;
+    const screenW = showScreen ? 8 : 0
 
     const layout = [
-        { i: 'a', x: 0, y: 0, w: 8, h: 8, minW: 4 },
-        { i: 'b', x: 10, y: 0, w: 4, h: 8, minW: 4 },
-        { i: 'c', x: 0, y: 7, w: 12, h: 8 },
-        { i: 'screen', x: 0, y: 5, w: 3, h: 5 }
+        { i: 'a', x: 0, y: 0, w: 8, h: plotH, minW: 4 },
+        { i: 'b', x: 10, y: 0, w: 4, h: imgsH, minW: 4 },
+        { i: 'c', x: 0, y: 7, w: 12, h: tableH },
+        { i: 'screen', x: 0, y: 5, w: screenH, h: screenH }
     ];
+
+    let screenComponent = undefined;
+    if (showScreen && screen) {
+        screenComponent = (
+                <Screen
+                    screenId={screen}
+                    selectedIds={selectedIds}
+                    setSelectedIds={setSelectedIds}
+                />
+        )
+    }
 
     return (
         <DataContext toLoad={toLoad}>
@@ -47,22 +69,23 @@ function CsvPage({ toLoad, screen }) {
                 <Drawer />
                 <main className="column" style={mainStyle}>
 
+                    <button
+                        style={{position: 'absolute', zIndex: 10}}
+                        onClick={handleShowScreen}>
+                        +
+                    </button>
+
                     <ReactGridLayout
                         draggableCancel=".draggableCancel"
                         className="layout"
                         layout={layout} cols={12} rowHeight={45} >
 
-                        {/* {screen &&
-                            <div
-                                key="screen"
-                                style={cellStyle}>
-                                <Screen
-                                    screenId={screen}
-                                    selectedIds={selectedIds}
-                                    setSelectedIds={setSelectedIds}
-                                />
-                            </div>
-                        } */}
+                        <div
+                            key="screen"
+                            style={cellStyle}>
+                            {screenComponent}
+                        </div>
+
                         <div
                             key="a"
                             style={cellStyle}>
