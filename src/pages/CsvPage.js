@@ -42,8 +42,8 @@ function CsvPage({ toLoad, screen }) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const [items, setItems] = React.useState([
-        { i: 'p1', type: 'plot', x: 0, y: 0, w: 8, h: 8, minW: 4 },
-        { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8, minW: 4 },
+        { i: 'p1', type: 'plot', x: 0, y: 0, w: 8, h: 8},
+        { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8},
         { i: 'p3', type: 'table', x: 0, y: 7, w: 12, h: 8 },
     ]);
 

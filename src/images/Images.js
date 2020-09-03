@@ -3,6 +3,7 @@ import React from "react";
 import { CXContext } from "../crossfilter/DataContext";
 import { FixedSizeGrid as Grid } from 'react-window';
 import ImageViewer from './ImageViewer';
+import RoiViewer from './RoiViewer';
 import sizeMe from 'react-sizeme'
 
 const imgStyle = {
@@ -68,9 +69,13 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
         let rowID = selectedIds[0];
         let selectedRows = filteredData.filter(row => row._rowID === rowID);
         if (selectedRows.length === 1) {
-            return (
-                <ImageViewer rowData={selectedRows[0]} />
-            )
+            if (selectedRows[0].ROI && Number.isInteger(selectedRows[0].ROI)) {
+                return <RoiViewer rowData={selectedRows[0]} />
+            } else {
+                return (
+                    <ImageViewer rowData={selectedRows[0]} />
+                )
+            }
         }
     }
 

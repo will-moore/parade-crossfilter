@@ -9,6 +9,7 @@ import './App.css';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import 'react-input-range/lib/css/index.css'
 
 function App() {
 
