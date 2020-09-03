@@ -30,6 +30,13 @@ function CsvPage({ toLoad, screen }) {
         padding: 15,
     }
 
+    const removeStyle = {
+        position: "absolute",
+        right: 3,
+        top: 0,
+        cursor: "pointer"
+    };
+
     const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
@@ -41,10 +48,15 @@ function CsvPage({ toLoad, screen }) {
     ]);
 
     function createItem(el) {
-        const i = el.add ? "+" : el.i;
+        const i = el.i;
         return (
             <div key={i} data-grid={el} style={cellStyle}>
                 {panels[el.type]}
+                <span
+                    className="remove"
+                    style={removeStyle}
+                    onClick={() => { onRemoveItem(i) }}
+                >X</span>
             </div>
         );
     }
@@ -65,6 +77,10 @@ function CsvPage({ toLoad, screen }) {
             h: height,
         };
         setItems([newPanel, ...l]);
+    }
+
+    function onRemoveItem(i) {
+        setItems(items.filter(panel => panel.i !== i));
     }
 
     const screenComponent = (
