@@ -16,25 +16,35 @@ export function groupCrossfilterData(data, columns, groupBy) {
     // We only want to group 'number' columns
     columns = columns.filter(c => c.type === 'number');
     dsGrouping.reduce(
-        function(prev, row) { // add
+        // ADDs rows to the group
+        function(prev, row) {
             columns.forEach(c => {
-                prev[c.name] = prev[c.name] + row[c.name];
+                prev[c.name].sum = prev[c.name].sum + row[c.name];
+                prev[c.name].max = Math.max(row[c.name], prev[c.name].max);
+                prev[c.name].min = Math.min(row[c.name], prev[c.name].min);
             });
-            prev.count = prev.count + 1;
+            prev.paradeRowCount = prev.paradeRowCount + 1;
             return prev;
         },
-        function(prev, row) { // remove - Don't expect this to be used
+        // REMOVES rows - Don't expect this to be used
+        function(prev, row) {
             columns.forEach(c => {
-                prev[c.name] = prev[c.name] - row[c.name];
+                prev[c.name].sum = prev[c.name].sum - row[c.name];
             });
-            prev.count = prev.count - 1;
+            prev.paradeRowCount = prev.paradeRowCount - 1;
             return prev;
         },
-        function() { // init
-            // for each columns, keep track of sum
-            let init = {count: 0};
+        // INIT the group
+        function() {
+            // We want to count total rows (to calcuate averages)
+            let init = {paradeRowCount: 0};
+            // And for each column, we want sum, min and max
             columns.forEach(c => {
-                init[c.name] = 0;
+                init[c.name] = {
+                    sum: 0,
+                    max: -Infinity,
+                    min: Infinity
+                };
             });
             return init;
         }
@@ -43,16 +53,23 @@ export function groupCrossfilterData(data, columns, groupBy) {
     let newColName = "Rows per " + groupBy;
 
     // Convert grouped data back to new 'table' (rows of objects)
-    let nonIntegerCols = {};
+    let minMaxRangeCols = {};
     let groupedTable = dsGrouping.all().map((group, idx) => {
         let row = {'_rowID': idx};
         row[groupBy] = group.key;
         // Add new column, e.g. 'Rows per Image': 10
-        row[newColName] = group.value.count;
+        row[newColName] = group.value.paradeRowCount;
         columns.forEach(c => {
-            row[c.name] = group.value[c.name] / group.value.count;
-            if (!nonIntegerCols[c.name] && !Number.isInteger(row[c.name])) {
-                nonIntegerCols[c.name] = true;
+            // Add average value
+            row[c.name] = group.value[c.name].sum / group.value.paradeRowCount;
+            // Add min/max values - note which columns have min-max range
+            let min = group.value[c.name].min;
+            let max = group.value[c.name].max;
+            row[`min ${c.name}`] = min;
+            row[`max ${c.name}`] = max;
+            row[`range ${c.name}`] = max - min;
+            if (min !== max) {
+                minMaxRangeCols[c.name] = true;
             }
         });
         return row;
@@ -62,10 +79,16 @@ export function groupCrossfilterData(data, columns, groupBy) {
     // E.g. group ROIs by Image - ROI column will contain average ROI IDs which makes no sense
     // BUT we don't want to remove e.g. Well ID column
     const idNames = ['Screen', 'Plate', 'Well', 'Project', 'Dataset', 'Image', 'ROI', 'Shape'];
-    let toRemove = idNames.filter(name => nonIntegerCols[name]);
+    let toRemove = idNames.filter(name => minMaxRangeCols[name]);
+    // remove min/max data for any columns where min==max
+    columns.forEach(col => {
+        if (!minMaxRangeCols[col.name]) {
+            toRemove.push(`min ${col.name}`);
+            toRemove.push(`max ${col.name}`);
+        }
+    });
 
-    // remove columns AND remove data
-    columns = columns.filter(c => toRemove.indexOf(c.name) === -1);
+    // remove data
     groupedTable = groupedTable.map(row => {
         toRemove.forEach(name => {
             delete row[name];
@@ -73,10 +96,24 @@ export function groupCrossfilterData(data, columns, groupBy) {
         return row;
     });
 
-    // Add new column
-    columns.splice(1, 0, {name: newColName, type: 'number'});
+    // Filter unwanted columns
+    columns = columns.filter(c => !toRemove.includes(c.name));
+    // Add min/max columns
+    let newColumns = [];
+    columns.forEach(col => {
+        // Keep the column itself, plus min/max as adjacent columns
+        newColumns.push(col);
+        if (minMaxRangeCols[col.name]) {
+            newColumns.push({name: `min ${col.name}`, type: 'number' });
+            newColumns.push({name: `max ${col.name}`, type: 'number' });
+            newColumns.push({ name: `range ${col.name}`, type: 'number' });
+        }
+    });
 
-    return {columns, data: groupedTable}
+    // Add new column
+    newColumns.splice(1, 0, {name: newColName, type: 'number'});
+
+    return { columns: newColumns, data: groupedTable}
 }
 
 
