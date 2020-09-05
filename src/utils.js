@@ -14,20 +14,30 @@ export function groupCrossfilterData(data, columns, groupBy) {
     let dsDim = crossfilter(data.all()).dimension(r => r[groupBy]);
     let dsGrouping = dsDim.group();
     // We only want to group 'number' columns
-    columns = columns.filter(c => c.type === 'number');
+    // columns = columns.filter(c => c.type === 'number');
     dsGrouping.reduce(
         // ADDs rows to the group
-        function(prev, row) {
+        function (prev, row) {
             columns.forEach(c => {
-                prev[c.name].sum = prev[c.name].sum + row[c.name];
-                prev[c.name].max = Math.max(row[c.name], prev[c.name].max);
-                prev[c.name].min = Math.min(row[c.name], prev[c.name].min);
+                if (c.type === 'number') {
+                    prev[c.name].sum = prev[c.name].sum + row[c.name];
+                    prev[c.name].max = Math.max(row[c.name], prev[c.name].max);
+                    prev[c.name].min = Math.min(row[c.name], prev[c.name].min);
+                } else {
+                    if (prev[c.name].text === undefined) {
+                        // init the value
+                        prev[c.name].text = row[c.name];
+                    } else if (prev[c.name].text !== row[c.name]) {
+                        // any mismatch in text - revert to '-'
+                        prev[c.name].text = '-'
+                    }
+                }
             });
             prev.paradeRowCount = prev.paradeRowCount + 1;
             return prev;
         },
         // REMOVES rows - Don't expect this to be used
-        function(prev, row) {
+        function (prev, row) {
             columns.forEach(c => {
                 prev[c.name].sum = prev[c.name].sum - row[c.name];
             });
@@ -35,15 +45,16 @@ export function groupCrossfilterData(data, columns, groupBy) {
             return prev;
         },
         // INIT the group
-        function() {
+        function () {
             // We want to count total rows (to calcuate averages)
-            let init = {paradeRowCount: 0};
+            let init = { paradeRowCount: 0 };
             // And for each column, we want sum, min and max
             columns.forEach(c => {
                 init[c.name] = {
                     sum: 0,
                     max: -Infinity,
-                    min: Infinity
+                    min: Infinity,
+                    text: undefined,
                 };
             });
             return init;
@@ -54,22 +65,30 @@ export function groupCrossfilterData(data, columns, groupBy) {
 
     // Convert grouped data back to new 'table' (rows of objects)
     let minMaxRangeCols = {};
+    let mismatchTextCols = {};
     let groupedTable = dsGrouping.all().map((group, idx) => {
-        let row = {'_rowID': idx};
+        let row = { '_rowID': idx };
         row[groupBy] = group.key;
         // Add new column, e.g. 'Rows per Image': 10
         row[newColName] = group.value.paradeRowCount;
         columns.forEach(c => {
-            // Add average value
-            row[c.name] = group.value[c.name].sum / group.value.paradeRowCount;
-            // Add min/max values - note which columns have min-max range
-            let min = group.value[c.name].min;
-            let max = group.value[c.name].max;
-            row[`min ${c.name}`] = min;
-            row[`max ${c.name}`] = max;
-            row[`range ${c.name}`] = max - min;
-            if (min !== max) {
-                minMaxRangeCols[c.name] = true;
+            if (c.type === 'number') {
+                // Add average value
+                row[c.name] = group.value[c.name].sum / group.value.paradeRowCount;
+                // Add min/max values - note which columns have min-max range
+                let min = group.value[c.name].min;
+                let max = group.value[c.name].max;
+                row[`min ${c.name}`] = min;
+                row[`max ${c.name}`] = max;
+                row[`range ${c.name}`] = max - min;
+                if (min !== max) {
+                    minMaxRangeCols[c.name] = true;
+                }
+            } else {
+                row[c.name] = group.value[c.name].text;
+                if (row[c.name] === '-') {
+                    mismatchTextCols[c.name] = true;
+                }
             }
         });
         return row;
@@ -87,6 +106,8 @@ export function groupCrossfilterData(data, columns, groupBy) {
             toRemove.push(`max ${col.name}`);
         }
     });
+    // remove any text columns which are '-'
+    toRemove = toRemove.concat(Object.keys(mismatchTextCols));
 
     // remove data
     groupedTable = groupedTable.map(row => {
@@ -104,16 +125,16 @@ export function groupCrossfilterData(data, columns, groupBy) {
         // Keep the column itself, plus min/max as adjacent columns
         newColumns.push(col);
         if (minMaxRangeCols[col.name]) {
-            newColumns.push({name: `min ${col.name}`, type: 'number' });
-            newColumns.push({name: `max ${col.name}`, type: 'number' });
+            newColumns.push({ name: `min ${col.name}`, type: 'number' });
+            newColumns.push({ name: `max ${col.name}`, type: 'number' });
             newColumns.push({ name: `range ${col.name}`, type: 'number' });
         }
     });
 
     // Add new column
-    newColumns.splice(1, 0, {name: newColName, type: 'number'});
+    newColumns.splice(1, 0, { name: newColName, type: 'number' });
 
-    return { columns: newColumns, data: groupedTable}
+    return { columns: newColumns, data: groupedTable }
 }
 
 
@@ -137,14 +158,14 @@ export function parseMapAnns(mapAnnsInfo) {
     });
     // For each Image or Well ID, we get a row
     let rows = Object.keys(imgData).map(iid => {
-        return {...imgData[iid]};
+        return { ...imgData[iid] };
     });
 
     // Various rows might have different keys (column names)
     // coming from Map Annotations...
     // Compile column names from keys of ALL rows
     let colnamesSet = rows.reduce((prev, row) => {
-        Object.keys(row).forEach(c => {prev.add(c)});
+        Object.keys(row).forEach(c => { prev.add(c) });
         return prev;
     }, new Set());
 
@@ -178,10 +199,12 @@ export function parseData(rows, colnames) {
         if (newName === 'well_id') {
             newName = 'Well';
         }
-        return {name: newName,
-                origName: name,
-                type: undefined,
-                empty: true};
+        return {
+            name: newName,
+            origName: name,
+            type: undefined,
+            empty: true
+        };
     });
 
     // Go through all rows in the table
@@ -230,11 +253,11 @@ export function parseData(rows, colnames) {
         return !col.empty;
     });
 
-    return {columns, parsedData}
+    return { columns, parsedData }
 }
 
-export function isInt(n){
-    return typeof n== "number" && isFinite(n) && n%1===0;
+export function isInt(n) {
+    return typeof n == "number" && isFinite(n) && n % 1 === 0;
 }
 
 export function filesizeformat(bytes, round) {
@@ -246,16 +269,16 @@ export function filesizeformat(bytes, round) {
 
     if (bytes < 1024) {
         return bytes + ' B';
-    } else if (bytes < (1024*1024)) {
+    } else if (bytes < (1024 * 1024)) {
         return (bytes / 1024).toFixed(round) + ' KB';
-    } else if (bytes < (1024*1024*1024)) {
-        return (bytes / (1024*1024)).toFixed(round) + ' MB';
-    } else if (bytes < (1024*1024*1024*1024)) {
-        return (bytes / (1024*1024*1024)).toFixed(round) + ' GB';
-    } else if (bytes < (1024*1024*1024*1024*1024)) {
-        return (bytes / (1024*1024*1024*1024)).toFixed(round) + ' TB';
+    } else if (bytes < (1024 * 1024 * 1024)) {
+        return (bytes / (1024 * 1024)).toFixed(round) + ' MB';
+    } else if (bytes < (1024 * 1024 * 1024 * 1024)) {
+        return (bytes / (1024 * 1024 * 1024)).toFixed(round) + ' GB';
+    } else if (bytes < (1024 * 1024 * 1024 * 1024 * 1024)) {
+        return (bytes / (1024 * 1024 * 1024 * 1024)).toFixed(round) + ' TB';
     } else {
-        return (bytes / (1024*1024*1024*1024*1024)).toFixed(round) + ' PB';
+        return (bytes / (1024 * 1024 * 1024 * 1024 * 1024)).toFixed(round) + ' PB';
     }
 
 };
@@ -271,6 +294,6 @@ export function getShapeBbox(roi) {
         let xMax = xx.reduce((prev, x) => Math.max(prev, x));
         let yMin = yy.reduce((prev, y) => Math.min(prev, y));
         let yMax = yy.reduce((prev, y) => Math.max(prev, y));
-        return {x:xMin, y:yMin, width:xMax-xMin, height: yMax-yMin}
+        return { x: xMin, y: yMin, width: xMax - xMin, height: yMax - yMin }
     }
 }
