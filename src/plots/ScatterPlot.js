@@ -7,6 +7,38 @@ const ScatterPlot = ({height, xAxis, yAxis, groupBy, selectedIds, setSelectedIds
     const context = React.useContext(CXContext);
     const ndx = context.ndx;
 
+    function cumulative(values) {
+        let rowCount = values.length;
+
+        // values should be sorted
+        let bins = histogram(values);
+
+        let data = bins.reduce((prev, value, index) => {
+            let total = 0;
+            if (index > 1) {
+                total = prev.y[index - 1]
+            }
+            prev.y.push(value + total);
+            prev.x.push(index);
+            return prev;
+        }, {x: [], y: []});
+
+        data.y = data.y.map(y => 100 * (y / rowCount));
+        return data;
+    }
+
+    function histogram(values, stepSize = 1) {
+        // values should be sorted
+        return values.reduce((bins, value) => {
+            let binIndex = Math.floor(value / stepSize);
+            while (binIndex > bins.length) {
+                bins.push(0);
+            }
+            bins[bins.length - 1] += 1;
+            return bins;
+        }, [0])
+    }
+
     const [rows, setData] = React.useState([]);
 
         let plotData = [];
@@ -27,9 +59,16 @@ const ScatterPlot = ({height, xAxis, yAxis, groupBy, selectedIds, setSelectedIds
                 let data = bins[name];
                 // sort points by x axis (in case it's a line plot)
                 data.sort((a, b) => a.x > b.x ? 1 : (a.x < b.x ? -1 : 0));
+                let xVals = data.map(d => d.x);
+                let yVals = data.map(d => d.y);
+                if (true) {
+                    const cumData = cumulative(xVals);
+                    xVals = cumData.x;
+                    yVals = cumData.y;
+                }
                 return {
-                    x: data.map(d => d.x),
-                    y: data.map(d => d.y),
+                    x: xVals,
+                    y: yVals,
                     customdata: data.map(d => d.id),
                     type: 'scattergl',
                     mode: 'lines+markers',
