@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {filesizeformat} from '../utils';
+import { filesizeformat } from '../utils';
 
 
-function ChooseData({project, screen, setDataToLoad}) {
+function ChooseData({ project, screen, setDataToLoad }) {
 
 
     // dialog state
@@ -25,11 +25,11 @@ function ChooseData({project, screen, setDataToLoad}) {
         setLoading(true);
         let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file`;
         if (project) {
-            url += `&project=${ project }`
+            url += `&project=${project}`
         } else if (screen) {
-            url += `&screen=${ screen }`
+            url += `&screen=${screen}`
         }
-        fetch(url, {mode: 'cors', credentials: 'include'})
+        fetch(url, { mode: 'cors', credentials: 'include' })
             .then(rsp => rsp.json())
             .then(data => {
                 setLoading(false);
@@ -91,60 +91,60 @@ function ChooseData({project, screen, setDataToLoad}) {
 
     return (
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Choose Data</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        {(!project && !screen) ? helpMsg : (
-            <Form>
-            <p value="">
-            { loading ? "Loading..." :
-            `Choose a CSV file linked to ${ project ? "Project" : "Screen" }:`}
-            </p>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Choose Data</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {(!project && !screen) ? helpMsg : (
+                    <Form>
+                        <p value="">
+                            {loading ? "Loading..." :
+                                `Choose a CSV file linked to ${project ? "Project" : "Screen"}:`}
+                        </p>
 
-        
-            <Form.Control as="select" multiple
-                onChange={handleChange}>
-                {fileAnns.map((ann) => (
-                    <option
-                        key={ann.id}
-                        value={ann.id}
-                    >
-                    {`${ ann.id}: ${ann.file.name} (${filesizeformat(ann.file.size)})`}
-                    </option>
-                ))}
-            </Form.Control>
 
-            <div className="mb-3">
-                <Form.Check 
-                  type="checkbox"
-                  name="mapAnns"
-                  onChange={handleMapAnns}
-                  label={"Load Key-Value Pairs"}
-                />
-            </div>
+                        <Form.Control as="select" multiple
+                            onChange={handleChange}>
+                            {fileAnns.map((ann) => (
+                                <option
+                                    key={ann.id}
+                                    value={ann.id}
+                                >
+                                    {`${ann.id}: ${ann.file.name} (${filesizeformat(ann.file.size)})`}
+                                </option>
+                            ))}
+                        </Form.Control>
 
-            <div className="mb-3">
-                <Form.Check 
-                  type="checkbox"
-                  name="datasets"
-                  onChange={handleDatasets}
-                  label={"Load Datasets"}
-                />
-            </div>
-            </Form>
-        )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+                        <div className="mb-3">
+                            <Form.Check
+                                type="checkbox"
+                                name="mapAnns"
+                                onChange={handleMapAnns}
+                                label={"Load Key-Value Pairs"}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <Form.Check
+                                type="checkbox"
+                                name="datasets"
+                                onChange={handleDatasets}
+                                label={"Load Datasets"}
+                            />
+                        </div>
+                    </Form>
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
           </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Load Data
+                <Button variant="primary" onClick={handleSubmit}>
+                    Load Data
           </Button>
-        </Modal.Footer>
-      </Modal>
+            </Modal.Footer>
+        </Modal>
 
     )
 }

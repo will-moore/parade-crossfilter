@@ -150,3 +150,7 @@ body {
   max-width: 142px;
   border: solid white 2px;
 }
+
+#add-panel-dropdown-button {
+  border-radius: 20px;
+}

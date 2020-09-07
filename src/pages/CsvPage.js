@@ -5,6 +5,10 @@ import PlotContainer from '../plots/PlotContainer';
 import Screen from '../screen/Screen';
 import Images from '../images/Images';
 import { DataContext } from '../crossfilter/DataContext';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+
 
 import RGL, { WidthProvider } from "react-grid-layout";
 const ReactGridLayout = WidthProvider(RGL);
@@ -42,8 +46,8 @@ function CsvPage({ toLoad, screen }) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const [items, setItems] = React.useState([
-        { i: 'p1', type: 'plot', x: 0, y: 0, w: 8, h: 8},
-        { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8},
+        { i: 'p1', type: 'plot', x: 0, y: 0, w: 8, h: 8 },
+        { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8 },
         { i: 'p3', type: 'table', x: 0, y: 7, w: 12, h: 8 },
     ]);
 
@@ -129,17 +133,30 @@ function CsvPage({ toLoad, screen }) {
                 <Drawer />
                 <main className="column" style={mainStyle}>
 
-                    <button
-                        style={{ position: 'absolute', zIndex: 10 }}
-                        onClick={() => { onAddItem('plot') }}>
-                        plot
-                    </button>
+                    <div style={{ position: 'absolute', zIndex: 10, width: 40, left: 5, top: 5 }}>
+                        <DropdownButton
+                            style={{ borderRadius: 20 }} as={ButtonGroup}
+                            id={'add-panel-dropdown-button'}
+                            variant={'primary'}
+                            title={'+'}
+                        >
+                            <Dropdown.Item eventKey="1" onClick={() => { onAddItem('plot') }}>
+                                Scatter Plot
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="2">Histogram</Dropdown.Item>
+                            <Dropdown.Item eventKey="3" active>Cumulative percent</Dropdown.Item>
+                            <Dropdown.Item eventKey="4">Box and Whisker</Dropdown.Item>
 
-                    <button
-                        style={{ position: 'absolute', zIndex: 10, left: 100 }}
-                        onClick={() => { onAddItem('screen') }}>
-                        screen
-                    </button>
+                            {screen && (
+                                <React.Fragment>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item eventKey="5" onClick={() => { onAddItem('screen') }}>
+                                        Plate Layout
+                                    </Dropdown.Item>
+                                </React.Fragment>
+                            )}
+                        </DropdownButton>
+                    </div>
 
                     <ReactGridLayout
                         draggableCancel=".draggableCancel"
