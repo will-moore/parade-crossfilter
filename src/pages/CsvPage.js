@@ -2,6 +2,7 @@ import React from 'react';
 import Drawer from '../Drawer.js'
 import SimpleTable from '../table/SimpleTable';
 import PlotContainer from '../plots/PlotContainer';
+import BoxPlotContainer from '../plots/BoxPlotContainer';
 import Screen from '../screen/Screen';
 import Images from '../images/Images';
 import { DataContext } from '../crossfilter/DataContext';
@@ -95,9 +96,8 @@ function CsvPage({ toLoad, screen }) {
         />
     )
 
-    const plot = (plotType) => (
+    const scatter_plot = (
         <PlotContainer
-            plotType={plotType}
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
         />
@@ -120,12 +120,18 @@ function CsvPage({ toLoad, screen }) {
             setSortReverse={setSortReverse}
         />
     )
+    const boxplot = (
+        <BoxPlotContainer
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+        />
+    )
     const panels = {
-        'scatter_plot': plot('scatter_plot'),
+        'scatter_plot': scatter_plot,
         'images': images,
         'table': table,
         'screen': screenComponent,
-        'box_whisker': plot('box_whisker'),
+        'box_whisker': boxplot,
     }
 
     return (
