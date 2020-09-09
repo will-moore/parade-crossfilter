@@ -46,7 +46,7 @@ function CsvPage({ toLoad, screen }) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const [items, setItems] = React.useState([
-        { i: 'p1', type: 'plot', x: 0, y: 0, w: 8, h: 8 },
+        { i: 'p1', type: 'scatter_plot', x: 0, y: 0, w: 8, h: 8 },
         { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8 },
         { i: 'p3', type: 'table', x: 0, y: 7, w: 12, h: 8 },
     ]);
@@ -95,8 +95,9 @@ function CsvPage({ toLoad, screen }) {
         />
     )
 
-    const plot = (
+    const plot = (plotType) => (
         <PlotContainer
+            plotType={plotType}
             selectedIds={selectedIds}
             setSelectedIds={setSelectedIds}
         />
@@ -120,10 +121,11 @@ function CsvPage({ toLoad, screen }) {
         />
     )
     const panels = {
-        'plot': plot,
+        'scatter_plot': plot('scatter_plot'),
         'images': images,
         'table': table,
         'screen': screenComponent,
+        'box_whisker': plot('box_whisker'),
     }
 
     return (
@@ -140,12 +142,14 @@ function CsvPage({ toLoad, screen }) {
                             variant={'primary'}
                             title={'+'}
                         >
-                            <Dropdown.Item eventKey="1" onClick={() => { onAddItem('plot') }}>
+                            <Dropdown.Item eventKey="1" onClick={() => { onAddItem('scatter_plot') }}>
                                 Scatter Plot
                             </Dropdown.Item>
                             <Dropdown.Item eventKey="2">Histogram</Dropdown.Item>
-                            <Dropdown.Item eventKey="3" active>Cumulative percent</Dropdown.Item>
-                            <Dropdown.Item eventKey="4">Box and Whisker</Dropdown.Item>
+                            <Dropdown.Item eventKey="3">Cumulative percent</Dropdown.Item>
+                            <Dropdown.Item eventKey="4" onClick={() => { onAddItem('box_whisker') }}>
+                                Box and Whisker
+                            </Dropdown.Item>
 
                             {screen && (
                                 <React.Fragment>
