@@ -8,7 +8,7 @@ import { CXContext } from "../crossfilter/DataContext";
 const labelStyle = { marginLeft: 10, marginRight: 5 };
 
 // size props come from sizeMe() HOC below
-const PlotContainer = ({ size, selectedIds, setSelectedIds }) => {
+const PlotContainer = ({ size, selectedIds, setSelectedIds, cumulativePlot }) => {
 
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
@@ -52,12 +52,15 @@ const PlotContainer = ({ size, selectedIds, setSelectedIds }) => {
     return (
         <div style={{ height: '100%' }}>
             <div style={{ paddingTop: 5, position: 'absolute', zIndex: 10, fontSize: '90%' }}>
-                <ColumnPicker
-                    label={'Y'}
-                    options={yColNames}
-                    value={yAxis.name}
-                    handleSelectChange={handleChangeY}
-                />
+                {/* Don't show Y axis chooser for cumulative Plot */}
+                {!cumulativePlot && (
+                    <ColumnPicker
+                        label={'Y'}
+                        options={yColNames}
+                        value={yAxis.name}
+                        handleSelectChange={handleChangeY}
+                    />
+                )}
                 <ColumnPicker
                     label={'X'}
                     options={xColNames}
@@ -84,6 +87,7 @@ const PlotContainer = ({ size, selectedIds, setSelectedIds }) => {
                     xAxis={xAxis.name}
                     yAxis={yAxis.name}
                     groupBy={groupBy}
+                    cumulativePlot={cumulativePlot}
                     selectedIds={selectedIds}
                     setSelectedIds={setSelectedIds}
                 />

@@ -102,6 +102,13 @@ function CsvPage({ toLoad, screen }) {
             setSelectedIds={setSelectedIds}
         />
     )
+    const cumulative = (
+        <PlotContainer
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+            cumulativePlot={true}
+        />
+    )
     const images = (
         <Images
             selectedIds={selectedIds}
@@ -132,6 +139,7 @@ function CsvPage({ toLoad, screen }) {
         'table': table,
         'screen': screenComponent,
         'box_whisker': boxplot,
+        'cumulative': cumulative,
     }
 
     return (
@@ -152,7 +160,7 @@ function CsvPage({ toLoad, screen }) {
                                 Scatter Plot
                             </Dropdown.Item>
                             <Dropdown.Item eventKey="2">Histogram</Dropdown.Item>
-                            <Dropdown.Item eventKey="3">Cumulative percent</Dropdown.Item>
+                            <Dropdown.Item eventKey="3" onClick={() => { onAddItem('cumulative') }}>Cumulative percent</Dropdown.Item>
                             <Dropdown.Item eventKey="4" onClick={() => { onAddItem('box_whisker') }}>
                                 Box and Whisker
                             </Dropdown.Item>
