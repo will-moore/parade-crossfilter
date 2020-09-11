@@ -1,9 +1,9 @@
 import React from "react";
 import WellSample from "./WellSample";
 
-const Well = ({well, showFields, rows,
-               heatmap, heatmapMin, heatmapMax,
-               setSelectedIds}) => {
+const Well = ({ well, showFields, rows,
+    heatmap, heatmapMin, heatmapMax,
+    setSelectedIds }) => {
     // well - api json for Well
     // showFields? - Do we show individual fields for the Well
     // rows - crossfilter rows that match this Well ID
@@ -25,8 +25,8 @@ const Well = ({well, showFields, rows,
         // need to group rows by Image ID
         let fields = {};
         if (rows) {
-            for (let r=0; r<rows.length; r++) {
-                let row=rows[r];
+            for (let r = 0; r < rows.length; r++) {
+                let row = rows[r];
                 if (!fields[row.Image]) {
                     fields[row.Image] = [];
                 }

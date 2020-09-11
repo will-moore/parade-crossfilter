@@ -129,7 +129,9 @@ export class DataContext extends React.Component {
                 this.initCrossfilter(undefined, datasetsInfo, mapAnnsInfo);
             }
         };
-        fetchData();
+        if (this.toLoad) {
+            fetchData();
+        }
 
     }
 
