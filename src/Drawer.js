@@ -17,6 +17,7 @@ function Drawer() {
     boxShadow: 'inset -1px 0 0 rgba(0, 0, 0, .1)',
     display: 'block',
     flex: `0 0 50px`,
+    backgroundColor: '#4f545a',
   }
 
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -24,12 +25,13 @@ function Drawer() {
   const drawerStyle = {
     zIndex: 100,
     padding: '0',
-    boxShadow: 'inset -1px 0 0 rgba(0, 0, 0, .1)',
+    // boxShadow: 'inset -1px 0 0 rgba(0, 0, 0, .1)',
     display: 'block',
     flexGrow: 0,
     flexShrink: 0,
     width: drawerOpen ? drawerWidth : 0,
     transition: 'width 0.5s ease-in-out',
+    backgroundColor: '#4f545a',
   }
 
   const expandButtonStyle = {
@@ -42,12 +44,12 @@ function Drawer() {
 
   return (
     <React.Fragment>
-      <nav className="bg-light" style={drawerStyle}>
+      <nav style={drawerStyle}>
         <GroupBy />
         <Filters />
       </nav>
 
-      <nav className="bg-light" style={toolbarStyle}>
+      <nav style={toolbarStyle}>
         <div className="sidebar-sticky" style={{padding: 7}}>
           <button onClick={handleClickExpand} type="button" className="btn btn-light" style={expandButtonStyle}>
             <FontAwesomeIcon icon={faChevronLeft} />
