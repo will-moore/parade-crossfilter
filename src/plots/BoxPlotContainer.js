@@ -1,7 +1,5 @@
 import React from "react";
 import sizeMe from 'react-sizeme'
-// import ScatterPlot from "./ScatterPlot";
-import ScatterPlot from "./ScatterPlot";
 import BoxPlot from "./BoxPlot";
 import { CXContext } from "../crossfilter/DataContext";
 
@@ -54,12 +52,12 @@ const BoxPlotContainer = ({ size, selectedIds, setSelectedIds }) => {
                         </option>
                     ))}
                 </select>
-                
+
             </div>
             <div style={{ width: 'calc(100% - 10px)', position: 'absolute', top: 49, zIndex: 1 }}
                 className="draggableCancel"
             >
-                    
+
                 <BoxPlot
                     height={size.height - 60}
                     xAxis={xAxis.name}

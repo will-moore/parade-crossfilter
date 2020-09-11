@@ -159,8 +159,9 @@ function CsvPage({ toLoad, screen }) {
                             <Dropdown.Item eventKey="1" onClick={() => { onAddItem('scatter_plot') }}>
                                 Scatter Plot
                             </Dropdown.Item>
-                            <Dropdown.Item eventKey="2">Histogram</Dropdown.Item>
-                            <Dropdown.Item eventKey="3" onClick={() => { onAddItem('cumulative') }}>Cumulative percent</Dropdown.Item>
+                            <Dropdown.Item eventKey="3" onClick={() => { onAddItem('cumulative') }}>
+                                Cumulative percent
+                            </Dropdown.Item>
                             <Dropdown.Item eventKey="4" onClick={() => { onAddItem('box_whisker') }}>
                                 Box and Whisker
                             </Dropdown.Item>
