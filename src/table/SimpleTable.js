@@ -100,7 +100,7 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
         let value = filteredData[rowIndex][colNames[columnIndex]];
         let displayVal = value;
         // If a number (not an Integer), format precision...
-        if (value.toPrecision && !Number.isInteger(value)) {
+        if (value !== undefined && value.toPrecision && !Number.isInteger(value)) {
             displayVal = value.toPrecision(4);
         }
         return (
