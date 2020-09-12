@@ -26,7 +26,6 @@ const RoiViewer = ({ rowData }) => {
             if (Number.isInteger(rowData.ROI)) {
                 let url = window.OMEROWEB_INDEX + `api/v0/m/rois/${rowData.ROI}/`;
                 let roiJson = await fetchJson(url);
-                console.log(roiJson.data);
                 parseRoiData(roiJson.data);
             }
         }
@@ -58,13 +57,13 @@ const RoiViewer = ({ rowData }) => {
         <div>
             {<p>ROI: {rowData.ROI} </p>}
             {roiData ?
-                (<div style={{padding:10}}>
+                (<div style={{ padding: 10 }}>
 
-                    <div style={{position: 'relative', height: 200}}>
+                    <div style={{ position: 'relative', height: 200 }}>
                         {/* Add thumb for every shapeID */}
                         {
                             roiData.map(shape => (
-                                <img style={{ ...imgStyle, visibility: isVisible(shape, theZ, theT) ? 'visible': 'hidden'}}
+                                <img style={{ ...imgStyle, visibility: isVisible(shape, theZ, theT) ? 'visible' : 'hidden' }}
                                     alt={`Shape ID:${shape['@id']}`}
                                     src={`${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${shape['@id']}/?color=ff0`}
                                 />

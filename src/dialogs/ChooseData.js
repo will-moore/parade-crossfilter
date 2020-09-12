@@ -40,7 +40,6 @@ function ChooseData({ project, screen, setDataToLoad }) {
     }, [project, screen]);
 
     const handleChange = (event) => {
-        console.log(event.target.value)
         let fid = parseInt(event.target.value);
         if (selectedAnn === fid) {
             // toggle checkbox off
@@ -80,7 +79,6 @@ function ChooseData({ project, screen, setDataToLoad }) {
         }
         dataToLoad.datasets = datasets;
         dataToLoad.mapAnns = mapAnns;
-        console.log(dataToLoad);
         setDataToLoad(dataToLoad);
         setShow(false);
     }
@@ -116,23 +114,23 @@ function ChooseData({ project, screen, setDataToLoad }) {
                             ))}
                         </Form.Control>
 
-                        <div className="mb-3">
+                        <Form.Group controlId="mapAnnsCheckbox">
                             <Form.Check
                                 type="checkbox"
                                 name="mapAnns"
                                 onChange={handleMapAnns}
                                 label={"Load Key-Value Pairs"}
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="mb-3">
+                        <Form.Group controlId="datasetsCheckbox">
                             <Form.Check
                                 type="checkbox"
                                 name="datasets"
                                 onChange={handleDatasets}
                                 label={"Load Datasets"}
                             />
-                        </div>
+                        </Form.Group>
                     </Form>
                 )}
             </Modal.Body>
