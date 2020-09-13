@@ -20,6 +20,7 @@ function ChooseData({ project, screen, setDataToLoad }) {
     const [selectedAnn, selectFileAnn] = useState(undefined);
     const [datasets, setDatasets] = useState(undefined);
     const [mapAnns, setMapAnns] = useState(undefined);
+    const [tags, setTags] = useState(undefined);
 
     useEffect(() => {
         setLoading(true);
@@ -58,6 +59,20 @@ function ChooseData({ project, screen, setDataToLoad }) {
         }
     }
 
+    const handleTags = (event) => {
+        // toggle tags
+        if (tags) {
+            setDatasets(undefined);
+        } else {
+            // pass in the screen, project ID etc
+            if (screen) {
+                setTags('screen-' + screen);
+            } else if (project) {
+                setTags('project-' + project);
+            }
+        }
+    }
+
     const handleMapAnns = (event) => {
         if (mapAnns) {
             setMapAnns(undefined);
@@ -79,6 +94,7 @@ function ChooseData({ project, screen, setDataToLoad }) {
         }
         dataToLoad.datasets = datasets;
         dataToLoad.mapAnns = mapAnns;
+        dataToLoad.tags = tags;
         setDataToLoad(dataToLoad);
         setShow(false);
     }
@@ -129,6 +145,15 @@ function ChooseData({ project, screen, setDataToLoad }) {
                                 name="datasets"
                                 onChange={handleDatasets}
                                 label={"Load Datasets"}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="tagsCheckbox">
+                            <Form.Check
+                                type="checkbox"
+                                name="tags"
+                                onChange={handleTags}
+                                label={"Load Tags"}
                             />
                         </Form.Group>
                     </Form>

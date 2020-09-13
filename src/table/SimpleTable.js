@@ -99,8 +99,11 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let value = filteredData[rowIndex][colNames[columnIndex]];
         let displayVal = value;
-        // If a number (not an Integer), format precision...
-        if (value !== undefined && value.toPrecision && !Number.isInteger(value)) {
+        if (typeof value === 'object') {
+            // This will be an Array
+            displayVal = value.join(', ');
+        } else if (value !== undefined && value.toPrecision && !Number.isInteger(value)) {
+            // If a number (not an Integer), format precision...
             displayVal = value.toPrecision(4);
         }
         return (

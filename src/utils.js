@@ -176,6 +176,25 @@ export function parseMapAnns(mapAnnsInfo) {
 }
 
 
+export function parseTagAnns(tagsJson) {
+    // we want dict of {'imageID': ['list', 'of', 'tags']}
+    let tagData = tagsJson.reduce((prev, tag) => {
+        let pid = tag.link.parent.id;
+        let text = tag.textValue;
+        if (!prev[pid]) {
+            // create array for an Image, or Well
+            prev[pid] = [];
+        }
+        if (!prev[pid].includes(text)) {
+            prev[pid].push(text);
+        }
+        return prev;
+    }, {});
+
+    return tagData;
+}
+
+
 export function parseData(rows, colnames) {
 
     if (!colnames) {

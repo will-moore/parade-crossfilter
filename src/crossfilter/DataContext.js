@@ -1,8 +1,8 @@
 import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
-import { fetchText, fetchJson } from "./FetchData";
-import { parseData, parseMapAnns, groupCrossfilterData } from "../utils";
+import { fetchText, fetchJson, fetchChildAnnotations } from "./FetchData";
+import { parseData, parseMapAnns, parseTagAnns, groupCrossfilterData } from "../utils";
 
 import crossfilter from "crossfilter2";
 
@@ -40,7 +40,7 @@ export class DataContext extends React.Component {
         }, 100);
     }
 
-    initCrossfilter(data, datasetsInfo, mapAnnsInfo) {
+    initCrossfilter(data, datasetsInfo, annData) {
         // Handle csv data, rows of dicts
         let columns = [];
         let parsedData = [];
@@ -50,10 +50,15 @@ export class DataContext extends React.Component {
             columns = d.columns;
             parsedData = d.parsedData;
         }
-        if (mapAnnsInfo) {
+
+        // ** NB: for MapAnnotations and Tags, we use 'Image' key to add these
+        // to the CSV data.
+        // Need to handle Screen data using 'Well' key!
+
+        if (annData.maps) {
             // OR, if we have map annotations, add a column for each Key
-            let d = parseMapAnns(mapAnnsInfo);
-            columns = columns.concat(d.columns.filter(c => c.name != 'Image'));
+            let d = parseMapAnns(annData.maps);
+            columns = columns.concat(d.columns.filter(c => c.name !== 'Image'));
             // make {imgId:row} lookup...
             let rowById = d.parsedData.reduce((prev, row) => {
                 prev[row.Image] = row;
@@ -63,6 +68,16 @@ export class DataContext extends React.Component {
             parsedData = parsedData.map(row => {
                 let kvData = rowById[row.Image] || {};
                 return { ...row, ...kvData };
+            });
+        }
+        if (annData.tags) {
+            // if we have tags, get {imgId: ['list', 'of', 'tags']}
+            let tagsById = parseTagAnns(annData.tags);
+            columns.push({ name: 'Tags', type: 'array' });
+            // add key-value dict to each row, matching by Image ID
+            parsedData = parsedData.map(row => {
+                let tags = tagsById[row.Image] || [];
+                return { ...row, 'Tags': tags };
             });
         }
 
@@ -116,15 +131,17 @@ export class DataContext extends React.Component {
                 datasetsInfo = jsonData.data;
             }
 
-            let mapAnnsInfo;
+            let annData = {};
             if (this.toLoad.mapAnns) {
                 let objId = this.toLoad.mapAnns; // 'project-1'
-                let id = objId.split('-')[1];
-                let dtype = objId.split('-')[0];
-                let childType = (dtype === 'project') ? 'images' : 'wells';
-                let u = window.OMEROWEB_INDEX + `parade_crossfilter/annotations/${dtype}/${id}/${childType}/?type=map`;
-                let jsonData = await fetchJson(u);
-                mapAnnsInfo = jsonData.annotations;
+                let jsonData = await fetchChildAnnotations(objId, 'map');
+                annData.maps = jsonData.annotations;
+            }
+
+            if (this.toLoad.tags) {
+                let objId = this.toLoad.tags; // 'project-1'
+                let jsonData = await fetchChildAnnotations(objId, 'tag');
+                annData.tags = jsonData.annotations;
             }
 
             if (this.toLoad.csvFiles && this.toLoad.csvFiles.length > 0) {
@@ -133,10 +150,10 @@ export class DataContext extends React.Component {
                 let url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}`;
                 // Load csv file, then process csv (and datasetInfo)
                 fetchText(url, csvText => {
-                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, mapAnnsInfo);
+                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
                 });
             } else {
-                this.initCrossfilter(undefined, datasetsInfo, mapAnnsInfo);
+                this.initCrossfilter(undefined, datasetsInfo, annData);
             }
         };
         if (this.toLoad) {
