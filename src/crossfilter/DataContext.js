@@ -58,27 +58,43 @@ export class DataContext extends React.Component {
         if (annData.maps) {
             // OR, if we have map annotations, add a column for each Key
             let d = parseMapAnns(annData.maps);
-            columns = columns.concat(d.columns.filter(c => c.name !== 'Image'));
-            // make {imgId:row} lookup...
-            let rowById = d.parsedData.reduce((prev, row) => {
-                prev[row.Image] = row;
-                return prev;
-            }, {});
-            // add key-value dict to each row, matching by Image ID
-            parsedData = parsedData.map(row => {
-                let kvData = rowById[row.Image] || {};
-                return { ...row, ...kvData };
-            });
+
+            if (parsedData.length === 0) {
+                // No existing data - just use MapAnns data
+                parsedData = d.parsedData;
+                columns = d.columns;
+            } else {
+                // Add MapAnns data to existing data
+                columns = columns.concat(d.columns.filter(c => c.name !== 'Image'));
+                // make {imgId:row} lookup...
+                let rowById = d.parsedData.reduce((prev, row) => {
+                    prev[row.Image] = row;
+                    return prev;
+                }, {});
+                // add key-value dict to each row, matching by Image ID
+                parsedData = parsedData.map(row => {
+                    let kvData = rowById[row.Image] || {};
+                    return { ...row, ...kvData };
+                });
+            }
         }
         if (annData.tags) {
             // if we have tags, get {imgId: ['list', 'of', 'tags']}
             let tagsById = parseTagAnns(annData.tags);
+            if (columns.length === 0) {
+                // No existing data - just use MapAnns data
+                columns.push({ name: 'Image', type: 'number' })
+                parsedData = Object.keys(tagsById).map(iid => {
+                    return { 'Image': iid, 'Tags': tagsById[iid] };
+                });
+            } else {
+                // add key-value dict to each row, matching by Image ID
+                parsedData = parsedData.map(row => {
+                    let tags = tagsById[row.Image] || [];
+                    return { ...row, 'Tags': tags };
+                });
+            }
             columns.push({ name: 'Tags', type: 'array' });
-            // add key-value dict to each row, matching by Image ID
-            parsedData = parsedData.map(row => {
-                let tags = tagsById[row.Image] || [];
-                return { ...row, 'Tags': tags };
-            });
         }
 
         // If we have dict of {image: {id:1}, dataset:{name:'foo'}}

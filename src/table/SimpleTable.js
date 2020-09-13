@@ -101,6 +101,7 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
         let displayVal = value;
         if (typeof value === 'object') {
             // This will be an Array
+            value = value.sort();
             displayVal = value.join(', ');
         } else if (value !== undefined && value.toPrecision && !Number.isInteger(value)) {
             // If a number (not an Integer), format precision...
