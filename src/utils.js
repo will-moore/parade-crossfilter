@@ -275,6 +275,86 @@ export function parseData(rows, colnames) {
     return { columns, parsedData }
 }
 
+
+export function prepCrossfilterData(data, datasetsInfo, annData) {
+    // Handle csv data, rows of dicts
+    let columns = [];
+    let parsedData = [];
+
+    if (data) {
+        let d = parseData(data);
+        columns = d.columns;
+        parsedData = d.parsedData;
+    }
+
+    // ** NB: for MapAnnotations and Tags, we use 'Image' key to add these
+    // to the CSV data.
+    // Need to handle Screen data using 'Well' key!
+
+    if (annData.maps) {
+        // OR, if we have map annotations, add a column for each Key
+        let d = parseMapAnns(annData.maps);
+
+        if (parsedData.length === 0) {
+            // No existing data - just use MapAnns data
+            parsedData = d.parsedData;
+            columns = d.columns;
+        } else {
+            // Add MapAnns data to existing data
+            columns = columns.concat(d.columns.filter(c => c.name !== 'Image'));
+            // make {imgId:row} lookup...
+            let rowById = d.parsedData.reduce((prev, row) => {
+                prev[row.Image] = row;
+                return prev;
+            }, {});
+            // add key-value dict to each row, matching by Image ID
+            parsedData = parsedData.map(row => {
+                let kvData = rowById[row.Image] || {};
+                return { ...row, ...kvData };
+            });
+        }
+    }
+    if (annData.tags) {
+        // if we have tags, get {imgId: ['list', 'of', 'tags']}
+        let tagsById = parseTagAnns(annData.tags);
+        if (columns.length === 0) {
+            // No existing data - just use MapAnns data
+            columns.push({ name: 'Image', type: 'number' })
+            parsedData = Object.keys(tagsById).map(iid => {
+                return { 'Image': iid, 'Tags': tagsById[iid] };
+            });
+        } else {
+            // add key-value dict to each row, matching by Image ID
+            parsedData = parsedData.map(row => {
+                let tags = tagsById[row.Image] || [];
+                return { ...row, 'Tags': tags };
+            });
+        }
+        columns.push({ name: 'Tags', type: 'array' });
+    }
+
+    // If we have dict of {image: {id:1}, dataset:{name:'foo'}}
+    // Use it to populate the table using existing image colum
+    if (datasetsInfo) {
+        let imgToDataset = {};
+        datasetsInfo.forEach(link => {
+            imgToDataset[link.image.id] = link.dataset;
+        });
+
+        columns.push({ name: 'Dataset', type: 'string' });
+
+        // Add Dataset names to data
+        parsedData = parsedData.map(row => {
+            if (row.Image && imgToDataset[row.Image]) {
+                return { ...row, 'Dataset': imgToDataset[row.Image].name }
+            }
+            return row
+        });
+    }
+    return { columns, parsedData };
+}
+
+
 export function isInt(n) {
     return typeof n == "number" && isFinite(n) && n % 1 === 0;
 }
