@@ -49,6 +49,9 @@ const RoiViewer = ({ rowData }) => {
     }
 
     function isVisible(shape, z, t) {
+        if (!roiData || roiData.length === 1) {
+            return true;
+        }
         return ((shape.TheT === undefined || shape.TheT === t) &&
             (shape.TheZ === undefined || shape.TheZ === z))
     }
@@ -64,6 +67,7 @@ const RoiViewer = ({ rowData }) => {
                         {
                             roiData.map(shape => (
                                 <img style={{ ...imgStyle, visibility: isVisible(shape, theZ, theT) ? 'visible' : 'hidden' }}
+                                    key={shape['@id']}
                                     alt={`Shape ID:${shape['@id']}`}
                                     src={`${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${shape['@id']}/?color=ff0`}
                                 />
