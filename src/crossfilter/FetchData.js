@@ -45,3 +45,30 @@ export async function fetchChildAnnotations(objId, type) {
     return anns;
 }
 
+export async function loadDatasetsAndAnnotations(toLoad) {
+
+    // If loading Datastes info, wait....
+    let datasetsInfo;
+    if (toLoad.datasets) {
+        let projectId = toLoad.datasets;
+        let u = window.OMEROWEB_INDEX + `parade_crossfilter/datasets/${projectId}`;
+        let jsonData = await fetchJson(u);
+        datasetsInfo = jsonData.data;
+    }
+
+    let annData = {};
+    if (toLoad.mapAnns) {
+        let objId = toLoad.mapAnns; // 'project-1'
+        let jsonData = await fetchChildAnnotations(objId, 'map');
+        annData.maps = jsonData.annotations;
+    }
+
+    if (toLoad.tags) {
+        let objId = toLoad.tags; // 'project-1'
+        let jsonData = await fetchChildAnnotations(objId, 'tag');
+        annData.tags = jsonData.annotations;
+    }
+
+    return { datasetsInfo, annData }
+}
+

@@ -1,7 +1,7 @@
 import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
-import { fetchText, fetchJson, fetchChildAnnotations } from "./FetchData";
+import { fetchText, loadDatasetsAndAnnotations } from "./FetchData";
 import { parseData, parseMapAnns, parseTagAnns, groupCrossfilterData } from "../utils";
 
 import crossfilter from "crossfilter2";
@@ -138,27 +138,7 @@ export class DataContext extends React.Component {
         // Need to wrap the await below in async function
         const fetchData = async () => {
 
-            // If loading Datastes info, wait....
-            let datasetsInfo;
-            if (this.toLoad.datasets) {
-                let projectId = this.toLoad.datasets;
-                let u = window.OMEROWEB_INDEX + `parade_crossfilter/datasets/${projectId}`;
-                let jsonData = await fetchJson(u);
-                datasetsInfo = jsonData.data;
-            }
-
-            let annData = {};
-            if (this.toLoad.mapAnns) {
-                let objId = this.toLoad.mapAnns; // 'project-1'
-                let jsonData = await fetchChildAnnotations(objId, 'map');
-                annData.maps = jsonData.annotations;
-            }
-
-            if (this.toLoad.tags) {
-                let objId = this.toLoad.tags; // 'project-1'
-                let jsonData = await fetchChildAnnotations(objId, 'tag');
-                annData.tags = jsonData.annotations;
-            }
+            let { datasetsInfo, annData } = await loadDatasetsAndAnnotations(this.toLoad);
 
             if (this.toLoad.csvFiles && this.toLoad.csvFiles.length > 0) {
                 // Load CSV files etc...
