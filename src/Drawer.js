@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import Filters from './filters/Filters';
@@ -32,6 +32,7 @@ function Drawer() {
     width: drawerOpen ? drawerWidth : 0,
     transition: 'width 0.5s ease-in-out',
     backgroundColor: '#4f545a',
+    color: 'white',
   }
 
   const expandButtonStyle = {
@@ -50,7 +51,7 @@ function Drawer() {
       </nav>
 
       <nav style={toolbarStyle}>
-        <div className="sidebar-sticky" style={{padding: 7}}>
+        <div className="sidebar-sticky" style={{ padding: 7 }}>
           <button onClick={handleClickExpand} type="button" className="btn btn-light" style={expandButtonStyle}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
