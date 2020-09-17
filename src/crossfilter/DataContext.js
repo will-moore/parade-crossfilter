@@ -15,7 +15,7 @@ export class DataContext extends React.Component {
         this.chars = [];
         this.state = { loading: false, hasNDX: false, groupBy: [] };
         // toLoad.csvFiles = [annId]
-        this.toLoad = props.toLoad;
+        // this.toLoad = props.toLoad;
     }
 
     addGroupBy(colname) {
@@ -55,23 +55,23 @@ export class DataContext extends React.Component {
         this.setState({ loading: false, hasNDX: true });
     }
 
-    componentDidMount() {
-        if (this.state.hasNDX) {
-            return
-        }
-        if (this.state.loading) {
-            return
-        }
+    loadData(toLoad) {
+        // if (this.state.hasNDX) {
+        //     return
+        // }
+        // if (this.state.loading) {
+        //     return
+        // }
         this.setState({ loading: true });
 
         // Need to wrap the await below in async function
         const fetchData = async () => {
 
-            let { datasetsInfo, annData } = await loadDatasetsAndAnnotations(this.toLoad);
+            let { datasetsInfo, annData } = await loadDatasetsAndAnnotations(toLoad);
 
-            if (this.toLoad.csvFiles && this.toLoad.csvFiles.length > 0) {
+            if (toLoad.csvFiles && toLoad.csvFiles.length > 0) {
                 // Load CSV files etc...
-                let annId = this.toLoad.csvFiles[0];
+                let annId = toLoad.csvFiles[0];
                 let url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}`;
                 // Load csv file, then process csv (and datasetInfo)
                 fetchText(url, csvText => {
@@ -81,27 +81,29 @@ export class DataContext extends React.Component {
                 this.initCrossfilter(undefined, datasetsInfo, annData);
             }
         };
-        if (this.toLoad) {
-            fetchData();
-        }
+
+        // Call async function, but don't wait on it
+        fetchData();
 
     }
 
     render() {
-        if (!this.state.hasNDX) {
-            return (<div>Loading...</div>);
+
+        let context = {
+            setDataToLoad: (toLoad) => { this.loadData(toLoad) },
+            ndx: undefined,
+            columns: [],
+            addGroupBy: (groupBy) => { this.addGroupBy(groupBy) },
         }
 
-        let cfdata = this.orig_data;
-        let columns = this.columns;
+        if (this.state.hasNDX) {
+            context.ndx = this.orig_data;
+            context.columns = this.columns;
+        }
 
         return (
             <CXContext.Provider
-                value={{
-                    ndx: cfdata,
-                    columns: columns,
-                    addGroupBy: (groupBy) => { this.addGroupBy(groupBy) },
-                }}>
+                value={context}>
                 <div ref={this.parent}>
                     {this.props.children}
                 </div>

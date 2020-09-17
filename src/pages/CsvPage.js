@@ -5,7 +5,6 @@ import PlotContainer from '../plots/PlotContainer';
 import BoxPlotContainer from '../plots/BoxPlotContainer';
 import Screen from '../screen/Screen';
 import Images from '../images/Images';
-import { DataContext } from '../crossfilter/DataContext';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -14,7 +13,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import RGL, { WidthProvider } from "react-grid-layout";
 const ReactGridLayout = WidthProvider(RGL);
 
-function CsvPage({ toLoad, screen }) {
+function CsvPage({ screen }) {
 
     const mainStyle = {
         flex: '1 1 auto',
@@ -143,53 +142,51 @@ function CsvPage({ toLoad, screen }) {
     }
 
     return (
-        <DataContext toLoad={toLoad}>
 
-            <div style={{ display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%' }}>
-                <Drawer />
-                <main className="column" style={mainStyle}>
+        <div style={{ display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%' }}>
+            <Drawer />
+            <main className="column" style={mainStyle}>
 
-                    <div style={{ position: 'absolute', zIndex: 10, width: 40, left: 5, top: 5 }}>
-                        <DropdownButton
-                            style={{ borderRadius: 20 }} as={ButtonGroup}
-                            id={'add-panel-dropdown-button'}
-                            variant={'primary'}
-                            title={'+'}
-                        >
-                            <Dropdown.Item eventKey="1" onClick={() => { onAddItem('scatter_plot') }}>
-                                Scatter Plot
+                <div style={{ position: 'absolute', zIndex: 10, width: 40, left: 5, top: 5 }}>
+                    <DropdownButton
+                        style={{ borderRadius: 20 }} as={ButtonGroup}
+                        id={'add-panel-dropdown-button'}
+                        variant={'primary'}
+                        title={'+'}
+                    >
+                        <Dropdown.Item eventKey="1" onClick={() => { onAddItem('scatter_plot') }}>
+                            Scatter Plot
                             </Dropdown.Item>
-                            <Dropdown.Item eventKey="3" onClick={() => { onAddItem('cumulative') }}>
-                                Cumulative percent
+                        <Dropdown.Item eventKey="3" onClick={() => { onAddItem('cumulative') }}>
+                            Cumulative percent
                             </Dropdown.Item>
-                            <Dropdown.Item eventKey="4" onClick={() => { onAddItem('box_whisker') }}>
-                                Box and Whisker
+                        <Dropdown.Item eventKey="4" onClick={() => { onAddItem('box_whisker') }}>
+                            Box and Whisker
                             </Dropdown.Item>
 
-                            {screen && (
-                                <React.Fragment>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="5" onClick={() => { onAddItem('screen') }}>
-                                        Plate Layout
+                        {screen && (
+                            <React.Fragment>
+                                <Dropdown.Divider />
+                                <Dropdown.Item eventKey="5" onClick={() => { onAddItem('screen') }}>
+                                    Plate Layout
                                     </Dropdown.Item>
-                                </React.Fragment>
-                            )}
-                        </DropdownButton>
-                    </div>
+                            </React.Fragment>
+                        )}
+                    </DropdownButton>
+                </div>
 
-                    <ReactGridLayout
-                        draggableCancel=".draggableCancel"
-                        className="layout"
-                        cols={12} rowHeight={45} >
+                <ReactGridLayout
+                    draggableCancel=".draggableCancel"
+                    className="layout"
+                    cols={12} rowHeight={45} >
 
-                        {
-                            items.map(el => createItem(el))
-                        }
-                    </ReactGridLayout>
+                    {
+                        items.map(el => createItem(el))
+                    }
+                </ReactGridLayout>
 
-                </main>
-            </div>
-        </DataContext>
+            </main>
+        </div>
     );
 }
 

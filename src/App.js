@@ -4,6 +4,8 @@ import Nav from 'react-bootstrap/Nav';
 import NavItem from 'react-bootstrap/NavItem';
 import NavLink from 'react-bootstrap/NavLink';
 import Dropdown from 'react-bootstrap/Dropdown';
+
+import { DataContext } from './crossfilter/DataContext';
 import Header from './pages/Header';
 import Main from './pages/Main';
 import { getUrlParameter } from './utils';
@@ -31,19 +33,21 @@ function App() {
 
     return (
         <div className="App">
-            <Nav
-                className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow"
-            >
-                <Header />
+            <DataContext>
+                <Nav
+                    className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow"
+                >
+                    <Header />
 
-                <Dropdown as={NavItem} className="ml-auto navbar-nav pr-md-4">
-                    <Dropdown.Toggle as={NavLink}>Click to see more…</Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item>Hello there!</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </Nav>
-            <Main />
+                    <Dropdown as={NavItem} className="ml-auto navbar-nav pr-md-4">
+                        <Dropdown.Toggle as={NavLink}>Click to see more…</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item>Hello there!</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Nav>
+                <Main />
+            </DataContext>
         </div >
     );
 }
