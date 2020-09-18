@@ -22,6 +22,8 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
     const columns = context.columns;
     let thumbSize = 192;
 
+    console.log('render Images - context')
+
     React.useEffect(() => {
 
         // Initial load
@@ -83,7 +85,7 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
     const width = size.width;
     const colCount = parseInt(Math.round(width / thumbSize));
     // adjust thumbSize to fit columns
-    thumbSize = width/colCount;
+    thumbSize = width / colCount;
     // Known dimensions of roi-thumbnails
     const roiThumbAspect = 250 / 166;
     const thumbHeight = thumbSize / roiThumbAspect;

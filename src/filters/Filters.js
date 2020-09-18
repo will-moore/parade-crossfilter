@@ -4,6 +4,7 @@ import Filter from './Filter';
 import FilteredCounter from './FilteredCounter';
 
 const Filters = () => {
+    console.log('render Filters')
 
     const [filters, setFilters] = React.useState([]);
 

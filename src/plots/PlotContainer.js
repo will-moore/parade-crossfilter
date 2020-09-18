@@ -13,6 +13,8 @@ const PlotContainer = ({ size, selectedIds, setSelectedIds, cumulativePlot }) =>
     const context = React.useContext(CXContext);
     const numberCols = context.columns.filter(col => col.type === 'number');
 
+    console.log('render PlotContainer - context')
+
     // Start by plotting the first 2 dimensions we have
     const [yAxis, setYAxis] = React.useState(numberCols[0]);
 

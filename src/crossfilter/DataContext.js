@@ -12,28 +12,16 @@ export const CXContext = React.createContext("CXContext");
 export class DataContext extends React.Component {
     constructor(props) {
         super(props);
-        this.chars = [];
         this.state = { loading: false, hasNDX: false, groupBy: [] };
-        // toLoad.csvFiles = [annId]
-        // this.toLoad = props.toLoad;
     }
 
     addGroupBy(colname) {
-        // let groupBy = [...this.state.groupBy, colname];
 
-        // let cfdata = this.orig_data;
-        // let columns = this.columns;
-
-        // let groupBy = this.state.groupBy;
-        // if (groupBy) {
-        //     groupBy.forEach(groupName => {
         let g = groupCrossfilterData(this.orig_data, this.columns, colname);
         this.orig_data = crossfilter(g.data);
         this.columns = g.columns;
-        //     });
-        // }
 
-        // Hack! to orce all Children to re-render with new crossfilter(grouped)
+        // Hack! to force all Children to re-render with new crossfilter(grouped)
         this.setState({ hasNDX: false, loading: true });
         setTimeout(() => {
             this.setState({ hasNDX: true, loading: false });
@@ -56,12 +44,7 @@ export class DataContext extends React.Component {
     }
 
     loadData(toLoad) {
-        // if (this.state.hasNDX) {
-        //     return
-        // }
-        // if (this.state.loading) {
-        //     return
-        // }
+
         this.setState({ loading: true });
 
         // Need to wrap the await below in async function

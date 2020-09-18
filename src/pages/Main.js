@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import CsvPage from './CsvPage';
 import ChooseData from '../dialogs/ChooseData';
 import { getUrlParameter } from '../utils';
@@ -8,6 +8,8 @@ import { CXContext } from "../crossfilter/DataContext";
 export default () => {
 
     const context = React.useContext(CXContext);
+
+    console.log('render Main - context')
 
     let project = getUrlParameter('project');
     let screen = getUrlParameter('screen');
