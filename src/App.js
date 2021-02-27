@@ -8,6 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { DataContext } from './crossfilter/DataContext';
 import Header from './pages/Header';
 import Main from './pages/Main';
+import OpenWith from './pages/OpenWith';
 import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';

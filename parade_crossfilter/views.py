@@ -19,6 +19,11 @@
 from django.http import HttpResponse, JsonResponse, \
     Http404, StreamingHttpResponse
 import re
+import json
+from PIL import Image
+from io import BytesIO
+import base64
+import numpy as np
 from django.core.urlresolvers import reverse
 from django.template import loader
 from django.templatetags import static
@@ -206,3 +211,25 @@ def omero_table_as_csv(request, file_id, conn=None, **kwargs):
     # rsp['Content-Length'] = ann.getFileSize()
     rsp['Content-Disposition'] = ('attachment; filename=%s' % name)
     return rsp
+
+
+@login_required(setGroupContext=True)
+def save_image(request, conn=None, **kwargs):
+
+    json_data = json.loads(request.body)
+
+    img_data64 = json_data['data'].replace('data:image/png;base64,', '')
+    im = Image.open(BytesIO(base64.b64decode(img_data64)))
+    # im.show()
+
+    np_array = np.asarray(im)
+    red = np_array[::, ::, 0]
+    green = np_array[::, ::, 1]
+    blue = np_array[::, ::, 2]
+    plane_gen = iter([red, green, blue])
+    new_image = conn.createImageFromNumpySeq(
+        plane_gen,
+        "Plot from OMERO.parade",
+        sizeC=3)
+
+    return JsonResponse({'image_id': new_image.id})
