@@ -39,14 +39,7 @@ function App() {
                     className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow"
                 >
                     <Header />
-
-
-                    <Dropdown as={NavItem} className="ml-auto navbar-nav pr-md-4">
-                        <Dropdown.Toggle as={NavLink}>Click to see more…</Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item>Hello there!</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <OpenWith />
                 </Nav>
                 <Main />
             </DataContext>

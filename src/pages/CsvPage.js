@@ -41,7 +41,6 @@ function CsvPage({ screen }) {
         cursor: "pointer"
     };
 
-    const [selectedIds, setSelectedIds] = React.useState([]);
     const [sortBy, setSortBy] = React.useState(undefined);
     const [sortReverse, setSortReverse] = React.useState(false);
 
@@ -90,36 +89,25 @@ function CsvPage({ screen }) {
     const screenComponent = (
         <Screen
             screenId={screen}
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
         />
     )
 
     const scatter_plot = (
-        <PlotContainer
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-        />
+        <PlotContainer />
     )
     const cumulative = (
         <PlotContainer
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
             cumulativePlot={true}
         />
     )
     const images = (
         <Images
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
             sortBy={sortBy}
             sortReverse={sortReverse}
         />
     )
     const table = (
         <SimpleTable
-            setSelectedIds={setSelectedIds}
-            selectedIds={selectedIds}
             sortBy={sortBy}
             setSortBy={setSortBy}
             sortReverse={sortReverse}
@@ -127,10 +115,7 @@ function CsvPage({ screen }) {
         />
     )
     const boxplot = (
-        <BoxPlotContainer
-            selectedIds={selectedIds}
-            setSelectedIds={setSelectedIds}
-        />
+        <BoxPlotContainer />
     )
     const panels = {
         'scatter_plot': scatter_plot,

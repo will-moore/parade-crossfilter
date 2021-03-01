@@ -8,9 +8,11 @@ import { CXContext } from "../crossfilter/DataContext";
 const labelStyle = { marginLeft: 10, marginRight: 5 };
 
 // size props come from sizeMe() HOC below
-const PlotContainer = ({ size, selectedIds, setSelectedIds, cumulativePlot }) => {
+const PlotContainer = ({ size, cumulativePlot }) => {
 
     const context = React.useContext(CXContext);
+    const selectedIds = context.selectedIds;
+    const setSelectedIds = context.setSelectedIds;
     const numberCols = context.columns.filter(col => col.type === 'number');
 
     console.log('render PlotContainer - context')

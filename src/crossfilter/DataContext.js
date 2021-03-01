@@ -12,7 +12,13 @@ export const CXContext = React.createContext("CXContext");
 export class DataContext extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { loading: false, hasNDX: false, groupBy: [] };
+        this.state = { loading: false, hasNDX: false, selectedIds: [] };
+        this.setSelectedIds = this.setSelectedIds.bind(this);
+    }
+
+    setSelectedIds(rowIds) {
+        console.log("DataContext.setSelectedIds", rowIds);
+        this.setState({ ...this.state, selectedIds: rowIds });
     }
 
     addGroupBy(colname) {
@@ -72,11 +78,15 @@ export class DataContext extends React.Component {
 
     render() {
 
+        console.log('DataContext.render()', this.state.selectedIds);
+
         let context = {
             setDataToLoad: (toLoad) => { this.loadData(toLoad) },
             ndx: undefined,
             columns: [],
             addGroupBy: (groupBy) => { this.addGroupBy(groupBy) },
+            setSelectedIds: this.setSelectedIds,
+            selectedIds: this.state.selectedIds,
         }
 
         if (this.state.hasNDX) {

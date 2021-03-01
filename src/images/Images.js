@@ -14,10 +14,12 @@ const imgStyle = {
 }
 
 // size props come from sizeMe() HOC below
-const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
+const Images = ({ sortBy, sortReverse, size }) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
+    const selectedIds = context.selectedIds;
+    const setSelectedIds = context.setSelectedIds;
     const ndx = context.ndx;
     const columns = context.columns;
     let thumbSize = 192;
