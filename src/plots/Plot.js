@@ -44,11 +44,16 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style }) => {
         }
     }, [layout, xLabel, yLabel]);
 
+    // combine x and y range with layout from props
+    let xaxis = { ...layout.xaxis, range: xRange }
+    let yaxis = { ...layout.yaxis, range: yRange }
+    const layoutWithRanges = { ...layout, xaxis: xaxis, yaxis: yaxis }
+
     const handlSaveToOmero = () => {
         // NB: This uses the hidden 'graph' div below
         // can add 'width' and 'height' to layout for higher resolution
         // default size is 'width':700, 'height':450
-        Plotly.plot('graph', data, layout).then((gd) => {
+        Plotly.plot('graph', data, layoutWithRanges).then((gd) => {
             return Plotly.toImage(gd);
         }).then((dataURI) => {
             const csrftoken = getCookie("csrftoken");
@@ -64,11 +69,6 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style }) => {
             ));
         });
     }
-
-    // combine x and y range with layout from props
-    let xaxis = { ...layout.xaxis, range: xRange }
-    let yaxis = { ...layout.yaxis, range: yRange }
-    const layoutWithRanges = { ...layout, xaxis: xaxis, yaxis: yaxis }
 
     // When user pans, zooms etc. update the saved X and Y ranges
     const handleUpdate = (figure, b) => {
