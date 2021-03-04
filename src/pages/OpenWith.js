@@ -112,16 +112,13 @@ function OpenWith() {
     let roiIDs = getIDs('ROI')
     let shapeIDs = getIDs('Shape')
 
-    console.log('imageIDs', imageIDs);
-
-
     // List of [{ text: label, url: url }]
     const urls = (imageIDs.length > 0) ? getOpenWithLinkParams(imageIDs, 'image') : [];
-    console.log('urls', urls);
 
     return (
         <Dropdown as={NavItem} className="ml-auto navbar-nav pr-md-4">
-            <Dropdown.Toggle as={NavLink}>Open {selectedIds.length} with...</Dropdown.Toggle>
+            <Dropdown.Toggle as={NavLink}>
+                Open {imageIDs.length} Image{imageIDs.length === 1 ? "" : "s"} with...</Dropdown.Toggle>
             <Dropdown.Menu>
                 {
                     urls.map(url => (
