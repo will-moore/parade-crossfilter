@@ -1,6 +1,5 @@
 import React from "react";
 import sizeMe from 'react-sizeme'
-// import ScatterPlot from "./ScatterPlot";
 import ScatterPlot from "./ScatterPlot";
 import ColumnPicker from "./ColumnPicker";
 import { CXContext } from "../crossfilter/DataContext";

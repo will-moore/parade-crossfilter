@@ -7,18 +7,14 @@ import { filesizeformat } from '../utils';
 
 function ChooseData({ project, screen, setDataToLoad }) {
 
-
     // dialog state
     const [show, setShow] = React.useState(true);
     const handleClose = () => setShow(false);
-    // const handleShow = () => setShow(true);
 
-
-    // let dtype = 'project';
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
     const [selectedAnn, selectFileAnn] = useState(undefined);
-    const [datasets, setDatasets] = useState(undefined);
+    const [datasets, setDatasets] = useState(project === "" ? undefined : project);
     const [mapAnns, setMapAnns] = useState(undefined);
     const [tags, setTags] = useState(undefined);
 
@@ -143,6 +139,7 @@ function ChooseData({ project, screen, setDataToLoad }) {
                             <Form.Check
                                 type="checkbox"
                                 name="datasets"
+                                checked={datasets !== undefined}
                                 onChange={handleDatasets}
                                 label={"Load Datasets"}
                             />

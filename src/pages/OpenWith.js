@@ -1,6 +1,5 @@
 
 import React from 'react';
-import Nav from 'react-bootstrap/Nav';
 import NavItem from 'react-bootstrap/NavItem';
 import NavLink from 'react-bootstrap/NavLink';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -40,11 +39,11 @@ const getOpenWithLinkParams = function (ids, type) {
                 return prev || supported === 'images' || supported === 'image';
             }, false);
         }
-        if (!enabled) return;
+        if (!enabled) return "";
 
         // Ignore open_with -> iviewer or webgateway viewer
         if (v.url.indexOf('iviewer_url') === 0 ||
-            v.url.indexOf('webgateway_url') == 0) return;
+            v.url.indexOf('webgateway_url') === 0) return "";
 
         var label = v.label || v.id;
 
@@ -60,11 +59,6 @@ const getOpenWithLinkParams = function (ids, type) {
     }).filter(l => l);
 }
 
-const OpenWithMenuItem = ({ name, ids }) => (
-    <Dropdown.Item>
-        Open {ids.length} {name}{ids.length > 1 ? "s" : ""} with
-    </Dropdown.Item>
-)
 
 window.OME.open_with_options = [];
 
@@ -93,7 +87,7 @@ function OpenWith() {
     }, []);
 
     // Get Dataset IDs, Image IDs, ROI IDs
-    if (ndx == undefined) {
+    if (ndx === undefined) {
         return <span>...</span>
     }
 
