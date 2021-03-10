@@ -3,23 +3,8 @@ import React from "react";
 import Plot from 'react-plotly.js';
 import * as Plotly from 'plotly.js';
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
-const PlotlyPlot = ({ data, layout, config, onSelected, style }) => {
+const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
     // This whole component wraps the Plotly <Plot> simply to prevent
     // loss of the current x and y ranges on re-render...
 
@@ -56,17 +41,7 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style }) => {
         Plotly.plot('graph', data, layoutWithRanges).then((gd) => {
             return Plotly.toImage(gd);
         }).then((dataURI) => {
-            const csrftoken = getCookie("csrftoken");
-            const saveUrl = `${window.OMEROWEB_INDEX}parade_crossfilter/save_image/`;
-            fetch(saveUrl, {
-                method: 'POST',
-                mode: 'cors',
-                credentials: 'include',
-                body: JSON.stringify({ data: dataURI }),
-                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
-            }).then(res => console.log(
-                res.json()
-            ));
+            saveImg(dataURI);
         });
     }
 
@@ -78,7 +53,7 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style }) => {
 
     return (
         <div>
-            <button onClick={handlSaveToOmero} >Save</button>
+            <button style={{ position: 'absolute', right: 0, top: -50 }} onClick={handlSaveToOmero} >Save</button>
             <Plot
                 data={data}
                 config={config}

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import Form from 'react-bootstrap/Form';
 import NavItem from 'react-bootstrap/NavItem';
 import NavLink from 'react-bootstrap/NavLink';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -25,11 +26,9 @@ function getScript(scriptUrl) {
 const getOpenWithLinkParams = function (ids, type) {
 
     var selectedObjs = ids.map(id => { return { id, type } });
-    console.log('selectedObjs', selectedObjs);
     var image_id = selectedObjs[0].id;
 
     return window.OME.open_with_options.map(v => {
-        console.log('v', v);
         var enabled = false;
         if (typeof v.isEnabled === "function") {
             enabled = v.isEnabled(selectedObjs);
@@ -67,7 +66,13 @@ function OpenWith() {
     const context = React.useContext(CXContext);
     const selectedIds = context.selectedIds;
     const ndx = context.ndx;
+    const exportedPlotIds = context.exportedPlotIds;
 
+    const [exportPlots, setExportPlots] = React.useState(false);
+
+    const handleExportPlots = () => {
+        setExportPlots(!exportPlots);
+    }
 
     React.useEffect(() => {
         // Run once on mount...
@@ -101,26 +106,37 @@ function OpenWith() {
     }
 
 
-    let datasetIDs = getIDs('Dataset');
+    // let datasetIDs = getIDs('Dataset');
     let imageIDs = getIDs('Image')
-    let roiIDs = getIDs('ROI')
-    let shapeIDs = getIDs('Shape')
+
+    if (exportPlots) {
+        imageIDs = imageIDs.concat(exportedPlotIds);
+    }
+    // let roiIDs = getIDs('ROI')
+    // let shapeIDs = getIDs('Shape')
 
     // List of [{ text: label, url: url }]
     const urls = (imageIDs.length > 0) ? getOpenWithLinkParams(imageIDs, 'image') : [];
 
     return (
-        <Dropdown as={NavItem} className="ml-auto navbar-nav pr-md-4">
-            <Dropdown.Toggle as={NavLink}>
-                Open {imageIDs.length} Image{imageIDs.length === 1 ? "" : "s"} with...</Dropdown.Toggle>
-            <Dropdown.Menu>
-                {
-                    urls.map(url => (
-                        <Dropdown.Item key={url.text} target="_blank" href={url.url}>{url.text}</Dropdown.Item>
-                    ))
+        <React.Fragment>
+            <Form inline className="ml-auto navbar-nav pr-md-4">
+                {exportedPlotIds.length > 0 &&
+                    <Form.Check onClick={handleExportPlots} className="nav-link" type="checkbox" label={`Open ${exportedPlotIds.length} Plots`} />
                 }
-            </Dropdown.Menu>
-        </Dropdown>
+            </Form>
+            <Dropdown as={NavItem} className="navbar-nav pr-md-4">
+                <Dropdown.Toggle as={NavLink}>
+                    Open {imageIDs.length} Image{imageIDs.length === 1 ? "" : "s"} with...</Dropdown.Toggle>
+                <Dropdown.Menu>
+                    {
+                        urls.map(url => (
+                            <Dropdown.Item key={url.text} target="_blank" href={url.url}>{url.text}</Dropdown.Item>
+                        ))
+                    }
+                </Dropdown.Menu>
+            </Dropdown>
+        </React.Fragment>
     );
 }
 

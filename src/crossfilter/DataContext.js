@@ -2,7 +2,7 @@ import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
 import { fetchText, loadDatasetsAndAnnotations } from "./FetchData";
-import { prepCrossfilterData, groupCrossfilterData } from "../utils";
+import { prepCrossfilterData, groupCrossfilterData, getCookie } from "../utils";
 
 import crossfilter from "crossfilter2";
 
@@ -12,8 +12,22 @@ export const CXContext = React.createContext("CXContext");
 export class DataContext extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { loading: false, hasNDX: false, selectedIds: [] };
+        this.state = {
+            loading: false,
+            hasNDX: false,
+            selectedIds: [],
+            exportedPlotIds: [],
+        };
         this.setSelectedIds = this.setSelectedIds.bind(this);
+        this.setExportedPlotIds = this.setExportedPlotIds.bind(this);
+        this.handleSavePlotImage = this.handleSavePlotImage.bind(this);
+    }
+
+    setExportedPlotIds(imageId) {
+        let { exportedPlotIds } = this.state;
+        console.log('plotIds', this.state, exportedPlotIds, imageId);
+        this.setState({ ...this.state, exportedPlotIds: [...exportedPlotIds, imageId] });
+        console.log('setExportedPlotIds', this.state);
     }
 
     setSelectedIds(rowIds) {
@@ -76,6 +90,26 @@ export class DataContext extends React.Component {
 
     }
 
+    handleSavePlotImage(dataURI) {
+        console.log('context.handleSavePlotImage...')
+        const csrftoken = getCookie("csrftoken");
+        console.log('csrftoken', csrftoken)
+        const saveUrl = `${window.OMEROWEB_INDEX}parade_crossfilter/save_image/`;
+        fetch(saveUrl, {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+            body: JSON.stringify({ data: dataURI }),
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        }).then(res => res.json())
+            .then(data => {
+                console.log('data', data);
+                const plotId = data.image_id;
+                console.log('plotId', plotId);
+                this.setExportedPlotIds(plotId);
+            });
+    }
+
     render() {
 
         console.log('DataContext.render()', this.state.selectedIds);
@@ -87,6 +121,8 @@ export class DataContext extends React.Component {
             addGroupBy: (groupBy) => { this.addGroupBy(groupBy) },
             setSelectedIds: this.setSelectedIds,
             selectedIds: this.state.selectedIds,
+            handleSavePlotImage: this.handleSavePlotImage,
+            exportedPlotIds: this.state.exportedPlotIds,
         }
 
         if (this.state.hasNDX) {
