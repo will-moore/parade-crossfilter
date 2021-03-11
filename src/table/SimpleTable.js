@@ -10,7 +10,15 @@ const headerStyle = {
     cursor: 'pointer',
 }
 
-const SimpleTable = ({ selectedIds, setSelectedIds,
+const gridStyle = {
+    width: 'calc(100%-10px)',
+    height: '100%',
+    paddingTop: 5,
+    margin: 2,
+    overflowX: 'auto'
+}
+
+const SimpleTable = ({
     sortBy, setSortBy,
     sortReverse, setSortReverse,
     size }) => {
@@ -20,6 +28,8 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
     const [filteredData, setData] = React.useState([]);
 
     const ndx = context.ndx;
+    const selectedIds = context.selectedIds;
+    const setSelectedIds = context.setSelectedIds;
 
     React.useEffect(() => {
 
@@ -99,8 +109,12 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let value = filteredData[rowIndex][colNames[columnIndex]];
         let displayVal = value;
-        // If a number (not an Integer), format precision...
-        if (value.toPrecision && !Number.isInteger(value)) {
+        if (typeof value === 'object') {
+            // This will be an Array
+            value = value.sort();
+            displayVal = value.join(', ');
+        } else if (value !== undefined && value.toPrecision && !Number.isInteger(value)) {
+            // If a number (not an Integer), format precision...
             displayVal = value.toPrecision(4);
         }
         return (
@@ -133,7 +147,7 @@ const SimpleTable = ({ selectedIds, setSelectedIds,
     const colWidth = 100;
 
     return (
-        <div style={{ width: 'calc(100%-10px)', height: '100%', paddingTop: 5, margin: 2, overflowX: 'auto' }}>
+        <div style={gridStyle}>
             <Grid
                 height={35}
                 columnCount={colNames.length}

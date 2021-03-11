@@ -7,19 +7,16 @@ import { filesizeformat } from '../utils';
 
 function ChooseData({ project, screen, setDataToLoad }) {
 
-
     // dialog state
     const [show, setShow] = React.useState(true);
     const handleClose = () => setShow(false);
-    // const handleShow = () => setShow(true);
 
-
-    // let dtype = 'project';
     const [loading, setLoading] = useState(false);
     const [fileAnns, setFileAnns] = useState([]);
     const [selectedAnn, selectFileAnn] = useState(undefined);
-    const [datasets, setDatasets] = useState(undefined);
+    const [datasets, setDatasets] = useState(project === "" ? undefined : project);
     const [mapAnns, setMapAnns] = useState(undefined);
+    const [tags, setTags] = useState(undefined);
 
     useEffect(() => {
         setLoading(true);
@@ -40,7 +37,6 @@ function ChooseData({ project, screen, setDataToLoad }) {
     }, [project, screen]);
 
     const handleChange = (event) => {
-        console.log(event.target.value)
         let fid = parseInt(event.target.value);
         if (selectedAnn === fid) {
             // toggle checkbox off
@@ -56,6 +52,20 @@ function ChooseData({ project, screen, setDataToLoad }) {
         } else {
             // pass in the project ID
             setDatasets(project);
+        }
+    }
+
+    const handleTags = (event) => {
+        // toggle tags
+        if (tags) {
+            setDatasets(undefined);
+        } else {
+            // pass in the screen, project ID etc
+            if (screen) {
+                setTags('screen-' + screen);
+            } else if (project) {
+                setTags('project-' + project);
+            }
         }
     }
 
@@ -80,7 +90,7 @@ function ChooseData({ project, screen, setDataToLoad }) {
         }
         dataToLoad.datasets = datasets;
         dataToLoad.mapAnns = mapAnns;
-        console.log(dataToLoad);
+        dataToLoad.tags = tags;
         setDataToLoad(dataToLoad);
         setShow(false);
     }
@@ -116,23 +126,33 @@ function ChooseData({ project, screen, setDataToLoad }) {
                             ))}
                         </Form.Control>
 
-                        <div className="mb-3">
+                        <Form.Group controlId="mapAnnsCheckbox">
                             <Form.Check
                                 type="checkbox"
                                 name="mapAnns"
                                 onChange={handleMapAnns}
                                 label={"Load Key-Value Pairs"}
                             />
-                        </div>
+                        </Form.Group>
 
-                        <div className="mb-3">
+                        <Form.Group controlId="datasetsCheckbox">
                             <Form.Check
                                 type="checkbox"
                                 name="datasets"
+                                checked={datasets !== undefined}
                                 onChange={handleDatasets}
                                 label={"Load Datasets"}
                             />
-                        </div>
+                        </Form.Group>
+
+                        <Form.Group controlId="tagsCheckbox">
+                            <Form.Check
+                                type="checkbox"
+                                name="tags"
+                                onChange={handleTags}
+                                label={"Load Tags"}
+                            />
+                        </Form.Group>
                     </Form>
                 )}
             </Modal.Body>

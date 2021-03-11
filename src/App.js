@@ -1,7 +1,14 @@
 
 import React from 'react';
+import Nav from 'react-bootstrap/Nav';
+import NavItem from 'react-bootstrap/NavItem';
+import NavLink from 'react-bootstrap/NavLink';
+import Dropdown from 'react-bootstrap/Dropdown';
+
+import { DataContext } from './crossfilter/DataContext';
 import Header from './pages/Header';
 import Main from './pages/Main';
+import OpenWith from './pages/OpenWith';
 import { getUrlParameter } from './utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,11 +34,16 @@ function App() {
 
     return (
         <div className="App">
-            <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-                <Header />
-            </nav>
-            <Main/>
-        </div>
+            <DataContext>
+                <Nav
+                    className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow"
+                >
+                    <Header />
+                    <OpenWith />
+                </Nav>
+                <Main />
+            </DataContext>
+        </div >
     );
 }
 

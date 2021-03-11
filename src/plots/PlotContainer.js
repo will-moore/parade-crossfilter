@@ -1,6 +1,5 @@
 import React from "react";
 import sizeMe from 'react-sizeme'
-// import ScatterPlot from "./ScatterPlot";
 import ScatterPlot from "./ScatterPlot";
 import ColumnPicker from "./ColumnPicker";
 import { CXContext } from "../crossfilter/DataContext";
@@ -8,10 +7,14 @@ import { CXContext } from "../crossfilter/DataContext";
 const labelStyle = { marginLeft: 10, marginRight: 5 };
 
 // size props come from sizeMe() HOC below
-const PlotContainer = ({ size, selectedIds, setSelectedIds, cumulativePlot }) => {
+const PlotContainer = ({ size, cumulativePlot }) => {
 
     const context = React.useContext(CXContext);
+    const selectedIds = context.selectedIds;
+    const setSelectedIds = context.setSelectedIds;
     const numberCols = context.columns.filter(col => col.type === 'number');
+
+    console.log('render PlotContainer - context')
 
     // Start by plotting the first 2 dimensions we have
     const [yAxis, setYAxis] = React.useState(numberCols[0]);

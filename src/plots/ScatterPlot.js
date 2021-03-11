@@ -147,6 +147,7 @@ const ScatterPlot = ({ height, xAxis, yAxis, groupBy, cumulativePlot,
                 }
             }}
             onSelected={handleSelected}
+            saveImg={context.handleSavePlotImage}
         />
     );
 };

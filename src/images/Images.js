@@ -14,13 +14,17 @@ const imgStyle = {
 }
 
 // size props come from sizeMe() HOC below
-const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
+const Images = ({ sortBy, sortReverse, size }) => {
 
     const context = React.useContext(CXContext);
     const [crossFilterData, setData] = React.useState([]);
+    const selectedIds = context.selectedIds;
+    const setSelectedIds = context.setSelectedIds;
     const ndx = context.ndx;
     const columns = context.columns;
     let thumbSize = 192;
+
+    console.log('render Images - context')
 
     React.useEffect(() => {
 
@@ -83,7 +87,7 @@ const Images = ({ selectedIds, setSelectedIds, sortBy, sortReverse, size }) => {
     const width = size.width;
     const colCount = parseInt(Math.round(width / thumbSize));
     // adjust thumbSize to fit columns
-    thumbSize = width/colCount;
+    thumbSize = width / colCount;
     // Known dimensions of roi-thumbnails
     const roiThumbAspect = 250 / 166;
     const thumbHeight = thumbSize / roiThumbAspect;

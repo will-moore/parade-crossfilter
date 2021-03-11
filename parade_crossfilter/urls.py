@@ -36,4 +36,7 @@ urlpatterns = [
 
     url(r'^omero_table_as_csv/(?P<file_id>[0-9]+)/$',
         views.omero_table_as_csv, name='pc_omero_table_as_csv'),
+
+    # POST image as {'data': 'data:image/png;base64,fsfssdflksdf....'}
+    url(r'^save_image/$', views.save_image, name='pc_save_image'),
 ]

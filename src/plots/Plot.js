@@ -1,8 +1,10 @@
 
 import React from "react";
 import Plot from 'react-plotly.js';
+import * as Plotly from 'plotly.js';
 
-const PlotlyPlot = ({data, layout, config, onSelected, style}) => {
+
+const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
     // This whole component wraps the Plotly <Plot> simply to prevent
     // loss of the current x and y ranges on re-render...
 
@@ -28,9 +30,22 @@ const PlotlyPlot = ({data, layout, config, onSelected, style}) => {
     }, [layout, xLabel, yLabel]);
 
     // combine x and y range with layout from props
-    let xaxis = {...layout.xaxis, range: xRange}
-    let yaxis = {...layout.yaxis, range: yRange}
-    const layoutWithRanges = {...layout, xaxis:xaxis, yaxis:yaxis}
+    let xaxis = { ...layout.xaxis, range: xRange }
+    let yaxis = { ...layout.yaxis, range: yRange }
+    const layoutWithRanges = { ...layout, xaxis: xaxis, yaxis: yaxis }
+
+    const handlSaveToOmero = () => {
+        // NB: This uses the hidden 'graph' div below
+        // can add 'width' and 'height' to layout for higher resolution
+        // default size is 'width':700, 'height':450
+        Plotly.plot('graph', data, layoutWithRanges).then((gd) => {
+            return Plotly.toImage(gd);
+        }).then((dataURI) => {
+            // Clear the graph element
+            Plotly.purge('graph');
+            saveImg(dataURI);
+        });
+    }
 
     // When user pans, zooms etc. update the saved X and Y ranges
     const handleUpdate = (figure, b) => {
@@ -40,6 +55,7 @@ const PlotlyPlot = ({data, layout, config, onSelected, style}) => {
 
     return (
         <div>
+            <button style={{ position: 'absolute', right: 0, top: -50 }} onClick={handlSaveToOmero} >Save</button>
             <Plot
                 data={data}
                 config={config}
@@ -49,6 +65,7 @@ const PlotlyPlot = ({data, layout, config, onSelected, style}) => {
                 useResizeHandler={true}
                 style={style}
             />
+            <div id="graph" style={{ display: "none" }}></div>
         </div>
     );
 };

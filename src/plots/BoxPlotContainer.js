@@ -24,13 +24,13 @@ const BoxPlotContainer = ({ size, selectedIds, setSelectedIds }) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setXAxis(col);
-        setSelectedIds([]);
+        context.setSelectedIds([]);
     }
     const handleChangeY = (event) => {
         let name = event.target.value;
         let col = context.columns.find(col => col.name === name);
         setYAxis(col);
-        setSelectedIds([]);
+        context.setSelectedIds([]);
     }
 
     return (

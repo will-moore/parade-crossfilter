@@ -1,31 +1,34 @@
 
-import React, {useState} from 'react';
+import React from 'react';
 import CsvPage from './CsvPage';
 import ChooseData from '../dialogs/ChooseData';
 import { getUrlParameter } from '../utils';
+import { CXContext } from "../crossfilter/DataContext";
 
 export default () => {
 
-    const [toLoad, setDataToLoad] = useState();
+    const context = React.useContext(CXContext);
+
+    console.log('render Main - context')
 
     let project = getUrlParameter('project');
     let screen = getUrlParameter('screen');
 
     return (
-    <React.Fragment>
-        <ChooseData
-            screen={screen}
-            project={project}
-            setDataToLoad={setDataToLoad}
-        />
-
-        { toLoad ?
-            <CsvPage
-                toLoad={toLoad}
+        <React.Fragment>
+            <ChooseData
                 screen={screen}
+                project={project}
+                setDataToLoad={context.setDataToLoad}
             />
-        
-        : <div>Welcome to OMERO.parade</div>}
 
-    </React.Fragment>
-)}
+            { context.ndx ?
+                <CsvPage
+                    screen={screen}
+                />
+
+                : <div>Welcome to OMERO.parade</div>}
+
+        </React.Fragment>
+    )
+}
