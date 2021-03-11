@@ -14,12 +14,13 @@ function getScript(scriptUrl) {
     if (scriptUrl[0] === '/') {
         scriptUrl = scriptUrl.slice(1);
     }
-    scriptUrl = window.OMEROWEB_INDEX + scriptUrl;
+    // in running in dev environment, need to use full URL
+    // e.g. http://localhost:4080/...
+    if (window.OMEROWEB_INDEX.includes("localhost")) {
+        scriptUrl = window.OMEROWEB_INDEX + scriptUrl;
+    }
     const script = document.createElement('script');
     script.src = scriptUrl;
-    console.log('scriptUrl', scriptUrl, script);
-    // script.onload = callback;
-
     document.body.appendChild(script);
 }
 
