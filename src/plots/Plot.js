@@ -2,6 +2,7 @@
 import React from "react";
 import Plot from 'react-plotly.js';
 import * as Plotly from 'plotly.js';
+import Button from 'react-bootstrap/Button';
 
 
 const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
@@ -15,6 +16,7 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
     // So, we remember the axis labels in state...
     const [xLabel, setXLabel] = React.useState(layout.xaxis.title.text);
     const [yLabel, setYLabel] = React.useState(layout.yaxis.title.text);
+    const [savingPlot, setSavingPlot] = React.useState(false);
 
     // When layout prop changes, check to see if X or Y axis label has changed...
     React.useEffect(() => {
@@ -38,12 +40,15 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
         // NB: This uses the hidden 'graph' div below
         // can add 'width' and 'height' to layout for higher resolution
         // default size is 'width':700, 'height':450
+        setSavingPlot(true);
         Plotly.plot('graph', data, layoutWithRanges).then((gd) => {
             return Plotly.toImage(gd);
         }).then((dataURI) => {
             // Clear the graph element
             Plotly.purge('graph');
-            saveImg(dataURI);
+            return saveImg(dataURI);
+        }).then(() => {
+            setSavingPlot(false);
         });
     }
 
@@ -55,7 +60,15 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
 
     return (
         <div>
-            <button style={{ position: 'absolute', right: 0, top: -50 }} onClick={handlSaveToOmero} >Save</button>
+            <Button
+                variant="outline-secondary"
+                size="sm"
+                style={{ position: 'absolute', right: 0, top: -50 }}
+                onClick={handlSaveToOmero}
+                title="Save Plot as new Image in OMERO"
+            >
+                {savingPlot ? "Saving..." : "Save Plot"}
+            </Button>
             <Plot
                 data={data}
                 config={config}

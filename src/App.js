@@ -1,9 +1,6 @@
 
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
-import NavItem from 'react-bootstrap/NavItem';
-import NavLink from 'react-bootstrap/NavLink';
-import Dropdown from 'react-bootstrap/Dropdown';
 
 import { DataContext } from './crossfilter/DataContext';
 import Header from './pages/Header';

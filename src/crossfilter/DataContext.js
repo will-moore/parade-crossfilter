@@ -90,12 +90,12 @@ export class DataContext extends React.Component {
 
     }
 
-    handleSavePlotImage(dataURI) {
+    async handleSavePlotImage(dataURI) {
         console.log('context.handleSavePlotImage...')
         const csrftoken = getCookie("csrftoken");
         console.log('csrftoken', csrftoken)
         const saveUrl = `${window.OMEROWEB_INDEX}parade_crossfilter/save_image/`;
-        fetch(saveUrl, {
+        await fetch(saveUrl, {
             method: 'POST',
             mode: 'cors',
             credentials: 'include',
