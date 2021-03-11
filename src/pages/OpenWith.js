@@ -11,14 +11,18 @@ if (!window.OME) {
 }
 
 function getScript(scriptUrl) {
-    if (scriptUrl[0] === '/') {
-        scriptUrl = scriptUrl.slice(1);
-    }
+    // if (scriptUrl[0] === '/') {
+    //     scriptUrl = scriptUrl.slice(1);
+    // }
+    console.log('getScript()', scriptUrl);
     // in running in dev environment, need to use full URL
     // e.g. http://localhost:4080/...
     if (window.OMEROWEB_INDEX.includes("localhost")) {
-        scriptUrl = window.OMEROWEB_INDEX + scriptUrl;
-    }
+        scriptUrl = window.OMEROWEB_INDEX + scriptUrl.slice(1);
+    } else {
+        // e.g. OMEROWEB_INDEX = '/omero/' and scriptUrl
+        scriptUrl = scriptUrl.replace(window.OMEROWEB_INDEX, "/");
+    };
     const script = document.createElement('script');
     script.src = scriptUrl;
     document.body.appendChild(script);
@@ -53,7 +57,7 @@ const getOpenWithLinkParams = function (ids, type) {
             the_url = v.getUrl(selectedObjs, v.url);
         }
         catch (err) { }
-        var url = the_url || v.url + '?image=' + image_id;
+        var url = the_url || v.url + '?' + selectedObjs.map(o => `${o.type}=${o.id}`).join('&');
 
         return ({ text: label, url: url });
     }).filter(l => l);
