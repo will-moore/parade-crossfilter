@@ -41,6 +41,8 @@ const PlotlyPlot = ({ data, layout, config, onSelected, style, saveImg }) => {
         Plotly.plot('graph', data, layoutWithRanges).then((gd) => {
             return Plotly.toImage(gd);
         }).then((dataURI) => {
+            // Clear the graph element
+            Plotly.purge('graph');
             saveImg(dataURI);
         });
     }
