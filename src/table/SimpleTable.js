@@ -8,6 +8,7 @@ import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 
 const headerStyle = {
     cursor: 'pointer',
+    overflow: 'hidden',
 }
 
 const gridStyle = {
@@ -100,7 +101,7 @@ const SimpleTable = ({
     )
 
     const Header = ({ columnIndex, rowIndex, style }) => (
-        <div style={{ ...style, ...headerStyle }} onClick={() => handleHeaderClick(columnIndex)}>
+        <div title={colNames[columnIndex]} style={{ ...style, ...headerStyle }} onClick={() => handleHeaderClick(columnIndex)}>
             {colNames[columnIndex]}
             <FontAwesomeIcon icon={sortIcon(colNames[columnIndex])} style={{ marginLeft: 3 }} />
         </div>
@@ -144,7 +145,7 @@ const SimpleTable = ({
         )
     }
 
-    const colWidth = 100;
+    const colWidth = 150;
 
     return (
         <div style={gridStyle}>
