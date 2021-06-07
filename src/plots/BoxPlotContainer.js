@@ -54,7 +54,7 @@ const BoxPlotContainer = ({ size, selectedIds, setSelectedIds }) => {
                 </select>
 
             </div>
-            <div style={{ width: 'calc(100% - 10px)', position: 'absolute', top: 49, zIndex: 1 }}
+            <div style={{ width: 'calc(100% - 10px)', position: 'absolute', top: 59, zIndex: 11 }}
                 className="draggableCancel"
             >
 
