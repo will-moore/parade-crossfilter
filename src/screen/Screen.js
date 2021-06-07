@@ -1,32 +1,32 @@
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Plate from "./Plate";
 import SpwControls from "./SpwControls";
 
-const Screen = ({screenId, selectedIds, setSelectedIds}) => {
+const Screen = ({ screenId }) => {
 
     const [plates, setPlates] = useState([]);
     const [showFields, setShowFields] = useState(false);
     const [heatmap, setHeatmap] = React.useState('--');
 
     useEffect(() => {
-        let url = window.OMEROWEB_INDEX + `api/v0/m/screens/${ screenId }/plates/`;
-        fetch(url, {mode: 'cors', credentials: 'include'})
+        let url = window.OMEROWEB_INDEX + `api/v0/m/screens/${screenId}/plates/`;
+        fetch(url, { mode: 'cors', credentials: 'include' })
             .then(rsp => rsp.json())
             .then(data => {
-                let plates = data.data.map(p => {return {id: p['@id'], Name: p.Name}});
+                let plates = data.data.map(p => { return { id: p['@id'], Name: p.Name } });
                 setPlates(plates);
             });
     }, [screenId]);
 
     return (
-        <div style={{position: 'relative'}}>
+        <div style={{ position: 'relative' }}>
             <SpwControls
                 setShowFields={setShowFields}
                 heatmap={heatmap}
                 setHeatmap={setHeatmap}
             />
-            { plates.length === 0 ? "Loading plates..." : `${ plates.length } plates:`}
+            { plates.length === 0 ? "Loading plates..." : `${plates.length} plates:`}
             {
                 plates.map(p =>
                     <Plate
@@ -34,8 +34,6 @@ const Screen = ({screenId, selectedIds, setSelectedIds}) => {
                         plate={p}
                         showFields={showFields}
                         heatmap={heatmap}
-                        selectedIds={selectedIds}
-                        setSelectedIds={setSelectedIds}
                     />)
             }
         </div>
