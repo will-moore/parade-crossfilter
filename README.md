@@ -34,33 +34,21 @@ Particular questions:
 
 <img src="https://user-images.githubusercontent.com/900055/77835025-66d0e300-7141-11ea-9b4a-ba1fe5885e57.png" />
 
-## Development
+## Install
 
-You can run this project in development mode or as an OMERO.web Django app.
-
-The notes below are largely from `Create React App` but have been updated with
-changes made to connect to OMERO in dev or production modes.
-
-To get started:
+This project is not yet available on Pypi. To install it, you need to checkout
+this repository, then:
 
     $ cd parade-crossfilter
+    $ pip install .     # use -e if you wish to edit (dev)
+
+To build the JS bundle, you'll need to have [Node](https://nodejs.org/) installed.
+Then install the JavaScript dependencies and build:
+
     $ npm install
+    $ npm run build`
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The app will try to connect to an OMERO.web server at http://localhost:4080
-using an existing session.<br>
-You will need to be logged-in to http://localhost:4080/webclient.<br>
-To use a different server, edit `dev_omeroweb_index` in `public/index.html`.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder and copies the
+This builds the app for production to the `build` folder and copies the
 html and static files to the Django app in `parade_crossfilter`.<br>
 
 You will need to have the app configured in your OMERO.web install:
@@ -72,3 +60,27 @@ The app will be run as an OMERO.web app at e.g. http://localhost:4080/parade_cro
 Add to 'open_with' config:
 
     $ omero config append omero.web.open_with '["Parade", "parade_crossfilter_index", {"supported_objects": ["project", "screen"]}]'
+
+## Development
+
+You can run this project in development mode or as an OMERO.web Django app (below).
+
+The notes below are largely from `Create React App` but have been updated with
+changes made to connect to OMERO in dev or production modes.
+
+To get started:
+
+    $ cd parade-crossfilter
+    $ npm install
+
+In the project directory, you can run:
+
+    $ npm start
+
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The app will try to connect to an OMERO.web server at http://localhost:4080
+using an existing session.<br>
+You will need to be logged-in to http://localhost:4080/webclient.<br>
+To use a different server, edit `dev_omeroweb_index` in `public/index.html`.
