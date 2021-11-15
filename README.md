@@ -46,7 +46,7 @@ To build the JS bundle, you'll need to have [Node](https://nodejs.org/) installe
 Then install the JavaScript dependencies and build:
 
     $ npm install
-    $ npm run build`
+    $ npm run build
 
 This builds the app for production to the `build` folder and copies the
 html and static files to the Django app in `parade_crossfilter`.<br>
