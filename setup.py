@@ -45,6 +45,7 @@ setup(
     version='0.0.1dev',
     description="OMERO.web plugin to test crossfilter",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Will Moore",
     packages=find_packages(exclude=['ez_setup']),
     install_requires=['omero-web>=5.6.1'],
