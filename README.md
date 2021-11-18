@@ -6,11 +6,24 @@ It uses [Create React App](https://github.com/facebook/create-react-app)
 with the cross-filter, https://dc-js.github.io/dc.js/ and React interaction
 based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 
+# Install
+
+Install into your omero-web python environment:
+
+    $ pip install parade-crossfilter
+
+You will need to have the app configured in your OMERO.web install:
+
+    $ omero config append omero.web.apps '"parade_crossfilter"'
+
+Add to 'open_with' config:
+
+    $ omero config append omero.web.open_with '["Parade", "parade_crossfilter_index", {"supported_objects": ["project", "screen"]}]'
+
 
 <a href="https://www.youtube.com/watch?v=FyjGhZxx6es&feature=youtu.be">
     <img src="https://user-images.githubusercontent.com/900055/78835005-57765300-79e7-11ea-873d-a5a2f3a07638.png" width="650px">
 </a>
-
 
 ## Questions to Answer
 
@@ -34,13 +47,12 @@ Particular questions:
 
 <img src="https://user-images.githubusercontent.com/900055/77835025-66d0e300-7141-11ea-9b4a-ba1fe5885e57.png" />
 
-## Install
+## Development
 
-This project is not yet available on Pypi. To install it, you need to checkout
-this repository, then:
+To install in dev mode, you need to checkout this repository, then:
 
     $ cd parade-crossfilter
-    $ pip install .     # use -e if you wish to edit (dev)
+    $ pip install -e .
 
 To build the JS bundle, you'll need to have [Node](https://nodejs.org/) installed.
 Then install the JavaScript dependencies and build:
@@ -50,18 +62,7 @@ Then install the JavaScript dependencies and build:
 
 This builds the app for production to the `build` folder and copies the
 html and static files to the Django app in `parade_crossfilter`.<br>
-
-You will need to have the app configured in your OMERO.web install:
-
-    $ omero config append omero.web.apps '"parade_crossfilter"'
-
-The app will be run as an OMERO.web app at e.g. http://localhost:4080/parade_crossfilter/.
-
-Add to 'open_with' config:
-
-    $ omero config append omero.web.open_with '["Parade", "parade_crossfilter_index", {"supported_objects": ["project", "screen"]}]'
-
-## Development
+See OMERO config steps above.
 
 You can run this project in development mode or as an OMERO.web Django app (below).
 
@@ -81,7 +82,7 @@ Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The app will try to connect to an OMERO.web server at http://localhost:4080
-using an existing session.<br>
+using an existing session, which requires CORS to be enabled.<br>
 You will need to be logged-in to http://localhost:4080/webclient.<br>
 To use a different server, edit `dev_omeroweb_index` in `public/index.html`.
 
