@@ -11,6 +11,9 @@ const Well = ({ well, showFields, rows,
     // heatmap
     // if NOT showing seperate Fields, we need average value for heatmap
     if (!showFields) {
+        if (!well['WellSamples']) {
+            return null;
+        }
         return (
             <WellSample
                 wellSample={well['WellSamples'][0]}

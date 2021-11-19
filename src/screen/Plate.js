@@ -106,11 +106,11 @@ const Plate = ({ plate, showFields, heatmap }) => {
             <table className="plateGrid">
                 <tbody>
                     {
-                        grid.map(row => (
-                            <tr key={row[0]['@id']}>
+                        grid.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
                                 {
-                                    row.map(well => (
-                                        <td key={well['@id']}
+                                    row.map((well, colIndex) => (
+                                        <td key={colIndex}
                                             style={{ background: selected(well['@id']) ? 'rgb(177, 179, 244)' : '' }}
                                         >
                                             <Well
