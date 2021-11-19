@@ -42,7 +42,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='parade-crossfilter',
-    version='0.0.1',
+    version='0.0.2dev',
     description="OMERO.web plugin to test crossfilter",
     long_description=long_description,
     long_description_content_type="text/markdown",
