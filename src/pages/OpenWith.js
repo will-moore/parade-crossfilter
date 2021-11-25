@@ -31,7 +31,6 @@ function getScript(scriptUrl) {
 const getOpenWithLinkParams = function (ids, type) {
 
     var selectedObjs = ids.map(id => { return { id, type } });
-    var image_id = selectedObjs[0].id;
 
     return window.OME.open_with_options.map(v => {
         var enabled = false;
@@ -64,7 +63,19 @@ const getOpenWithLinkParams = function (ids, type) {
 }
 
 
-window.OME.open_with_options = [];
+window.OME.open_with_options = [
+    // Always include Open-with webclient...
+    {
+        id: 'webclient',
+        url: window.OMEROWEB_INDEX + 'webclient/',
+        supported_objects: ["images"],
+        getUrl: function (selectedObjs, url) {
+            console.log("getUrl", selectedObjs, url);
+            let imgIds = selectedObjs.map(obj => obj.id);
+            return url + '?show=image-' + imgIds.join('|image-');
+        }
+    }
+];
 
 function OpenWith() {
 
@@ -86,7 +97,7 @@ function OpenWith() {
             .then(rsp => rsp.json())
             .then(data => {
                 console.log('open_with', data, this);
-                window.OME.open_with_options = data.open_with_options;
+                window.OME.open_with_options = window.OME.open_with_options.concat(data.open_with_options);
                 // Try to load scripts if specified:
                 window.OME.open_with_options.forEach(ow => {
                     if (ow.script_url) {
