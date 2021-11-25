@@ -99,15 +99,29 @@ const Plate = ({ plate, showFields, heatmap }) => {
         }
     }
 
+    if (grid.length == 0) {
+        return (<div>Loading...</div>)
+    }
+
     return (
         <div>
             <div>{plate.Name} ({wells.length} Wells) </div>
 
             <table className="plateGrid">
                 <tbody>
+                    <tr>
+                        <td></td>
+                        {
+                            grid[0].map((well, colIndex) => (
+                                <td key={colIndex}>
+                                    {colIndex + 1}
+                                </td>))
+                        }
+                    </tr>
                     {
                         grid.map((row, rowIndex) => (
                             <tr key={rowIndex}>
+                                <td>{String.fromCharCode(65 + rowIndex)}</td>
                                 {
                                     row.map((well, colIndex) => (
                                         <td key={colIndex}
