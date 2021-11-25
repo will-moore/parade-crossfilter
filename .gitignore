@@ -3,3 +3,5 @@ node_modules
 parade_crossfilter/static/
 parade_crossfilter/templates/
 *.pyc
+*.DS_Store
+*.egg-info
