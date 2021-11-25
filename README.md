@@ -91,3 +91,6 @@ To use a different server, edit `dev_omeroweb_index` in `public/index.html`.
 Run:
 
     $ python setup.py sdist bdist_wheel
+
+    # TODO: get github actions to do this!
+    $ python -m twine upload dist/*
