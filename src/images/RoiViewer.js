@@ -26,27 +26,24 @@ const RoiViewer = ({ rowData }) => {
             if (Number.isInteger(rowData.ROI)) {
                 let url = window.OMEROWEB_INDEX + `api/v0/m/rois/${rowData.ROI}/`;
                 let roiJson = await fetchJson(url);
-                parseRoiData(roiJson.data);
+                const { data } = roiJson;
+                let theTs = data.shapes.map(shape => shape.TheT).filter(t => Number.isInteger(t));
+                let theZs = data.shapes.map(shape => shape.TheZ).filter(z => Number.isInteger(z));
+
+                setMinT(theTs.length > 0 ? Math.min(...theTs) : undefined);
+                setMaxT(theTs.length > 0 ? Math.max(...theTs) : undefined);
+                setTheT(Number.isInteger(rowData.t) ? rowData.t : Math.min(...theTs));
+
+                setMinZ(theZs.length > 0 ? Math.min(...theZs) : undefined);
+                setMaxZ(theZs.length > 0 ? Math.max(...theZs) : undefined);
+                setTheZ(Number.isInteger(rowData.z) ? rowData.z : Math.min(...theZs));
+
+                setRoiData(data.shapes);
             }
         }
         loadAsyn();
     }, [rowData]);
 
-    function parseRoiData(data) {
-
-        let theTs = data.shapes.map(shape => shape.TheT).filter(t => Number.isInteger(t));
-        let theZs = data.shapes.map(shape => shape.TheZ).filter(z => Number.isInteger(z));
-
-        setMinT(theTs.length > 0 ? Math.min(...theTs) : undefined);
-        setMaxT(theTs.length > 0 ? Math.max(...theTs) : undefined);
-        setTheT(Number.isInteger(rowData.t) ? rowData.t : Math.min(...theTs));
-
-        setMinZ(theZs.length > 0 ? Math.min(...theZs) : undefined);
-        setMaxZ(theZs.length > 0 ? Math.max(...theZs) : undefined);
-        setTheZ(Number.isInteger(rowData.z) ? rowData.z : Math.min(...theZs));
-
-        setRoiData(data.shapes);
-    }
 
     function isVisible(shape, z, t) {
         if (!roiData || roiData.length === 1) {
@@ -85,7 +82,7 @@ const RoiViewer = ({ rowData }) => {
                                 onChange={value => setTheZ(value)} />
                         </div>
                     }
-                    { minT !== maxT &&
+                    {minT !== maxT &&
                         <div className="draggableCancel">
                             <InputRange
                                 formatLabel={value => `T: ${value}`}

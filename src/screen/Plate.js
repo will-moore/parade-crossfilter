@@ -99,7 +99,7 @@ const Plate = ({ plate, showFields, heatmap }) => {
         }
     }
 
-    if (grid.length == 0) {
+    if (grid.length === 0) {
         return (<div>Loading...</div>)
     }
 
