@@ -9,7 +9,6 @@ export default () => {
 
     const context = React.useContext(CXContext);
 
-    console.log('render Main - context')
 
     let project = getUrlParameter('project');
     let screen = getUrlParameter('screen');
@@ -22,7 +21,7 @@ export default () => {
                 setDataToLoad={context.setDataToLoad}
             />
 
-            { context.ndx ?
+            {context.ndx ?
                 <CsvPage
                     screen={screen}
                 />

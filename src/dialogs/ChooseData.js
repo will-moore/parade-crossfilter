@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { filesizeformat } from '../utils';
+import { filesizeformat, getUrlParameter } from '../utils';
+import { fetchJson, initCorsHeaders } from '../crossfilter/FetchData';
 
 
-function ChooseData({ project, screen, setDataToLoad }) {
+function ChooseData({ setDataToLoad, screen }) {
+
+    const project = getUrlParameter('project');
+    const csv = getUrlParameter('csv');
 
     // dialog state
-    const [show, setShow] = React.useState(true);
+    const [show, setShow] = React.useState(false);
     const handleClose = () => setShow(false);
 
     const [loading, setLoading] = useState(false);
@@ -19,21 +23,37 @@ function ChooseData({ project, screen, setDataToLoad }) {
     const [tags, setTags] = useState(undefined);
 
     useEffect(() => {
-        setLoading(true);
-        let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file`;
-        if (project) {
-            url += `&project=${project}`
-        } else if (screen) {
-            url += `&screen=${screen}`
+
+        async function initLoad() {
+            let url = window.OMEROWEB_INDEX + `webclient/api/annotations/?type=file`;
+            if (project) {
+                url += `&project=${project}`
+            } else if (screen) {
+                url += `&screen=${screen}`
+            } else if (csv) {
+                url = csv;
+            }
+
+            await initCorsHeaders(url);
+
+            if (csv) {
+                setDataToLoad({ csv });
+                return;
+            }
+
+            setShow(true);
+            setLoading(true);
+
+            fetchJson(url)
+                .then(data => {
+                    setLoading(false);
+                    let csvFiles = data.annotations
+                        .filter(ann => ann.file && (ann.file.name.endsWith(".csv")));
+                    setFileAnns(csvFiles);
+                });
         }
-        fetch(url, { mode: 'cors', credentials: 'include' })
-            .then(rsp => rsp.json())
-            .then(data => {
-                setLoading(false);
-                let csvFiles = data.annotations
-                    .filter(ann => ann.file && (ann.file.name.endsWith(".csv")));
-                setFileAnns(csvFiles);
-            });
+        initLoad();
+        // eslint-disable-next-line
     }, [project, screen]);
 
     const handleChange = (event) => {
@@ -159,10 +179,10 @@ function ChooseData({ project, screen, setDataToLoad }) {
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
-          </Button>
+                </Button>
                 <Button variant="primary" onClick={handleSubmit}>
                     Load Data
-          </Button>
+                </Button>
             </Modal.Footer>
         </Modal>
 

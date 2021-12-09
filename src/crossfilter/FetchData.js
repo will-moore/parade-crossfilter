@@ -1,6 +1,32 @@
 
+let cors_headers = { mode: 'cors', credentials: 'include' };
+
+export async function initCorsHeaders(url) {
+    // IF we're using a server that is different from our host,
+    // It might by public (e.g. IDR) and we don't want to include credentials
+    // because this causes CORS to fail with:
+    // 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
+
+    // Try to ping without credentials... e.g. http://idr.openmicroscopy.org/webclient/keepalive_ping/
+    let baseUrl = window.OMEROWEB_INDEX;
+    try {
+        // if absolute URL, update baseUrl
+        const u = new URL(url);
+        baseUrl = `${u.protocol}//${u.host}/`
+    } catch (e) { }
+
+    // Fetch without headers - If OK then we don't need headers.
+    await fetch(`${baseUrl}webclient/keepalive_ping/`)
+        .then(response => response.text())
+        .then(text => {
+            if (text === "OK") {
+                cors_headers = {}
+            }
+        })
+}
+
 export function fetchText(url, callback) {
-    fetch(url, { mode: 'cors', credentials: 'include' })
+    fetch(url, cors_headers)
         .then(rsp => rsp.body.getReader())
         .then(reader => {
             readText(reader, callback);
@@ -24,10 +50,9 @@ export function readText(reader, callback) {
 }
 
 export async function fetchJson(url) {
-    return await fetch(url, { mode: 'cors', credentials: 'include' })
+    return await fetch(url, cors_headers)
         .then(response => response.json())
         .then(data => {
-            console.log('fetchJson', data);
             return data;
         });
 }
@@ -41,7 +66,6 @@ export async function fetchChildAnnotations(objId, type) {
     let childType = (dtype === 'project') ? 'images' : 'wells';
     let u = window.OMEROWEB_INDEX + `parade_crossfilter/annotations/${dtype}/${id}/${childType}/?type=${type}`;
     let anns = await fetchJson(u);
-    console.log('fetch anns', anns);
     return anns;
 }
 

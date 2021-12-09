@@ -25,13 +25,10 @@ export class DataContext extends React.Component {
 
     setExportedPlotIds(imageId) {
         let { exportedPlotIds } = this.state;
-        console.log('plotIds', this.state, exportedPlotIds, imageId);
         this.setState({ ...this.state, exportedPlotIds: [...exportedPlotIds, imageId] });
-        console.log('setExportedPlotIds', this.state);
     }
 
     setSelectedIds(rowIds) {
-        console.log("DataContext.setSelectedIds", rowIds);
         this.setState({ ...this.state, selectedIds: rowIds });
     }
 
@@ -72,10 +69,15 @@ export class DataContext extends React.Component {
 
             let { datasetsInfo, annData } = await loadDatasetsAndAnnotations(toLoad);
 
-            if (toLoad.csvFiles && toLoad.csvFiles.length > 0) {
+            if ((toLoad.csvFiles && toLoad.csvFiles.length > 0) || toLoad.csv) {
                 // Load CSV files etc...
-                let annId = toLoad.csvFiles[0];
-                let url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}`;
+                let url;
+                if (toLoad.csv) {
+                    url = toLoad.csv;
+                } else {
+                    let annId = toLoad.csvFiles[0];
+                    url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}`;
+                }
                 // Load csv file, then process csv (and datasetInfo)
                 fetchText(url, csvText => {
                     this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
