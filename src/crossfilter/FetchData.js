@@ -25,6 +25,39 @@ export async function initCorsHeaders(url) {
         })
 }
 
+export async function loadCsvByChunks(url, callback) {
+    // pre-flight lookup of total row count:
+    // /json/?limit=0
+    // Then use ?&limit=41&offset=0&header=true  for first chunk
+
+    const jsonUrl = url.replace("csv", "json") + "?limit=0";
+
+    const { meta } = await fetchJson(jsonUrl);
+    const { totalCount } = meta;
+
+    const limit = 50;
+
+    let offset = 0;
+    let text = "";
+
+    function nextChunk() {
+        if (offset > totalCount) {
+            console.log("DONE!", text.length);
+            callback(text);
+        } else {
+            let chunkUrl = url + `?offset=${offset}&limit=${limit}&header=${offset === 0}`
+            fetchText(chunkUrl, (chunkText) => {
+                text = text + chunkText;
+                console.log("text...", text.length);
+                offset += limit;
+                nextChunk();
+            });
+        }
+    }
+
+    nextChunk();
+}
+
 export function fetchText(url, callback) {
     fetch(url, cors_headers)
         .then(rsp => rsp.body.getReader())
@@ -75,7 +108,7 @@ export async function loadDatasetsAndAnnotations(toLoad) {
     let datasetsInfo;
     if (toLoad.datasets) {
         let projectId = toLoad.datasets;
-        let u = window.OMEROWEB_INDEX + `parade_crossfilter/datasets/${projectId}`;
+        let u = window.OMEROWEB_INDEX + `parade_crossfilter/datasets/${projectId}/`;
         let jsonData = await fetchJson(u);
         datasetsInfo = jsonData.data;
     }

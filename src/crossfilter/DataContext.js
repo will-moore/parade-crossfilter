@@ -1,7 +1,7 @@
 import React from "react";
 // import "./dc.css";
 import * as d3 from "d3";
-import { fetchText, loadDatasetsAndAnnotations } from "./FetchData";
+import { fetchText, loadCsvByChunks, loadDatasetsAndAnnotations } from "./FetchData";
 import { prepCrossfilterData, groupCrossfilterData, getCookie } from "../utils";
 
 import crossfilter from "crossfilter2";
@@ -73,15 +73,26 @@ export class DataContext extends React.Component {
                 // Load CSV files etc...
                 let url;
                 if (toLoad.csv) {
-                    url = toLoad.csv;
-                } else {
+                    // url = toLoad.csv;
+                    loadCsvByChunks(toLoad.csv, csvText => {
+                        this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
+                    });
+                    return;
+                } else if (toLoad.csvFiles) {
                     let annId = toLoad.csvFiles[0];
-                    url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}`;
+                    url = window.OMEROWEB_INDEX + `webclient/annotation/${annId}/`;
                 }
                 // Load csv file, then process csv (and datasetInfo)
                 fetchText(url, csvText => {
                     this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
                 });
+            } else if (toLoad.tables) {
+                let fileId = toLoad.tables[0];
+                let url = window.OMEROWEB_INDEX + `webclient/omero_table/${fileId}/csv/`;
+                loadCsvByChunks(url, csvText => {
+                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
+                });
+                return;
             } else {
                 this.initCrossfilter(undefined, datasetsInfo, annData);
             }

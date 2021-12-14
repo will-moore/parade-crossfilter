@@ -36,6 +36,7 @@ function ChooseData({ setDataToLoad, screen }) {
 
             await initCorsHeaders(url);
 
+            // URL is ?csv=... Open directly (no dialog)
             if (csv) {
                 setDataToLoad({ csv });
                 return;
@@ -48,7 +49,10 @@ function ChooseData({ setDataToLoad, screen }) {
                 .then(data => {
                     setLoading(false);
                     let csvFiles = data.annotations
-                        .filter(ann => ann.file && (ann.file.name.endsWith(".csv")));
+                        .filter(ann => {
+                            // return csv files and OMERO.tables
+                            return ann.file && (ann.file.name.endsWith(".csv") || ann.file.mimetype === "OMERO.tables")
+                        });
                     setFileAnns(csvFiles);
                 });
         }
@@ -106,7 +110,12 @@ function ChooseData({ setDataToLoad, screen }) {
         event.preventDefault();
         let dataToLoad = {};
         if (selectedAnn) {
-            dataToLoad.csvFiles = [selectedAnn];
+            let fileAnn = fileAnns.filter(fa => fa.id === selectedAnn)[0];
+            if (fileAnn.file.name.endsWith("csv")) {
+                dataToLoad.csvFiles = [selectedAnn];
+            } else {
+                dataToLoad.tables = [fileAnn.file.id];
+            }
         }
         dataToLoad.datasets = datasets;
         dataToLoad.mapAnns = mapAnns;

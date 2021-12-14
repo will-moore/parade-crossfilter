@@ -333,7 +333,8 @@ export function prepCrossfilterData(data, datasetsInfo, annData) {
 
     // If we have dict of {image: {id:1}, dataset:{name:'foo'}}
     // Use it to populate the table using existing image colum
-    if (datasetsInfo) {
+    const colNames = columns.map(col => col.name);
+    if (datasetsInfo && !colNames.includes("Dataset")) {
         let imgToDataset = {};
         datasetsInfo.forEach(link => {
             imgToDataset[link.image.id] = link.dataset;
