@@ -38,15 +38,15 @@ const getOpenWithLinkParams = function (ids, type) {
             enabled = v.isEnabled(selectedObjs);
         } else if (typeof v.supported_objects === "object" && v.supported_objects.length > 0) {
             enabled = v.supported_objects.reduce(function (prev, supported) {
-                // enabled if plugin supports 'images' or 'image'
-                return prev || supported === 'images' || supported === 'image';
+                // enabled if plugin supports e.g. 'image' or 'images'
+                return prev || supported === type || supported === type + 's';
             }, false);
         }
         if (!enabled) return "";
 
         // Ignore open_with -> iviewer or webgateway viewer
-        if (v.url.indexOf('iviewer_url') === 0 ||
-            v.url.indexOf('webgateway_url') === 0) return "";
+        // if (v.url.indexOf('iviewer_url') === 0 ||
+        //     v.url.indexOf('webgateway_url') === 0) return "";
 
         var label = v.label || v.id;
 
@@ -68,11 +68,9 @@ window.OME.open_with_options = [
     {
         id: 'webclient',
         url: window.OMEROWEB_INDEX + 'webclient/',
-        supported_objects: ["images"],
+        supported_objects: ["images", "wells"],
         getUrl: function (selectedObjs, url) {
-            console.log("getUrl", selectedObjs, url);
-            let imgIds = selectedObjs.map(obj => obj.id);
-            return url + '?show=image-' + imgIds.join('|image-');
+            return url + '?show=' + selectedObjs.map(obj => `${obj.type}-${obj.id}`).join('|');
         }
     }
 ];
@@ -121,18 +119,25 @@ function OpenWith() {
         return [...new Set(ids)];
     }
 
+    // Could Add "ROI", "Dataset" etc?
+    const linkTypes = ["Image", "Well"];
 
-    // let datasetIDs = getIDs('Dataset');
-    let imageIDs = getIDs('Image')
+    let urls = linkTypes.map(linkType => {
+        let objIDs = getIDs(linkType);
+        if (exportPlots && linkType === "Image") {
+            // Add Image IDs from exported plots
+            objIDs = objIDs.concat(exportedPlotIds);
+        }
+        if (objIDs.length === 0) {
+            return false;
+        }
+        let urls = getOpenWithLinkParams(objIDs, linkType.toLowerCase());
+        if (urls.length === 0) {
+            return false;
+        }
+        return { linkType, urls, objIDs }
+    }).filter(Boolean);
 
-    if (exportPlots) {
-        imageIDs = imageIDs.concat(exportedPlotIds);
-    }
-    // let roiIDs = getIDs('ROI')
-    // let shapeIDs = getIDs('Shape')
-
-    // List of [{ text: label, url: url }]
-    const urls = (imageIDs.length > 0) ? getOpenWithLinkParams(imageIDs, 'image') : [];
 
     return (
         <React.Fragment>
@@ -141,19 +146,24 @@ function OpenWith() {
                     <Form.Check onClick={handleExportPlots} className="nav-link" type="checkbox" label={`Open ${exportedPlotIds.length} Plots`} />
                 }
             </Form>
-            <Dropdown as={NavItem} className="navbar-nav pr-md-4">
-                <Dropdown.Toggle as={NavLink}>
-                    Open {imageIDs.length} Image{imageIDs.length === 1 ? "" : "s"} with...</Dropdown.Toggle>
-                <Dropdown.Menu>
-                    {
-                        urls.map(url => (
-                            <Dropdown.Item key={url.text} target="_blank" href={url.url}>{url.text}</Dropdown.Item>
-                        ))
-                    }
-                </Dropdown.Menu>
-            </Dropdown>
+            {
+                urls.map(urlObj => (
+                    <Dropdown as={NavItem} className="navbar-nav pr-md-4" key={urlObj.linkType}>
+                        <Dropdown.Toggle as={NavLink}>
+                            Open {urlObj.objIDs.length} {urlObj.linkType}{urlObj.objIDs.length === 1 ? "" : "s"} with...</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {
+                                urlObj.urls.map(url => (
+                                    <Dropdown.Item key={url.text} target="_blank" href={url.url}>{url.text}</Dropdown.Item>
+                                ))
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                )
+                )
+            }
         </React.Fragment>
-    );
+    )
 }
 
 // Create functions on a global OME namespace that the open-with functions
