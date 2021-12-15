@@ -88,8 +88,13 @@ To use a different server, edit `dev_omeroweb_index` in `public/index.html`.
 
 ## Release
 
+ - Update version to release version in setup.py and package.json
+ - Update CHANGELOG
+ - Commit and tag
+
 Run:
 
+    $ rm -rf dist
     $ python setup.py sdist bdist_wheel
 
     # TODO: get github actions to do this!
