@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import json
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
 from setuptools.command.sdist import sdist
@@ -40,9 +41,14 @@ def require_npm(command, strict=False):
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+# read version from package.json
+with open("package.json", "r") as fh:
+    json_data = json.loads(fh.read())
+    version = json_data["version"]
+
 setup(
     name='parade-crossfilter',
-    version='0.0.4',
+    version=version,
     description="OMERO.web plugin to test crossfilter",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -1,6 +1,6 @@
 {
   "name": "parade-crossfilter",
-  "version": "0.0.4",
+  "version": "0.0.5dev",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
