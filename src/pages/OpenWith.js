@@ -32,14 +32,18 @@ const getOpenWithLinkParams = function (ids, type) {
 
     var selectedObjs = ids.map(id => { return { id, type } });
 
+    // Have we selected e.g. 'image' or 'images'?
+    let selectedType = type + ((ids.length > 1) ? "s" : "");
+
     return window.OME.open_with_options.map(v => {
         var enabled = false;
         if (typeof v.isEnabled === "function") {
             enabled = v.isEnabled(selectedObjs);
         } else if (typeof v.supported_objects === "object" && v.supported_objects.length > 0) {
             enabled = v.supported_objects.reduce(function (prev, supported) {
-                // enabled if plugin supports e.g. 'image' or 'images'
-                return prev || supported === type || supported === type + 's';
+                // enabled if plugin supported matches what's selected
+                // OR e.g. plugin supports 'images' but we have 'image' selected
+                return prev || supported === selectedType || supported === selectedType + 's';
             }, false);
         }
         if (!enabled) return "";
