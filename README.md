@@ -3,7 +3,7 @@
 This is a prototype OMERO.web app, exploring the use of https://github.com/crossfilter/crossfilter in a new implementation of https://github.com/ome/omero-parade.
 
 It uses [Create React App](https://github.com/facebook/create-react-app) 
-with the cross-filter, https://dc-js.github.io/dc.js/ and React interaction
+with the cross-filter, [dc.js](https://dc-js.github.io/dc.js/) and React interaction
 based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 
 # Install
