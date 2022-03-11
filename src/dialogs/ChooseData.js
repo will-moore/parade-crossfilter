@@ -32,6 +32,15 @@ function ChooseData({ setDataToLoad, screen }) {
                 url += `&screen=${screen}`
             } else if (csv) {
                 url = csv;
+            } else {
+                // If NO data in URL, user can choose default csv from IDR...
+                let csvEg = "https://idr.openmicroscopy.org/webclient/omero_table/41585274/csv/"
+                let csvUrl = prompt("Need ?project=ID or ?screen=ID or csv=https://full/server/csv/url/ Use this example?", csvEg);
+                let origin = new URL(window.location.href).origin;
+                if (csvUrl) {
+                    window.location.href = `${origin}?csv=${csvUrl}`;
+                }
+                return;
             }
 
             await initCorsHeaders(url);

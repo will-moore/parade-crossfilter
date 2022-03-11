@@ -2,6 +2,7 @@
 import React from 'react';
 import CsvPage from './CsvPage';
 import ChooseData from '../dialogs/ChooseData';
+import LoadingPercent from '../dialogs/LoadingPercent';
 import { getUrlParameter } from '../utils';
 import { CXContext } from "../crossfilter/DataContext";
 
@@ -20,6 +21,7 @@ export default () => {
                 project={project}
                 setDataToLoad={context.setDataToLoad}
             />
+            {context.loading && <LoadingPercent loadingPercent={context.loadingPercent} />}
 
             {context.ndx ?
                 <CsvPage

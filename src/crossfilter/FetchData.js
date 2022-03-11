@@ -23,9 +23,12 @@ export async function initCorsHeaders(url) {
                 cors_headers = {}
             }
         })
+        .catch(err => {
+            console.log("Error keepalive")
+        });
 }
 
-export async function loadCsvByChunks(url, callback) {
+export async function loadCsvByChunks(url, callback, progressCallback) {
     // pre-flight lookup of total row count:
     // /json/?limit=0
     // Then use ?&limit=41&offset=0&header=true  for first chunk
@@ -46,9 +49,10 @@ export async function loadCsvByChunks(url, callback) {
             callback(text);
         } else {
             let chunkUrl = url + `?offset=${offset}&limit=${limit}&header=${offset === 0}`
+            progressCallback(100 * offset / totalCount);
             fetchText(chunkUrl, (chunkText) => {
                 text = text + chunkText;
-                console.log("text...", text.length);
+                console.log("text...", text.length, (100 * offset / totalCount), "%");
                 offset += limit;
                 nextChunk();
             });
@@ -87,6 +91,9 @@ export async function fetchJson(url) {
         .then(response => response.json())
         .then(data => {
             return data;
+        })
+        .catch(err => {
+            console.log("Failed to fetch:", url);
         });
 }
 

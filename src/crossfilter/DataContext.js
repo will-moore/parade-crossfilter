@@ -17,6 +17,7 @@ export class DataContext extends React.Component {
             hasNDX: false,
             selectedIds: [],
             exportedPlotIds: [],
+            loadingPercent: 0,
         };
         this.setSelectedIds = this.setSelectedIds.bind(this);
         this.setExportedPlotIds = this.setExportedPlotIds.bind(this);
@@ -74,9 +75,10 @@ export class DataContext extends React.Component {
                 let url;
                 if (toLoad.csv) {
                     // url = toLoad.csv;
-                    loadCsvByChunks(toLoad.csv, csvText => {
-                        this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
-                    });
+                    loadCsvByChunks(toLoad.csv,
+                        csvText => { this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData); },
+                        loadingPercent => { this.setState({ ...this.state, loadingPercent }) }
+                    );
                     return;
                 } else if (toLoad.csvFiles) {
                     let annId = toLoad.csvFiles[0];
@@ -89,9 +91,10 @@ export class DataContext extends React.Component {
             } else if (toLoad.tables) {
                 let fileId = toLoad.tables[0];
                 let url = window.OMEROWEB_INDEX + `webclient/omero_table/${fileId}/csv/`;
-                loadCsvByChunks(url, csvText => {
-                    this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData);
-                });
+                loadCsvByChunks(url,
+                    csvText => { this.initCrossfilter(d3.csvParse(csvText), datasetsInfo, annData); },
+                    loadingPercent => { this.setState({ ...this.state, loadingPercent }) }
+                );
                 return;
             } else {
                 this.initCrossfilter(undefined, datasetsInfo, annData);
@@ -134,6 +137,8 @@ export class DataContext extends React.Component {
             addGroupBy: (groupBy) => { this.addGroupBy(groupBy) },
             setSelectedIds: this.setSelectedIds,
             selectedIds: this.state.selectedIds,
+            loading: this.state.loading,
+            loadingPercent: this.state.loadingPercent,
             handleSavePlotImage: this.handleSavePlotImage,
             exportedPlotIds: this.state.exportedPlotIds,
         }
