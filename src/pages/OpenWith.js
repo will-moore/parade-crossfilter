@@ -106,7 +106,9 @@ function OpenWith() {
                         getScript(ow.script_url);
                     }
                 });
-            });
+            }).catch(err => {
+                console.log("Error", err);
+            })
     }, []);
 
     // Get Dataset IDs, Image IDs, ROI IDs
