@@ -8,15 +8,9 @@ export async function initCorsHeaders(url) {
     // 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
 
     // Try to ping without credentials... e.g. http://idr.openmicroscopy.org/webclient/keepalive_ping/
-    let baseUrl = window.OMEROWEB_INDEX;
-    try {
-        // if absolute URL, update baseUrl
-        const u = new URL(url);
-        baseUrl = `${u.protocol}//${u.host}/`
-    } catch (e) { }
 
     // Fetch without headers - If OK then we don't need headers.
-    await fetch(`${baseUrl}webclient/keepalive_ping/`)
+    await fetch(`${url}webclient/keepalive_ping/`)
         .then(response => response.text())
         .then(text => {
             if (text === "OK") {

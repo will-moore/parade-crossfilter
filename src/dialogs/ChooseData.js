@@ -32,6 +32,9 @@ function ChooseData({ setDataToLoad, screen }) {
                 url += `&screen=${screen}`
             } else if (csv) {
                 url = csv;
+                if (url.includes("/webclient/")) {
+                    window.OMEROWEB_INDEX = url.split("webclient")[0];
+                }
             } else {
                 // If NO data in URL, user can choose default csv from IDR...
                 let csvEg = "https://idr.openmicroscopy.org/webclient/omero_table/41585274/csv/"
@@ -43,7 +46,7 @@ function ChooseData({ setDataToLoad, screen }) {
                 return;
             }
 
-            await initCorsHeaders(url);
+            await initCorsHeaders(window.OMEROWEB_INDEX);
 
             // URL is ?csv=... Open directly (no dialog)
             if (csv) {
