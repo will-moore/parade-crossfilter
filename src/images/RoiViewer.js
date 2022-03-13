@@ -18,13 +18,16 @@ const RoiViewer = ({ rowData }) => {
     const [maxZ, setMaxZ] = React.useState(0)
     const [theZ, setTheZ] = React.useState(0)
 
+    // Handle columns named 'Roi' or 'ROI' for ROI ID
+    const getId = row => row.Roi ? row.Roi : row.ROI;
+
     React.useEffect(() => {
 
         async function loadAsyn() {
             setRoiData(undefined);
             // Get ROI data if we have ROI...
-            if (Number.isInteger(rowData.ROI)) {
-                let url = window.OMEROWEB_INDEX + `api/v0/m/rois/${rowData.ROI}/`;
+            if (Number.isInteger(getId(rowData))) {
+                let url = window.OMEROWEB_INDEX + `api/v0/m/rois/${getId(rowData)}/`;
                 let roiJson = await fetchJson(url);
                 const { data } = roiJson;
                 let theTs = data.shapes.map(shape => shape.TheT).filter(t => Number.isInteger(t));
@@ -55,7 +58,7 @@ const RoiViewer = ({ rowData }) => {
 
     return (
         <div>
-            {<p>ROI: {rowData.ROI} </p>}
+            {<p>ROI: {getId(rowData)} </p>}
             {roiData ?
                 (<div style={{ padding: 10 }}>
 

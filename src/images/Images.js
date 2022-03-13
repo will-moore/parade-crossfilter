@@ -58,7 +58,8 @@ const Images = ({ sortBy, sortReverse, size }) => {
     const imgSrc = (row) => (
         row.Shape ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${row.Shape}/?color=ff0` :
             row.Image ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${row.Image}/` :
-                ''
+                (row.Roi || row.ROI) ? `${window.OMEROWEB_INDEX}webgateway/render_roi_thumbnail/${row.Roi || row.ROI}/` :
+                    ''
     )
 
     const getTitle = (row) => {
@@ -73,7 +74,7 @@ const Images = ({ sortBy, sortReverse, size }) => {
         let rowID = selectedIds[0];
         let selectedRows = filteredData.filter(row => row._rowID === rowID);
         if (selectedRows.length === 1) {
-            if (selectedRows[0].ROI && Number.isInteger(selectedRows[0].ROI)) {
+            if (Number.isInteger(selectedRows[0].ROI) || Number.isInteger(selectedRows[0].Roi)) {
                 return <RoiViewer rowData={selectedRows[0]} />
             } else {
                 return (
