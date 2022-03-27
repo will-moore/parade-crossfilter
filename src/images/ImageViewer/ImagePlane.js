@@ -1,5 +1,5 @@
 import React from "react";
-import { getShapeBbox } from '../utils';
+import { getShapeBbox } from '../../utils';
 import BirdsEye from './BirdsEye';
 
 const ImagePlane = ({imgData, roiData, rowData}) => {

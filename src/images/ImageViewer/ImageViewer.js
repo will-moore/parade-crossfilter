@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchJson } from '../crossfilter/FetchData';
+import { fetchJson } from '../../crossfilter/FetchData';
 import ImagePlane from './ImagePlane';
 
 const ImageViewer = ({rowData}) => {
