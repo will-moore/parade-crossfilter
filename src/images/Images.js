@@ -61,9 +61,9 @@ const Images = ({ sortBy, sortReverse, size }) => {
 
     const imgSrc = (row, thumbType) => {
         let objId = row[thumbType];
-        return (thumbType.toLowerCase() == 'shape') ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${objId}/?color=ff0` :
-            (thumbType.toLowerCase() == 'roi') ? `${window.OMEROWEB_INDEX}webgateway/render_roi_thumbnail/${objId}/` :
-                (thumbType.toLowerCase() == 'image') ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${objId}/` :
+        return (thumbType.toLowerCase() === 'shape') ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${objId}/?color=ff0` :
+            (thumbType.toLowerCase() === 'roi') ? `${window.OMEROWEB_INDEX}webgateway/render_roi_thumbnail/${objId}/` :
+                (thumbType.toLowerCase() === 'image') ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${objId}/` :
                     undefined
     }
 
@@ -115,7 +115,7 @@ const Images = ({ sortBy, sortReverse, size }) => {
                         src={imgSrc(row, thumbType)} />
                 </div>
                 :
-                <span tooltip="No shape, roi or image in row">?</span>
+                <span title="No shape, roi or image in row">?</span>
                 }
             </div>
         )
