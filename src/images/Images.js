@@ -55,12 +55,17 @@ const Images = ({ sortBy, sortReverse, size }) => {
         })
     }
 
-    const imgSrc = (row) => (
-        row.Shape ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${row.Shape}/?color=ff0` :
-            row.Image ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${row.Image}/` :
-                (row.Roi || row.ROI) ? `${window.OMEROWEB_INDEX}webgateway/render_roi_thumbnail/${row.Roi || row.ROI}/` :
-                    ''
-    )
+    const THUMB_TYPES = ["Shape", "shape", "ROI", "Roi", "roi", "Image", "image"];
+
+    const getThumbType = (row) => THUMB_TYPES.find(type => row[type]);
+
+    const imgSrc = (row, thumbType) => {
+        let objId = row[thumbType];
+        return (thumbType.toLowerCase() == 'shape') ? `${window.OMEROWEB_INDEX}webgateway/render_shape_thumbnail/${objId}/?color=ff0` :
+            (thumbType.toLowerCase() == 'roi') ? `${window.OMEROWEB_INDEX}webgateway/render_roi_thumbnail/${objId}/` :
+                (thumbType.toLowerCase() == 'image') ? `${window.OMEROWEB_INDEX}webclient/render_thumbnail/${objId}/` :
+                    undefined
+    }
 
     const getTitle = (row) => {
         return columns.map(col => col.name)
@@ -96,14 +101,22 @@ const Images = ({ sortBy, sortReverse, size }) => {
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let row = filteredData[(rowIndex * colCount) + columnIndex];
         if (!row) return (<span></span>)
+        const thumbType = getThumbType(row);
         return (
             <div style={{ ...style }}>
-                <img
-                    title={getTitle(row)}
-                    onClick={() => setSelectedIds([row._rowID])}
-                    alt={""}
-                    style={imgStyle}
-                    src={imgSrc(row)} />
+                { thumbType ?
+                <div>
+                    <div style={{position: 'absolute', margin:5, color:'white'}}>{thumbType}:{row[thumbType]}</div>
+                    <img
+                        title={getTitle(row)}
+                        onClick={() => setSelectedIds([row._rowID])}
+                        alt={""}
+                        style={imgStyle}
+                        src={imgSrc(row, thumbType)} />
+                </div>
+                :
+                <span tooltip="No shape, roi or image in row">?</span>
+                }
             </div>
         )
     }
