@@ -1,3 +1,11 @@
+0.0.5 (April 2022)
+---------------------
+
+- Don't show filter barchart for > 12 groups
+- Show ROI or Roi thumbnail if no Shape or Image on row
+- Loading display for csv files
+- Update to support Django 3.2
+
 0.0.4 (December 2021)
 ---------------------
 
