@@ -24,7 +24,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 import numpy as np
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.template import loader
 from django.templatetags import static
 
