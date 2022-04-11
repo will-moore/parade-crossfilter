@@ -8,9 +8,7 @@ import sizeMe from 'react-sizeme'
 
 const imgStyle = {
     padding: 2,
-    width: '100%',
     maxWidth: '100%',
-    maxHeight: '100%',
 }
 
 // size props come from sizeMe() HOC below
@@ -97,6 +95,7 @@ const Images = ({ sortBy, sortReverse, size }) => {
     // Known dimensions of roi-thumbnails
     const roiThumbAspect = 250 / 166;
     const thumbHeight = thumbSize / roiThumbAspect;
+    imgStyle.height = thumbHeight;
 
     const Cell = ({ columnIndex, rowIndex, style }) => {
         let row = filteredData[(rowIndex * colCount) + columnIndex];
