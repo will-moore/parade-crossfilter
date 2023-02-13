@@ -32,6 +32,7 @@ function CsvPage({ screen }) {
         background: 'white',
         borderRadius: '6px',
         padding: 15,
+        overflow: 'scroll',
     }
 
     const removeStyle = {
