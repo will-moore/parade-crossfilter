@@ -6,10 +6,6 @@ import ImageViewer from './ImageViewer';
 import RoiViewer from './RoiViewer';
 import sizeMe from 'react-sizeme'
 
-const imgStyle = {
-    padding: 2,
-    maxWidth: '100%',
-}
 
 // size props come from sizeMe() HOC below
 const Images = ({ sortBy, sortReverse, size }) => {
@@ -72,7 +68,7 @@ const Images = ({ sortBy, sortReverse, size }) => {
             .join("   ");
     }
 
-    // If ONLY 1 Image selected - show ImageViewer
+    // If ONLY 1 row (Well, Image, ROI) selected - show ImageViewer or RoiViewer
     if (selectedIds.length === 1) {
         let rowID = selectedIds[0];
         let selectedRows = filteredData.filter(row => row._rowID === rowID);
@@ -95,6 +91,10 @@ const Images = ({ sortBy, sortReverse, size }) => {
     // Known dimensions of roi-thumbnails
     const roiThumbAspect = 250 / 166;
     const thumbHeight = thumbSize / roiThumbAspect;
+    let imgStyle = {
+        padding: 2,
+        maxWidth: '100%',
+    }
     imgStyle.height = thumbHeight;
 
     const Cell = ({ columnIndex, rowIndex, style }) => {
