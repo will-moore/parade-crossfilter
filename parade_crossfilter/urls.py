@@ -26,16 +26,16 @@ urlpatterns = [
 
     # get Dataset info for all images in Project
     re_path(r'^datasets/(?P<project>[0-9]+)/$', views.datasets,
-        name='pc_datasets'),
+            name='pc_datasets'),
     
     # Get annotations on images within a project e.g. ?type=map
     re_path(r'^annotations/project/(?P<project>[0-9]+)/images/$',
-        views.image_annotations, name='pc_image_annotations'),
+            views.image_annotations, name='pc_image_annotations'),
     re_path(r'^annotations/screen/(?P<screen>[0-9]+)/wells/$',
-        views.well_annotations, name='pc_well_annotations'),
+            views.well_annotations, name='pc_well_annotations'),
 
     re_path(r'^omero_table_as_csv/(?P<file_id>[0-9]+)/$',
-        views.omero_table_as_csv, name='pc_omero_table_as_csv'),
+            views.omero_table_as_csv, name='pc_omero_table_as_csv'),
 
     # POST image as {'data': 'data:image/png;base64,fsfssdflksdf....'}
     re_path(r'^save_image/$', views.save_image, name='pc_save_image'),
