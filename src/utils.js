@@ -204,16 +204,17 @@ export function parseData(rows, colnames) {
     // Remove whitespace, image_id -> Image
     let columns = colnames.map(name => {
         let newName = name.trim();
-        if (newName === 'image_id') {
+        // Handle alternate names for columns - case insensitive
+        if (newName === 'image_id' || newName.toLowerCase() === 'image') {
             newName = 'Image';
         }
-        if (newName === 'roi_id') {
-            newName = 'ROI';
+        if (newName === 'roi_id' || newName.toLowerCase() === 'roi') {
+            newName = 'RoI';
         }
-        if (newName === 'shape_id') {
+        if (newName === 'shape_id' || newName.toLowerCase() === 'shape') {
             newName = 'Shape';
         }
-        if (newName === 'well_id') {
+        if (newName === 'well_id' || newName.toLowerCase() === 'well') {
             newName = 'Well';
         }
         return {
