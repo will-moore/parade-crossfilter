@@ -1,5 +1,5 @@
 import React from "react";
-// import CsvPage from "./CsvPage";
+import CsvPage from "./CsvPage";
 import ChooseData from "../dialogs/ChooseData";
 import LoadingPercent from "../dialogs/LoadingPercent";
 import { getUrlParameter } from "../utils";
@@ -24,8 +24,7 @@ export default () => {
       )}
 
       {context.ndx ? (
-        <h1>CSV PAGE...</h1>
-        // <CsvPage screen={screen} />
+        <CsvPage screen={screen} />
       ) : (
         <div>Welcome to OMERO.parade</div>
       )}
