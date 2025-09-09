@@ -108,31 +108,9 @@ const SimpleTable = ({
         </div>
     );
 
-        // const Header = ({ columnIndex, rowIndex, style }) => {
-        //     return (
-        //         <div title={colNames[columnIndex]} style={{ ...style, ...headerStyle }} onClick={() => handleHeaderClick(columnIndex)}>
-        //             {colNames[columnIndex]}
-        //             <FontAwesomeIcon icon={sortIcon(colNames[columnIndex])} style={{ marginLeft: 3 }} />
-        //         </div>
-        //     );
-        // };
-
-    // function CellComponent({
-    //     colNames,
-    //     columnIndex,
-    //     rowIndex,
-    //     style
-    //     }) {
-    //     return (
-    //     <div className="truncate" style={style}>
-    //       {colNames[columnIndex]}
-    //     </div>
-    //     );
-    //     }
-
-
-    const Cell = ({ columnIndex, rowIndex, style }) => {
-        let value = filteredData[rowIndex][colNames[columnIndex]];
+    const Cell = ({ filteredData, columnIndex, rowIndex, style }) => {
+        // rowIndex - 1 because row 0 is the header...
+        let value = rowIndex == 0 ? colNames[columnIndex] : filteredData[rowIndex - 1][colNames[columnIndex]];
         let displayVal = value;
         if (typeof value === 'object') {
             // This will be an Array
@@ -173,27 +151,33 @@ const SimpleTable = ({
 
     return (
         <div style={gridStyle}>
+            <div style={{ height: '200px', border: '1px solid lightgrey' }}>
             <Grid
-                height={35}
-                columnCount={colNames.length}
-                columnWidth={colWidth}
-                rowCount={1}
-                rowHeight={35}
-                width={colNames.length * colWidth + 20}
-                cellProps={{ colNames }}
-                cellComponent={Header}
-            />
-            {/* <Grid
                 ref={gridRef}
-                height={size.height - 50}
+                height={200}
                 columnCount={colNames.length}
                 columnWidth={colWidth}
-                rowCount={filteredData.length}
+                rowCount={filteredData.length + 1}
                 rowHeight={35}
                 width={colNames.length * colWidth + 20}
-            >
-                {Cell}
-            </Grid> */}
+                cellProps={{ filteredData }}
+                cellComponent={Cell}>
+                    
+                {/* Header row - sticky */}
+                <div style={{ width: `${colNames.length * colWidth + 20}px`, height: '40px', border: '1px solid lightgrey', position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
+                    <Grid
+                        height={35}
+                        columnCount={colNames.length}
+                        columnWidth={colWidth}
+                        rowCount={1}
+                        rowHeight={35}
+                        width={colNames.length * colWidth + 20}
+                        cellProps={{ colNames }}
+                        cellComponent={Header}
+                    />
+                </div> 
+            </Grid>
+            </div>
         </div>
     );
 };
