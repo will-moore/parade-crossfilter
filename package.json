@@ -17,7 +17,10 @@
     "d3": "^7.9.0",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-grid-layout": "^1.5.2",
+    "react-sizeme": "^3.0.2",
+    "react-window": "^2.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

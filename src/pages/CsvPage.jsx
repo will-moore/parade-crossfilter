@@ -1,6 +1,6 @@
 import React from 'react';
 import Drawer from '../Drawer'
-// import SimpleTable from '../table/SimpleTable';
+import SimpleTable from '../table/SimpleTable';
 // import PlotContainer from '../plots/PlotContainer';
 // import BoxPlotContainer from '../plots/BoxPlotContainer';
 // import Screen from '../screen/Screen';
@@ -10,8 +10,8 @@ import Drawer from '../Drawer'
 // import Dropdown from 'react-bootstrap/Dropdown';
 
 
-// import RGL, { WidthProvider } from "react-grid-layout";
-// const ReactGridLayout = WidthProvider(RGL);
+import RGL, { WidthProvider } from "react-grid-layout";
+const ReactGridLayout = WidthProvider(RGL);
 
 function CsvPage({ screen }) {
 
@@ -46,8 +46,8 @@ function CsvPage({ screen }) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const [items, setItems] = React.useState([
-        { i: 'p1', type: 'scatter_plot', x: 0, y: 0, w: 8, h: 8 },
-        { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8 },
+        // { i: 'p1', type: 'scatter_plot', x: 0, y: 0, w: 8, h: 8 },
+        // { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8 },
         { i: 'p3', type: 'table', x: 0, y: 7, w: 12, h: 8 },
     ]);
 
@@ -109,36 +109,36 @@ function CsvPage({ screen }) {
         //     sortReverse={sortReverse}
         // />
     )
-    // const table = (
-    //     <SimpleTable
-    //         sortBy={sortBy}
-    //         setSortBy={setSortBy}
-    //         sortReverse={sortReverse}
-    //         setSortReverse={setSortReverse}
-    //     />
-    // )
+     const table = (
+        <SimpleTable
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            sortReverse={sortReverse}
+            setSortReverse={setSortReverse}
+        />
+    )
     const boxplot = (
         <h1>Box Plot</h1>
         // <BoxPlotContainer />
     )
-    // const panels = {
+    const panels = {
     //     'scatter_plot': scatter_plot,
     //     'images': images,
-    //     'table': table,
+        'table': table,
     //     'screen': screenComponent,
     //     'box_whisker': boxplot,
     //     'cumulative': cumulative,
-    // }
+    }
 
     return (
 
         <div style={{ display: 'flex', flexWrap: 'nowrap', position: 'absolute', top: 48, height: 'calc(100% - 48px)', bottom: 0, width: '100%' }}>
 
             <Drawer />
-             {/* 
+             
              <main className="column" style={mainStyle}>
 
-                 <div style={{ position: 'absolute', zIndex: 10, width: 40, left: 5, top: 5 }}>
+                 {/* <div style={{ position: 'absolute', zIndex: 10, width: 40, left: 5, top: 5 }}>
                      <DropdownButton
                         style={{ borderRadius: 20 }} as={ButtonGroup}
                         id={'add-panel-dropdown-button'}
@@ -164,7 +164,7 @@ function CsvPage({ screen }) {
                             </React.Fragment>
                         )}
                     </DropdownButton>
-                </div>
+                </div> */}
 
                 <ReactGridLayout
                     draggableCancel=".draggableCancel"
@@ -176,7 +176,7 @@ function CsvPage({ screen }) {
                     }
                 </ReactGridLayout> 
 
-            </main> */}
+            </main>
         </div>
     );
 }
