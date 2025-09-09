@@ -1,7 +1,7 @@
 import React from 'react';
 import Drawer from '../Drawer'
 import SimpleTable from '../table/SimpleTable';
-// import PlotContainer from '../plots/PlotContainer';
+import PlotContainer from '../plots/PlotContainer';
 // import BoxPlotContainer from '../plots/BoxPlotContainer';
 // import Screen from '../screen/Screen';
 // import Images from '../images/Images';
@@ -46,7 +46,7 @@ function CsvPage({ screen }) {
     const [sortReverse, setSortReverse] = React.useState(false);
 
     const [items, setItems] = React.useState([
-        // { i: 'p1', type: 'scatter_plot', x: 0, y: 0, w: 8, h: 8 },
+        { i: 'p1', type: 'scatter_plot', x: 0, y: 0, w: 8, h: 8 },
         // { i: 'p2', type: 'images', x: 10, y: 0, w: 4, h: 8 },
         { i: 'p3', type: 'table', x: 0, y: 7, w: 12, h: 8 },
     ]);
@@ -94,9 +94,9 @@ function CsvPage({ screen }) {
         // />
     )
 
-    // const scatter_plot = (
-    //     <PlotContainer />
-    // )
+    const scatter_plot = (
+        <PlotContainer />
+    )
     // const cumulative = (
     //     <PlotContainer
     //         cumulativePlot={true}
@@ -122,7 +122,7 @@ function CsvPage({ screen }) {
         // <BoxPlotContainer />
     )
     const panels = {
-    //     'scatter_plot': scatter_plot,
+        'scatter_plot': scatter_plot,
     //     'images': images,
         'table': table,
     //     'screen': screenComponent,
