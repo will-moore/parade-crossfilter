@@ -14,7 +14,7 @@ const PlotContainer = ({ size, cumulativePlot }) => {
     const setSelectedIds = context.setSelectedIds;
     const numberCols = context.columns.filter(col => col.type === 'number');
 
-    console.log('render PlotContainer - context')
+    console.log('render PlotContainer - context selectedIds', selectedIds);
 
     // Start by plotting the first 2 dimensions we have
     const [yAxis, setYAxis] = React.useState(numberCols[0]);

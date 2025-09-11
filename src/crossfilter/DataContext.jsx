@@ -30,6 +30,7 @@ export class DataContext extends React.Component {
     }
 
     setSelectedIds(rowIds) {
+        console.trace('DataContext.setSelectedIds', rowIds);
         this.setState({ ...this.state, selectedIds: rowIds });
     }
 

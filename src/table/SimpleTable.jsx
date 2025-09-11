@@ -52,13 +52,15 @@ const SimpleTable = ({
 
     const gridRef = React.useRef(null);
     React.useEffect(() => {
+        console.log('SimpleTable useEffect selectedIds', selectedIds);
+
         if (selectedIds.length > 0) {
             let rowIDs = filteredData.map(r => r._rowID);
             let selectedIndexes = selectedIds.map(id => rowIDs.indexOf(id));
-            gridRef.current.scrollToItem({
-                align: 'center',
-                rowIndex: selectedIndexes[0],
-            });
+            // gridRef.current.scrollToItem({
+            //     align: 'center',
+            //     rowIndex: selectedIndexes[0],
+            // });
         }
     }, [selectedIds, sortBy, sortReverse, filteredData]);
 
@@ -98,7 +100,7 @@ const SimpleTable = ({
     )
 
     const isSelected = (rowIndex) => (
-        selectedIds.indexOf(filteredData[rowIndex]._rowID) > -1
+        rowIndex == 0 ? false : selectedIds.indexOf(filteredData[rowIndex - 1]._rowID) > -1
     )
 
     const Header = ({ colNames, columnIndex, rowIndex, style }) => (

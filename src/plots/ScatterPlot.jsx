@@ -81,10 +81,16 @@ const ScatterPlot = ({ height, xAxis, yAxis, groupBy, cumulativePlot,
     }
 
     const handleSelected = (event) => {
+        console.log('ScatterPlot.handleSelected', event);
         // Unfortunately selection is LOST when this is re-rendered
         // See https://github.com/plotly/react-plotly.js/issues/147
         if (event && event.points) {
             let selected = event.points.map(p => p.customdata);
+            if (selected.length === 0) {
+                // if none selected, clear selection
+                // setSelectedIds([]);
+                return;
+            }
             setSelectedIds(selected);
         }
     }
