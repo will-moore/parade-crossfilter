@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background: #f6f6f6;
+      }
+      .panel {
+        background: white;
+        border-radius: 10px;
+        float: left;
+        box-sizing: border-box;
+        overflow: auto;
+        margin: 10px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <select id="xaxis">
+        <option value="Centroids_RAW_X">Centroids_RAW_X</option>
+        <option value="Centroids_RAW_Y">Centroids_RAW_Y</option>
+        <option value="Centroids_RAW_Z">Centroids_RAW_Z</option>
+      </select>
+      <select id="yaxis">
+        <option value="Centroids_RAW_Y">Centroids_RAW_Y</option>
+        <option value="Centroids_RAW_X">Centroids_RAW_X</option>
+        <option value="Centroids_RAW_Z">Centroids_RAW_Z</option>
+      </select>
+      <div id="plot"></div>
+    </div>
+    <div id="plot2" class="panel"></div>
+    <div style="clear: both;"></div>
+    <div id="table" class="panel"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
