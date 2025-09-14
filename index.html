@@ -9,6 +9,9 @@
       body {
         font-family: system-ui, sans-serif;
         background: #f6f6f6;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
       }
       .panel {
         background: white;
@@ -19,25 +22,54 @@
         margin: 10px;
         padding: 10px;
       }
+      #thumbnails {
+        width: 150px;
+        height: 200px;
+      }
+      #controls {
+        flex: 0 0 auto;
+        width: 100%;
+        margin: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      }
+      #table th {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1;
+      }
+      #loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: #999;
+      }
+      .hidden {
+        visibility: hidden;
+      }
     </style>
   </head>
   <body>
-    <div class="panel">
-      <select id="xaxis">
-        <option value="Centroids_RAW_X">Centroids_RAW_X</option>
-        <option value="Centroids_RAW_Y">Centroids_RAW_Y</option>
-        <option value="Centroids_RAW_Z">Centroids_RAW_Z</option>
-      </select>
-      <select id="yaxis">
-        <option value="Centroids_RAW_Y">Centroids_RAW_Y</option>
-        <option value="Centroids_RAW_X">Centroids_RAW_X</option>
-        <option value="Centroids_RAW_Z">Centroids_RAW_Z</option>
-      </select>
-      <div id="plot"></div>
+    <div id="loading">
+      <h1>Loading...</h1>
     </div>
-    <div id="plot2" class="panel"></div>
-    <div style="clear: both;"></div>
-    <div id="table" class="panel"></div>
+    <div id="controls" class="hidden">
+      <select id="xaxis"></select>
+      <select id="yaxis"></select>
+      <div id="plot"></div>
+      Add:
+      <button id="addPlot">Plot</button>
+      <button id="addHistogram">Histogram</button>
+    </div>
+
+    <div id="plots" class="hidden"></div>
+
+    <div id="table" class="panel hidden"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

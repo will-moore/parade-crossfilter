@@ -3,25 +3,56 @@ import { coordinator, Selection, DuckDBWASMConnector } from '@uwdata/mosaic-core
 import { loadCSV } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
 
-// import { makeClient, MosaicClient } from "@uwdata/mosaic-core";
+// import { makeClient } from "@uwdata/mosaic-core";
 // import { count, Query } from "@uwdata/mosaic-sql";
+
+import { scatterPlot, histogram } from "./plots.js";
 
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
 
 let selection = Selection.intersect();
 
+const TABLE_URL = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
+// const TABLE_URL = `${window.location}idr0010.csv`
+
+// Hardcoded column names for now...
+const NUM_COLS = ["Cell Count", "53BP1 foci", "Foci Per Cell", "Foci Per Cell (Normalized)"];
+const STR_COLS = ["Plate Name", "Term Source 2 Accession"]
+
+
+const TABLE_NAME = "my_table";
+const PLOT_W = 500;
+const PLOT_H = 300;
+
 await vg.coordinator().exec([
-  loadCSV("my_table", `${window.location}omero_table.csv`)
-  // loadCSV("my_table", `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`)
+  // NB: your URL must be like "http://localhost:5173/"
+  // loadCSV(TABLE_NAME, `${window.location}omero_table.csv`)
+  loadCSV(TABLE_NAME, TABLE_URL)
 ]);
 
+// Once we've loaded the table, hide loading message and show controls...
+document.getElementById("loading").style.display = "none";
+document.getElementById("plots").classList.remove("hidden");
+document.getElementById("table").classList.remove("hidden");
+document.getElementById("controls").classList.remove("hidden");
+
 // Trying to get table columns, but this returns empty array...
-wasm.query("DESCRIBE my_table").then(res => console.log("describe my_table", res));
+// wasm.query("DESCRIBE my_table").then(res => console.log("describe my_table", res));
 
 // When picking X and Y axes, we need to clear selection
-document.getElementById("xaxis").addEventListener("change", updatePlot);
-document.getElementById("yaxis").addEventListener("change", updatePlot);
+function populateSelectElement(id, values) {
+  let select = document.getElementById(id);
+  values.forEach(v => {
+    let option = document.createElement("option");
+    option.value = v;
+    option.text = v;
+    select.appendChild(option);
+  });
+}
+
+populateSelectElement("xaxis", NUM_COLS);
+populateSelectElement("yaxis", NUM_COLS);
 
 // class MyClient extends MosaicClient {
 
@@ -61,7 +92,7 @@ document.getElementById("yaxis").addEventListener("change", updatePlot);
 //         // Return information about the fields in the table.
 //         console.log("fieldInfo", info);
 //       }
-    // });
+//     });
 
 // function clearSelection(plotId) {
 //   console.log("selection", selection);
@@ -76,68 +107,29 @@ document.getElementById("yaxis").addEventListener("change", updatePlot);
 //   }
 // }
 
-// Dynamic plot uses selected X and Y axes
-function updatePlot() {
-  // clearSelection("plot");
-
+document.getElementById("addPlot").onclick = () => {
   let xaxis = document.getElementById("xaxis").value;
   let yaxis = document.getElementById("yaxis").value;
-  // xaxis = "53BP1 foci"
-  // yaxis = "Cell Count"
-  document.getElementById("plot").replaceChildren(
-    vg.plot(
-      vg.dot(
-        vg.from("my_table", { filterBy: selection }),
-        {x: xaxis, y: yaxis, tip: true, fill: "steelblue", fillOpacity: 0.8, r: 2}
-      ),
-      vg.intervalXY({ as: selection }),
-      vg.xyDomain(vg.Fixed),
-      vg.width(500),
-      vg.height(300),
-      vg.style({"id": "plot"})
-    )
-  )
+  let panel = document.createElement("div");
+  panel.className = "panel";
+  document.getElementById("plots").appendChild(panel);
+  panel.append(
+    scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H)
+  );
 }
-updatePlot();
 
-let xbin = document.getElementById("xaxis").value;
-// Another plot - static axes
-// document.getElementById("plot2").replaceChildren(
-//   vg.plot(
-//     vg.dot(
-//       vg.from("my_table", { filterBy: selection }),
-//       {x: "Cell Count", y: "53BP1 foci", tip: true, fill: "darkorange", fillOpacity: 0.8, r: 2}
-//     ),
-//     vg.intervalX({ as: selection }),
-//     vg.xyDomain(vg.Fixed),
-//     vg.width(500),
-//     vg.height(300)
-//   )
-// )
+document.getElementById("addHistogram").onclick = () => {
+  let xaxis = document.getElementById("xaxis").value;
+  let panel = document.createElement("div");
+  panel.className = "panel";
+  document.getElementById("plots").appendChild(panel);
+  panel.append(
+    histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H)
+  );
+}
 
-document.getElementById("plot2").replaceChildren(
-  vg.plot(
-    vg.rectY(
-      vg.from("my_table", {filterBy: selection}),
-      {
-        x: vg.bin(xbin),
-        y: vg.count(),
-        fill: "darkorange",
-        insetLeft: 0.5,
-        insetRight: 0.5
-      }
-    ),
-    vg.intervalX({as: selection}),
-    vg.xDomain(vg.Fixed),
-    vg.xLabel(xbin),
-    vg.xLabelAnchor("center"),
-    // vg.yTickFormat("s"),
-    vg.width(500),
-    vg.height(300)
-  )
-)
-
+// Add the table immediately...
 document.getElementById("table").replaceChildren(
   // as: selection - filters on mouseover, not click
-  vg.table({from: "my_table", filterBy: selection, height: 300, width: 1000})
+  vg.table({from: TABLE_NAME, filterBy: selection, height: 300, width: 2000})
 );
