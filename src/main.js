@@ -1,10 +1,7 @@
 
-import { coordinator, Selection, DuckDBWASMConnector } from '@uwdata/mosaic-core';
-import { loadCSV } from '@uwdata/mosaic-sql';
+import { coordinator, makeClient, Selection, DuckDBWASMConnector } from '@uwdata/mosaic-core';
+import { loadCSV, count, Query } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
-
-// import { makeClient } from "@uwdata/mosaic-core";
-// import { count, Query } from "@uwdata/mosaic-sql";
 
 import { scatterPlot, histogram } from "./plots.js";
 
@@ -37,10 +34,7 @@ document.getElementById("plots").classList.remove("hidden");
 document.getElementById("table").classList.remove("hidden");
 document.getElementById("controls").classList.remove("hidden");
 
-// Trying to get table columns, but this returns empty array...
-// wasm.query("DESCRIBE my_table").then(res => console.log("describe my_table", res));
 
-// When picking X and Y axes, we need to clear selection
 function populateSelectElement(id, values) {
   let select = document.getElementById(id);
   values.forEach(v => {
@@ -50,62 +44,58 @@ function populateSelectElement(id, values) {
     select.appendChild(option);
   });
 }
-
 populateSelectElement("xaxis", NUM_COLS);
 populateSelectElement("yaxis", NUM_COLS);
 
-// class MyClient extends MosaicClient {
+const coord = coordinator();
 
-//   async prepare(p) {
-//     console.log("prepare", p);
-//     // Preparation work before the client starts.
-//     // Here we get the total number of rows in the table.
-//     let result = await coordinator().query(
-//       Query.from("my_table").select({ count: count() })
-//     );
-//     this.totalCount = result.get(0).count;
-//     console.log("totalCount", this.totalCount);
-//   }
+let client = makeClient({
+  coordinator: coord,
+  selection,
+  prepare: async () => {
+    // Preparation work before the client starts.
+    // Here we get the total number of rows in the table.
+    let result = await coord.query(
+      Query.from(TABLE_NAME).select({ count: count() })
+    );
+    let totalCount = result.get(0).count;
+    console.log("totalCount", totalCount);
+    document.getElementById("totalCount").innerText = totalCount;
+  },
 
-//   async fieldInfo(info) {
-//     // Return information about the fields in the table.
-//     console.log("fieldInfo", info);
-//   }
-// }
+  fieldInfo: async (info) => {
+    // Return information about the fields in the table.
+    // *** This doesn't seem to be called???
+    console.log("fieldInfo", info);
+  },
+  query: (predicate) => {
+    // Returns a query to retrieve the data.
+    // The `predicate` is the selection's predicate for this client.
+    // Here we use it to get the filtered count.
+    console.log("query predicate", predicate);
+    return Query.from(TABLE_NAME)
+      .select({ count: count() })
+      .where(predicate);
+  },
+  queryResult: (data) => {
+    // The query result is available.
+    console.log("queryResult data", data);
+    let filteredCount = data.get(0).count;
+    console.log("filteredCount", filteredCount);
+    document.getElementById("filteredCount").innerText = filteredCount;
+  },
+  queryPending: () => {
+    console.log("queryPending");
+    // The query is pending.
+  },
+  queryError: () => {
+    // There is an error running the query.
+  },
+});
 
-// let client = new MyClient(selection);
+console.log("client", client);
+console.log("client", client.fieldInfo);
 
-// let client = makeClient({
-//       coordinator,
-//       selection,
-//       prepare: async () => {
-//         // Preparation work before the client starts.
-//         // Here we get the total number of rows in the table.
-//         let result = await coordinator.query(
-//           Query.from("my_table").select({ count: count() })
-//         );
-//         totalCount = result.get(0).count;
-//         console.log("totalCount", totalCount);
-//       },
-
-//       fieldInfo: async (info) => {
-//         // Return information about the fields in the table.
-//         console.log("fieldInfo", info);
-//       }
-//     });
-
-// function clearSelection(plotId) {
-//   console.log("selection", selection);
-//   if (!selection._value) return;
-//   const values = selection._value.filter(s => {
-//     console.log(s.source.mark.plot.attributes.style);
-//     return s.source.mark.plot.attributes.style.id === plotId;
-//   })
-//   console.log('clearSelection source', values, values.length, values[0]);
-//   if (values.length > 0) {
-//     selection = selection.remove(values[0].source);
-//   }
-// }
 
 document.getElementById("addPlot").onclick = () => {
   let xaxis = document.getElementById("xaxis").value;
