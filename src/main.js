@@ -111,21 +111,41 @@ document.getElementById("addPlot").onclick = () => {
   let xaxis = document.getElementById("xaxis").value;
   let yaxis = document.getElementById("yaxis").value;
   let panel = document.createElement("div");
+  let plotId = `scatter-plot-${Date.now()}`;
   panel.className = "panel";
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H)
+    scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
 document.getElementById("addHistogram").onclick = () => {
   let xaxis = document.getElementById("xaxis").value;
   let panel = document.createElement("div");
+  let plotId = `histogram-${Date.now()}`;
   panel.className = "panel";
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H)
+    histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H, plotId)
   );
+}
+
+document.getElementById("plots").onclick = (event) => {
+  if (event.target.className === "remove") {
+    console.log("remove panel selection.clauses", selection.clauses);
+    let plotId = event.target.id;
+    let toRemove = selection.clauses.filter(c => {
+      return c.source.mark.plot.attributes.style.id === plotId;
+    })
+    console.log("toRemove", toRemove);
+    if (toRemove.length > 0) {
+      selection.reset(toRemove);
+      console.log("new selection", selection.clauses);
+    }
+    // TODO: remove plot from UI...
+  }
 }
 
 // Add the table immediately...

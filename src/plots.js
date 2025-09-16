@@ -1,5 +1,4 @@
-
-import * as vg from '@uwdata/vgplot';
+import * as vg from "@uwdata/vgplot";
 
 export function scatterPlot(
   table_name,
@@ -7,7 +6,8 @@ export function scatterPlot(
   xaxis,
   yaxis,
   width,
-  height
+  height,
+  plotId
 ) {
   return vg.plot(
     vg.dot(vg.from(table_name, { filterBy: selection }), {
@@ -21,11 +21,12 @@ export function scatterPlot(
     vg.intervalXY({ as: selection }),
     vg.xyDomain(vg.Fixed),
     vg.width(width),
-    vg.height(height)
+    vg.height(height),
+    vg.style({ id: plotId }),
   );
 }
 
-export function histogram(table_name, selection, xaxis, width, height) {
+export function histogram(table_name, selection, xaxis, width, height, plotId) {
   return vg.plot(
     vg.rectY(vg.from(table_name, { filterBy: selection }), {
       x: vg.bin(xaxis),
@@ -39,6 +40,7 @@ export function histogram(table_name, selection, xaxis, width, height) {
     vg.xLabel(xaxis),
     vg.xLabelAnchor("center"),
     vg.width(width),
-    vg.height(height)
+    vg.height(height),
+    vg.style({ id: plotId })
   );
 }
