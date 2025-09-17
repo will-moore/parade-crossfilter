@@ -5,113 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        background: #f6f6f6;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-      }
-      .panel {
-        background: white;
-        border-radius: 10px;
-        float: left;
-        box-sizing: border-box;
-        overflow: auto;
-        margin: 10px;
-        padding: 10px;
-        position: relative;
-      }
-      #thumbnails {
-        width: 150px;
-        height: 200px;
-      }
-      #controls {
-        flex: 0 0 auto;
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-        padding: 10px;
-        box-sizing: border-box;
-        background: #333;
-        color: white;
-      }
-      #table th {
-        position: sticky;
-        top: 0;
-        background: white;
-        z-index: 1;
-      }
-      #loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 20px;
-        color: #999;
-        width: 300px;
-        text-align: center;
-      }
-      .hidden {
-        visibility: hidden;
-      }
-      svg.rotating {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-      }
-      .rotating {
-        animation: rotation 6s infinite linear;
-      }
-      .rotating:nth-child(1) {
-        animation-delay: 1s;
-      }
-      .rotating:nth-child(2) {
-        animation-delay: 2s;
-      }
-      .rotating:nth-child(3) {
-        animation-delay: 3s;
-      }
-      .rotating:nth-child(4) {
-        animation-delay: 4s;
-      }
-      .rotating:nth-child(5) {
-        animation-delay: 5s;
-      }
-      @keyframes rotation {
-        0% {
-          transform: rotate(0deg);
-        }
-        17.5% {
-          transform: rotate(360deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .st0 {
-        fill: #df283f;
-      }
-      .st1 {
-        fill: #1c4a87;
-      }
-      .st2 {
-        fill: #128669;
-      }
-      .st3 {
-        fill: #1d8dcd;
-      }
-      .svg_container {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        margin: auto;
-      }
-    </style>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
     <div id="loading">
@@ -156,7 +50,17 @@
 
     <div id="plots" class="hidden"></div>
 
-    <div id="table" class="panel hidden"></div>
+    <div id="footer" class="panel hidden">
+      <label>Table <input type="radio" id="tableView" name="view" checked /></label>
+      <label>Thumbnails <input type="radio" id="thumbnailView" name="view" /></label>
+      <hr />
+      <div id="table"></div>
+      <div id="thumbnails" class="hide">Thumbnails</div>
+    </div>
+
+
+
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

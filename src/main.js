@@ -4,6 +4,7 @@ import { loadCSV, count, Query } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
 
 import { scatterPlot, histogram } from "./plots.js";
+import { thumbnailClient } from "./thumbnails.js";
 
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
@@ -14,7 +15,6 @@ const TABLE_URL = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-cha
 // const TABLE_URL = `${window.location}idr0010.csv`
 
 // Hardcoded column names for now...
-const NUM_COLS = ["Cell Count", "53BP1 foci", "Foci Per Cell", "Foci Per Cell (Normalized)"];
 const STR_COLS = ["Plate Name", "Term Source 2 Accession"]
 
 
@@ -31,7 +31,7 @@ await vg.coordinator().exec([
 // Once we've loaded the table, hide loading message and show controls...
 document.getElementById("loading").style.display = "none";
 document.getElementById("plots").classList.remove("hidden");
-document.getElementById("table").classList.remove("hidden");
+document.getElementById("footer").classList.remove("hidden");
 document.getElementById("controls").classList.remove("hidden");
 
 
@@ -44,57 +44,57 @@ function populateSelectElement(id, values) {
     select.appendChild(option);
   });
 }
-populateSelectElement("xaxis", NUM_COLS);
-populateSelectElement("yaxis", NUM_COLS);
+
+thumbnailClient("thumbnails", selection, TABLE_NAME);
 
 const coord = coordinator();
 
-let client = makeClient({
+makeClient({
   coordinator: coord,
   selection,
   prepare: async () => {
+    coord.query("describe " + TABLE_NAME).then((data) => {
+      let col_info = data.toArray();
+      console.log("col_info", col_info);
+      let number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name);
+      console.log("number_col_names", number_col_names);
+      populateSelectElement("xaxis", number_col_names);
+      populateSelectElement("yaxis", number_col_names);
+    });
+
+    // let urls = await coord.query(
+    //   Query.from(TABLE_NAME).select("File Path")
+    // );
+    // console.log("urls", urls.toArray());
     // Preparation work before the client starts.
     // Here we get the total number of rows in the table.
     let result = await coord.query(
       Query.from(TABLE_NAME).select({ count: count() })
     );
     let totalCount = result.get(0).count;
-    console.log("totalCount", totalCount);
     document.getElementById("totalCount").innerText = totalCount;
-  },
-
-  fieldInfo: async (info) => {
-    // Return information about the fields in the table.
-    // *** This doesn't seem to be called???
-    console.log("fieldInfo", info);
   },
   query: (predicate) => {
     // Returns a query to retrieve the data.
     // The `predicate` is the selection's predicate for this client.
     // Here we use it to get the filtered count.
-    console.log("query predicate", predicate);
     return Query.from(TABLE_NAME)
       .select({ count: count() })
       .where(predicate);
   },
   queryResult: (data) => {
     // The query result is available.
-    console.log("queryResult data", data);
     let filteredCount = data.get(0).count;
-    console.log("filteredCount", filteredCount);
     document.getElementById("filteredCount").innerText = filteredCount;
   },
   queryPending: () => {
-    console.log("queryPending");
+    // console.log("queryPending");
     // The query is pending.
   },
   queryError: () => {
     // There is an error running the query.
   },
 });
-
-console.log("client", client);
-console.log("client", client.fieldInfo);
 
 
 document.getElementById("addPlot").onclick = () => {
