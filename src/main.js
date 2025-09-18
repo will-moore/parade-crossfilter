@@ -22,9 +22,6 @@ const TABLE_NAME = "my_table";
 const PLOT_W = 500;
 const PLOT_H = 300;
 
-let number_col_names = [];
-let string_col_names = [];
-
 await vg.coordinator().exec([
   // NB: your URL must be like "http://localhost:5173/"
   // loadCSV(TABLE_NAME, `${window.location}omero_table.csv`)
@@ -59,7 +56,7 @@ makeClient({
     coord.query("describe " + TABLE_NAME).then((data) => {
       let col_info = data.toArray();
       console.log("col_info", col_info);
-      number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name);
+      let number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name);
       console.log("number_col_names", number_col_names);
       populateSelectElement("xaxis", number_col_names);
       populateSelectElement("yaxis", number_col_names);
@@ -109,7 +106,7 @@ document.getElementById("addPlot").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    scatterPlot(TABLE_NAME, selection, number_col_names, PLOT_W, PLOT_H, plotId)
+    scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
