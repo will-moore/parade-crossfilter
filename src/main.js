@@ -7,7 +7,7 @@ import * as vg from '@uwdata/vgplot';
 
 import { scatterPlot, histogram, barChart } from "./plots.js";
 import { thumbnailClient } from "./thumbnails.js";
-// import { rightPanel } from "./rightpanel.js";
+import { rightPanel } from "./rightpanel.js";
 
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
@@ -49,7 +49,7 @@ function populateSelectElement(id, values) {
 
 // Create the thumbnail client, which returns the selectedImages param for the right panel...
 const selectedImagesParam = thumbnailClient("thumbnails", selection, TABLE_NAME);
-// rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
+rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 
 
 // Create a "client" to display filtered count/total count...
@@ -59,14 +59,6 @@ makeClient({
   coordinator: coord,
   selection,
   prepare: async () => {
-
-    // let query = `select * from ${TABLE_NAME} where "Cell Count" = 62`;
-    // let query = `select * from ${TABLE_NAME} where "Gene Symbol" = "INCENP"`;
-    // console.log("rightPanel query", query);
-    // coord.query(query).then((data) => {
-    //   let rows = data.toArray();
-    //   console.log("rightPanel query result", rows);
-    // });
 
     // We setup the <select> elements with column names...
     coord.query("describe " + TABLE_NAME).then((data) => {

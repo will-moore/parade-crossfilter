@@ -117,8 +117,8 @@ export function thumbnailClient(elementId, selection, table_name) {
       renderThumbnails();
     },
     queryPending: () => {
-      // console.log("queryPending");
-      // The query is pending.
+      // Clear selected images when a new query is pending...
+      selectedImages.update([]);
     },
     queryError: () => {
       // There is an error running the query.
