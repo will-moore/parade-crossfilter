@@ -1,4 +1,6 @@
 
+import '../public/style.css';
+
 import { coordinator, makeClient, Selection, DuckDBWASMConnector } from '@uwdata/mosaic-core';
 import { loadCSV, count, Query } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
