@@ -3,8 +3,9 @@ import { coordinator, makeClient, Selection, DuckDBWASMConnector } from '@uwdata
 import { loadCSV, count, Query } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
 
-import { scatterPlot, histogram } from "./plots.js";
+import { scatterPlot, histogram, barChart } from "./plots.js";
 import { thumbnailClient } from "./thumbnails.js";
+// import { rightPanel } from "./rightpanel.js";
 
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
@@ -30,8 +31,7 @@ await vg.coordinator().exec([
 
 // Once we've loaded the table, hide loading message and show controls...
 document.getElementById("loading").style.display = "none";
-document.getElementById("plots").classList.remove("hidden");
-document.getElementById("footer").classList.remove("hidden");
+document.getElementById("content").classList.remove("hidden");
 document.getElementById("controls").classList.remove("hidden");
 
 
@@ -45,29 +45,38 @@ function populateSelectElement(id, values) {
   });
 }
 
-thumbnailClient("thumbnails", selection, TABLE_NAME);
+// Create the thumbnail client, which returns the selectedImages param for the right panel...
+const selectedImagesParam = thumbnailClient("thumbnails", selection, TABLE_NAME);
+// rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 
+
+// Create a "client" to display filtered count/total count...
+// (and setup the column select elements)
 const coord = coordinator();
-
 makeClient({
   coordinator: coord,
   selection,
   prepare: async () => {
+
+    // let query = `select * from ${TABLE_NAME} where "Cell Count" = 62`;
+    // let query = `select * from ${TABLE_NAME} where "Gene Symbol" = "INCENP"`;
+    // console.log("rightPanel query", query);
+    // coord.query(query).then((data) => {
+    //   let rows = data.toArray();
+    //   console.log("rightPanel query result", rows);
+    // });
+
+    // We setup the <select> elements with column names...
     coord.query("describe " + TABLE_NAME).then((data) => {
       let col_info = data.toArray();
       console.log("col_info", col_info);
       let number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name);
-      console.log("number_col_names", number_col_names);
+      let string_col_names = col_info.filter(d => d.column_type === "VARCHAR").map(d => d.column_name);
       populateSelectElement("xaxis", number_col_names);
       populateSelectElement("yaxis", number_col_names);
+      populateSelectElement("stringCols", string_col_names);
     });
-
-    // let urls = await coord.query(
-    //   Query.from(TABLE_NAME).select("File Path")
-    // );
-    // console.log("urls", urls.toArray());
-    // Preparation work before the client starts.
-    // Here we get the total number of rows in the table.
+    // Also get the total count of rows...
     let result = await coord.query(
       Query.from(TABLE_NAME).select({ count: count() })
     );
@@ -83,7 +92,7 @@ makeClient({
       .where(predicate);
   },
   queryResult: (data) => {
-    // The query result is available.
+    // The query result is available. Show at top of UI.
     let filteredCount = data.get(0).count;
     document.getElementById("filteredCount").innerText = filteredCount;
   },
@@ -119,6 +128,18 @@ document.getElementById("addHistogram").onclick = () => {
   document.getElementById("plots").appendChild(panel);
   panel.append(
     histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H, plotId)
+  );
+}
+
+document.getElementById("addBarChart").onclick = () => {
+  let yaxis = document.getElementById("stringCols").value;
+  let panel = document.createElement("div");
+  let plotId = `bar-chart-${Date.now()}`;
+  panel.className = "panel";
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
+  document.getElementById("plots").appendChild(panel);
+  panel.append(
+    barChart(TABLE_NAME, selection, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 

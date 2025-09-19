@@ -34,12 +34,16 @@
       </h1>
     </div>
     <div id="controls" class="hidden">
+      X:
       <select id="xaxis"></select>
+      Y:
       <select id="yaxis"></select>
       <div id="plot"></div>
       Add:
       <button id="addPlot">Plot</button>
       <button id="addHistogram">Histogram</button>
+      <select id="stringCols"></select>
+      <button id="addBarChart">Bar Chart</button>
 
       <div style="flex-grow: 1;"></div>
       <div>
@@ -48,14 +52,21 @@
       </div>
     </div>
 
-    <div id="plots" class="hidden"></div>
-
-    <div id="footer" class="panel hidden">
-      <label>Table <input type="radio" id="tableView" name="view" checked /></label>
-      <label>Thumbnails <input type="radio" id="thumbnailView" name="view" /></label>
-      <hr />
-      <div id="table"></div>
-      <div id="thumbnails" class="hide">Thumbnails</div>
+    <!-- shown when loading is complete -->
+    <div id="content" class="hidden" style="display: flex; flex-direction: row; flex: 1 1 auto;">
+      <div style="flex: 1 1 auto; display: flex; flex-direction: column;">
+        <div id="plots" style="flex: 1 1 auto; height: 200px; overflow: auto"></div>
+        <div id="footer" style="flex: 0 0 auto; height: 300px;" class="panel">
+          <label>Table <input type="radio" id="tableView" name="view" checked /></label>
+          <label>Thumbnails <input type="radio" id="thumbnailView" name="view" /></label>
+          <hr />
+          <div id="table" style="width: 400px"></div>
+          <div id="thumbnails" class="hide">Thumbnails</div>
+        </div>
+      </div>
+      <div id="sidebar" style="flex: 0 0 350px; background-color: lightgray;">
+        Right panel
+      </div>
     </div>
 
 

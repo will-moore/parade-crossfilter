@@ -4,6 +4,9 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 .panel {
   background: white;
@@ -17,7 +20,7 @@ body {
 }
 #thumbnails {
   width: 150px;
-  height: 200px;
+  height: 245px;
 }
 #controls {
   flex: 0 0 auto;
@@ -124,6 +127,11 @@ svg.rotating {
   display: inline-block;
   background: lightgrey;
   border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#thumbnails img.selected {
+  border: solid 3px #1c4a87;
 }
 
 .thumb {

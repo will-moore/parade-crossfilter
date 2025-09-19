@@ -3,13 +3,16 @@ import {
   makeClient,
 } from "@uwdata/mosaic-core";
 import { Query } from "@uwdata/mosaic-sql";
+import { Param } from "@uwdata/mosaic-core";
+
 import * as omezarr from "https://cdn.jsdelivr.net/npm/ome-zarr.js@latest/+esm";
 
-const coordinator = defaultCoordinator();
+const selectedImages = Param.array([]);
 
 export function thumbnailClient(elementId, selection, table_name) {
 
-  let selectedRows = [];
+  // Store the current set of table rows from the last query...
+  let queryRows = [];
 
   // Setup toggle between table and thumbnail view...
   document.getElementById("tableView").onclick = () => {
@@ -22,12 +25,29 @@ export function thumbnailClient(elementId, selection, table_name) {
     renderThumbnails();
   };
 
+  // listen to clicks on thumbnails container...
+  document.getElementById(elementId).onclick = (event) => {
+    let target = event.target;
+    console.log("clicked", target);
+    if (target.tagName === "IMG") {
+      let url = target.id;
+      if (selectedImages.value.includes(url)) {
+        selectedImages.update(selectedImages.value.filter((d) => d !== url));
+        target.classList.remove("selected");
+      } else {
+        selectedImages.update([...selectedImages.value, url]);
+        target.classList.add("selected");
+      }
+      console.log("selectedImages", selectedImages.value);
+    }
+  };
+
   function renderThumbnails() {
     if (document.getElementById("thumbnails").classList.contains("hide")) {
       console.log("thumbnails hide, not rendering");
       return;
     }
-    let rows = selectedRows.slice(0, 100); // limit to first 100 for now...
+    let rows = queryRows.slice(0, 100); // limit to first 100 for now...
     let html = rows.map(row => `<div class="thumb spinner"><img id="${row["File Path"]}" alt="thumbnail" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /></div >`).join('');
     document.getElementById(elementId).innerHTML = html;
 
@@ -54,6 +74,8 @@ export function thumbnailClient(elementId, selection, table_name) {
   }
   renderThumbnails = debounce(renderThumbnails, 1000);
 
+  // Setup intersection observer to lazy load thumbnails
+  // when they scroll into view...
   const options = {
     root: document.querySelector("#thumbnails"),
     rootMargin: "0px",
@@ -72,9 +94,11 @@ export function thumbnailClient(elementId, selection, table_name) {
       }
     });
   };
-
   const observer = new IntersectionObserver(intersectionCallback, options);
 
+
+  // Mosaic client to listen to filter changes and update thumbnails...
+  const coordinator = defaultCoordinator();
   makeClient({
     coordinator,
     selection,
@@ -88,9 +112,8 @@ export function thumbnailClient(elementId, selection, table_name) {
       return Query.from(table_name).select("File Path").where(predicate);
     },
     queryResult: (data) => {
-      console.log("urls data", data.toArray());
       document.getElementById("thumbnails").innerHTML = "Loading...";
-      selectedRows = data.toArray();
+      queryRows = data.toArray();
       renderThumbnails();
     },
     queryPending: () => {
@@ -101,4 +124,6 @@ export function thumbnailClient(elementId, selection, table_name) {
       // There is an error running the query.
     },
   });
+
+  return selectedImages;
 }

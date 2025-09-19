@@ -44,3 +44,26 @@ export function histogram(table_name, selection, xaxis, width, height, plotId) {
     vg.style({ id: plotId })
   );
 }
+
+export function barChart(table_name, selection, yaxis, width, height, plotId) {
+  return vg.plot(
+    vg.barX(
+      vg.from(table_name, {filterBy: selection}),
+      {
+        x: vg.count(),
+        y: yaxis,
+        fill: "darkgreen",
+        sort: {y: "-x", limit: 20}
+      }
+    ),
+    vg.intervalY({ as: selection }),
+    vg.xLabel("Count"),
+    vg.yLabel(yaxis),
+    vg.yLabelAnchor("top"),
+    vg.marginTop(15),
+    vg.width(width),
+    vg.height(height),
+    vg.style({ id: plotId })
+  )
+}
+
