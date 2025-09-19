@@ -10,7 +10,7 @@ export function scatterPlot(
   plotId
 ) {
   return vg.plot(
-    vg.dot(vg.from(table_name, { filterBy: selection }), {
+    vg.dot(vg.from(table_name), {
       x: xaxis,
       y: yaxis,
       tip: true,
@@ -18,6 +18,7 @@ export function scatterPlot(
       fillOpacity: 0.8,
       r: 2,
     }),
+    vg.highlight({by: selection, opacity: 0.1, fill: "grey", r: 3}),
     vg.intervalXY({ as: selection }),
     vg.xyDomain(vg.Fixed),
     vg.width(width),
