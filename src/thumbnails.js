@@ -32,10 +32,22 @@ export function thumbnailClient(elementId, selection, table_name) {
     if (target.tagName === "IMG") {
       let url = target.id;
       if (selectedImages.value.includes(url)) {
+        // toggle selection off if already selected...
         selectedImages.update(selectedImages.value.filter((d) => d !== url));
         target.classList.remove("selected");
       } else {
-        selectedImages.update([...selectedImages.value, url]);
+        // if Cmd or Ctrl key held, allow multi-select
+        if (!event.metaKey && !event.ctrlKey) {
+          // no modifier key, so
+          // de-select all others and select this one...
+          selectedImages.update([url]);
+          document.querySelectorAll("#thumbnails img.selected").forEach((img) => {
+            img.classList.remove("selected");
+          });
+        } else {
+          // OR: allow multiple selection...
+          selectedImages.update([...selectedImages.value, url]);
+        }
         target.classList.add("selected");
       }
       console.log("selectedImages", selectedImages.value);

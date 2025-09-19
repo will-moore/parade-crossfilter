@@ -53,8 +53,6 @@ body {
 
 #thumbnails {
   overflow: auto;
-  background: #eee;
-  border: 1px solid #ccc;
   width: 100%;
 }
 
