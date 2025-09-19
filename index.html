@@ -5,32 +5,135 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+
+    <style>
+      /* Styles for the loading spinner - inline so we don't get FOUC */
+      #loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: #999;
+        width: 300px;
+        text-align: center;
+      }
+
+      .hidden {
+        visibility: hidden;
+      }
+      .hide {
+        display: none;
+      }
+
+      svg.rotating {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .rotating {
+        animation: rotation 6s infinite linear;
+      }
+      .rotating:nth-child(1) {
+        animation-delay: 1s;
+      }
+      .rotating:nth-child(2) {
+        animation-delay: 2s;
+      }
+      .rotating:nth-child(3) {
+        animation-delay: 3s;
+      }
+      .rotating:nth-child(4) {
+        animation-delay: 4s;
+      }
+      .rotating:nth-child(5) {
+        animation-delay: 5s;
+      }
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        17.5% {
+          transform: rotate(360deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .st0 {
+        fill: #df283f;
+      }
+      .st1 {
+        fill: #1c4a87;
+      }
+      .st2 {
+        fill: #128669;
+      }
+      .st3 {
+        fill: #1d8dcd;
+      }
+      .svg_container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="loading">
       <div class="svg_container">
         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st0" d="M256,448c0,70.7-57.3,128-128,128S0,518.7,0,448s57.3-128,128-128S256,377.3,256,448z"/></g>
+          <g>
+            <path
+              class="st0"
+              d="M256,448c0,70.7-57.3,128-128,128S0,518.7,0,448s57.3-128,128-128S256,377.3,256,448z"
+            />
+          </g>
         </svg>
         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st1" d="M448,128c0,70.7-57.3,128-128,128s-128-57.3-128-128S249.3,0,320,0S448,57.3,448,128z"/></g>
+          <g>
+            <path
+              class="st1"
+              d="M448,128c0,70.7-57.3,128-128,128s-128-57.3-128-128S249.3,0,320,0S448,57.3,448,128z"
+            />
+          </g>
         </svg>
         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st2" d="M832,128c0,70.7-57.3,128-128,128s-128-57.3-128-128S633.3,0,704,0S832,57.3,832,128z"/></g>
-        </svg>
-         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st1" d="M1024,448c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S1024,377.3,1024,448z"/></g>
+          <g>
+            <path
+              class="st2"
+              d="M832,128c0,70.7-57.3,128-128,128s-128-57.3-128-128S633.3,0,704,0S832,57.3,832,128z"
+            />
+          </g>
         </svg>
         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st3" d="M832,768c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S832,697.3,832,768z"/></g>
+          <g>
+            <path
+              class="st1"
+              d="M1024,448c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S1024,377.3,1024,448z"
+            />
+          </g>
         </svg>
         <svg class="rotating" viewBox="0 0 1024 896">
-          <g><path class="st1" d="M448,768c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S448,697.3,448,768z"/></g>
+          <g>
+            <path
+              class="st3"
+              d="M832,768c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S832,697.3,832,768z"
+            />
+          </g>
+        </svg>
+        <svg class="rotating" viewBox="0 0 1024 896">
+          <g>
+            <path
+              class="st1"
+              d="M448,768c0,70.7-57.3,128-128,128s-128-57.3-128-128s57.3-128,128-128S448,697.3,448,768z"
+            />
+          </g>
         </svg>
       </div>
-      <h1>
-        Loading...
-      </h1>
+      <h1>Loading...</h1>
     </div>
     <div id="controls" class="hidden">
       X:
@@ -44,7 +147,7 @@
       <select id="stringCols"></select>
       <button id="addBarChart">Bar Chart</button>
 
-      <div style="flex-grow: 1;"></div>
+      <div style="flex-grow: 1"></div>
       <div>
         Filtered: <span id="filteredCount"></span> / Total:
         <span id="totalCount"></span> Rows
@@ -52,24 +155,32 @@
     </div>
 
     <!-- shown when loading is complete -->
-    <div id="content" class="hidden" style="display: flex; flex-direction: row; flex: 1 1 auto;">
-      <div style="flex: 1 1 auto; display: flex; flex-direction: column;">
-        <div id="plots" style="flex: 1 1 auto; height: 200px; overflow: auto"></div>
-        <div id="footer" style="flex: 0 0 auto; height: 300px;" class="panel">
-          <label>Table <input type="radio" id="tableView" name="view" checked /></label>
-          <label>Thumbnails <input type="radio" id="thumbnailView" name="view" /></label>
+    <div
+      id="content"
+      class="hidden"
+      style="display: flex; flex-direction: row; flex: 1 1 auto"
+    >
+      <div style="flex: 1 1 auto; display: flex; flex-direction: column">
+        <div
+          id="plots"
+          style="flex: 1 1 auto; height: 200px; overflow: auto"
+        ></div>
+        <div id="footer" style="flex: 0 0 auto; height: 300px" class="panel">
+          <label
+            >Table <input type="radio" id="tableView" name="view" checked
+          /></label>
+          <label
+            >Thumbnails <input type="radio" id="thumbnailView" name="view"
+          /></label>
           <hr />
           <div id="table" style="width: 400px"></div>
           <div id="thumbnails" class="hide">Thumbnails</div>
         </div>
       </div>
-      <div id="sidebar" style="flex: 0 0 350px; background-color: lightgray;">
+      <div id="sidebar" style="flex: 0 0 350px; background-color: lightgray">
         Right panel
       </div>
     </div>
-
-
-
 
     <script type="module" src="/src/main.js"></script>
   </body>
