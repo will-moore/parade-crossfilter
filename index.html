@@ -136,17 +136,8 @@
       <h1>Loading...</h1>
     </div>
     <div id="controls" class="hidden">
-      X:
-      <select id="xaxis"></select>
-      Y:
-      <select id="yaxis"></select>
-      <div id="plot"></div>
-      Add:
-      <button id="addPlot">Plot</button>
-      <button id="addHistogram">Histogram</button>
-      <select id="stringCols"></select>
-      <button id="addBarChart">Bar Chart</button>
-
+      <h1 style="margin: 0 20px; font-size: 27px; font-weight: 200;">Parade</h1>
+      <button popovertarget="addPlotDialog">Add Plot</button>
       <div style="flex-grow: 1"></div>
       <div>
         Filtered: <span id="filteredCount"></span> / Total:
@@ -172,12 +163,72 @@
           <label
             >Thumbnails <input type="radio" id="thumbnailView" name="view"
           /></label>
-          <hr style="border: none; border-bottom: solid #ddd 1px;" />
+          <hr style="border: none; border-bottom: solid #ddd 1px" />
           <div id="table" style="width: 400px"></div>
           <div id="thumbnails" class="hide">Thumbnails</div>
         </div>
       </div>
-      <div id="sidebar" style="flex: 0 0 350px;">
+      <div id="sidebar" style="flex: 0 0 350px"></div>
+    </div>
+
+    <div id="addPlotDialog" popover>
+      <div style="display: flex; flex-direction: column; height: 100%">
+        <h2>Add Plot</h2>
+        <button popovertarget="addPlotDialog" class="x">×</button>
+        <div style="margin: 0; padding: 15px; flex: 1 1 auto">
+
+          <!-- tabs (CSS only, no JavaScript) for Plot, Histogram, and Bar Chart -->
+          <ul class="tabs">
+            <li class="tab">
+              <input type="radio" name="tabs" checked="checked" id="tab1" />
+              <label for="tab1">Scatter Plot</label>
+              <div id="tab-content1" class="content">
+                <p>
+                  <label for="xaxis">X-axis:</label>
+                  <select id="xaxis"></select>
+                  <label for="yaxis">Y-axis:</label>
+                  <select id="yaxis"></select>
+                </p>
+                <p style="text-align: right;">
+                  <button id="addPlot">Add Plot</button>
+                </p>
+              </div>
+            </li>
+
+            <li class="tab">
+              <input type="radio" name="tabs" id="tab2" />
+              <label for="tab2">Histogram</label>
+              <div id="tab-content2" class="content">
+                <p>
+                  <label for="histogramAxis">X-axis:</label>
+                  <select id="histogramAxis"></select>
+                </p>
+                <p style="text-align: right;">
+                  <button id="addHistogram">Add Plot</button>
+                </p>
+              </div>
+            </li>
+
+            <li class="tab">
+              <input type="radio" name="tabs" id="tab3" />
+              <label for="tab3">Bar Chart</label>
+              <div id="tab-content3" class="content">
+                <p>
+                  <label for="stringCols">Column:</label>
+                  <select id="stringCols"></select>
+                </p>
+                <p style="text-align: right;">
+                  <button id="addBarChart">Add Plot</button>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+          
+        <div style="flex-grow: 1"></div>
+        <div style="margin: 0; padding: 15px; border-top: solid grey 1px; text-align: right">
+          <button popovertarget="addPlotDialog" class="close">Close</button>
+        </div>
       </div>
     </div>
 

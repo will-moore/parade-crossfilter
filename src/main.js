@@ -35,6 +35,7 @@ await vg.coordinator().exec([
 document.getElementById("loading").style.display = "none";
 document.getElementById("content").classList.remove("hidden");
 document.getElementById("controls").classList.remove("hidden");
+document.getElementById("addPlotDialog").togglePopover();
 
 
 function populateSelectElement(id, values) {
@@ -68,6 +69,7 @@ makeClient({
       let string_col_names = col_info.filter(d => d.column_type === "VARCHAR").map(d => d.column_name);
       populateSelectElement("xaxis", number_col_names);
       populateSelectElement("yaxis", number_col_names);
+      populateSelectElement("histogramAxis", number_col_names);
       populateSelectElement("stringCols", string_col_names);
     });
     // Also get the total count of rows...
@@ -106,7 +108,7 @@ document.getElementById("addPlot").onclick = () => {
   let panel = document.createElement("div");
   let plotId = `scatter-plot-${Date.now()}`;
   panel.className = "panel";
-  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
     scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
@@ -114,11 +116,11 @@ document.getElementById("addPlot").onclick = () => {
 }
 
 document.getElementById("addHistogram").onclick = () => {
-  let xaxis = document.getElementById("xaxis").value;
+  let xaxis = document.getElementById("histogramAxis").value;
   let panel = document.createElement("div");
   let plotId = `histogram-${Date.now()}`;
   panel.className = "panel";
-  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
     histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H, plotId)
@@ -130,7 +132,7 @@ document.getElementById("addBarChart").onclick = () => {
   let panel = document.createElement("div");
   let plotId = `bar-chart-${Date.now()}`;
   panel.className = "panel";
-  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">X</button>`;
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
     barChart(TABLE_NAME, selection, yaxis, PLOT_W, PLOT_H, plotId)
@@ -150,6 +152,7 @@ document.getElementById("plots").onclick = (event) => {
       console.log("new selection", selection.clauses);
     }
     // TODO: remove plot from UI...
+    event.target.parentElement.remove();
   }
 }
 
