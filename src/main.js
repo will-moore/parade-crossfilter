@@ -14,12 +14,11 @@ coordinator().databaseConnector(wasm);
 
 let selection = Selection.intersect();
 
-const TABLE_URL = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
-// const TABLE_URL = `${window.location}idr0010.csv`
+const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
 
-// Hardcoded column names for now...
-const STR_COLS = ["Plate Name", "Term Source 2 Accession"]
-
+// Use ?query parameter "source" to get Table URL...
+const params = new URLSearchParams(window.location.search);
+const TABLE_URL = params.get("source") || defaultSource;
 
 const TABLE_NAME = "my_table";
 const PLOT_W = 500;
