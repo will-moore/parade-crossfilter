@@ -1,0 +1,1 @@
+../omero-parade-crossfilter/flake.nix

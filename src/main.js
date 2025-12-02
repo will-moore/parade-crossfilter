@@ -5,14 +5,26 @@ import { coordinator, makeClient, Selection, DuckDBWASMConnector } from '@uwdata
 import { loadCSV, count, Query } from '@uwdata/mosaic-sql';
 import * as vg from '@uwdata/vgplot';
 
-import { scatterPlot, histogram, barChart } from "./plots.js";
+import { scatterPlot, histogram, barChart, regressionPlot } from "./plots.js";
 import { thumbnailClient } from "./thumbnails.js";
 import { rightPanel } from "./rightpanel.js";
 
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
 
-let selection = Selection.intersect();
+const $range = Selection.crossfilter();
+const $click = Selection.intersect();
+const $combined = Selection.intersect();
+
+function recompute() {
+  const p1 = $range.predicate();
+  const p2 = $click.predicate();
+  $combined.setPredicate(p1 ? (p2 ? p1.and(p2) : p1) : (p2 || null));
+}
+$range.addEventListener("change", recompute);
+$click.addEventListener("change", recompute);
+
+
 
 const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
 
@@ -48,7 +60,7 @@ function populateSelectElement(id, values) {
 }
 
 // Create the thumbnail client, which returns the selectedImages param for the right panel...
-const selectedImagesParam = thumbnailClient("thumbnails", selection, TABLE_NAME);
+const selectedImagesParam = thumbnailClient("thumbnails", $range, TABLE_NAME);
 rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 
 
@@ -57,7 +69,7 @@ rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 const coord = coordinator();
 makeClient({
   coordinator: coord,
-  selection,
+  $range,
   prepare: async () => {
 
     // We setup the <select> elements with column names...
@@ -68,6 +80,8 @@ makeClient({
       let string_col_names = col_info.filter(d => d.column_type === "VARCHAR").map(d => d.column_name);
       populateSelectElement("xaxis", number_col_names);
       populateSelectElement("yaxis", number_col_names);
+      populateSelectElement("regXaxis", number_col_names);
+      populateSelectElement("regYaxis", number_col_names);
       populateSelectElement("histogramAxis", number_col_names);
       populateSelectElement("stringCols", string_col_names);
     });
@@ -110,7 +124,7 @@ document.getElementById("addPlot").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    scatterPlot(TABLE_NAME, selection, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
+    scatterPlot(TABLE_NAME, $range, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
@@ -122,7 +136,7 @@ document.getElementById("addHistogram").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    histogram(TABLE_NAME, selection, xaxis, PLOT_W, PLOT_H, plotId)
+    histogram(TABLE_NAME, $range, xaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
@@ -134,21 +148,34 @@ document.getElementById("addBarChart").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    barChart(TABLE_NAME, selection, yaxis, PLOT_W, PLOT_H, plotId)
+    barChart(TABLE_NAME, $range, $click, yaxis, PLOT_W, PLOT_H, plotId)
+  );
+}
+
+document.getElementById("addRegressionPlot").onclick = () => {
+  let xaxis = document.getElementById("regXaxis").value;
+  let yaxis = document.getElementById("regYaxis").value;
+  let panel = document.createElement("div");
+  let plotId = `regression-plot-${Date.now()}`;
+  panel.className = "panel";
+  panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
+  document.getElementById("plots").appendChild(panel);
+  panel.append(
+    regressionPlot(TABLE_NAME, $range, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
 document.getElementById("plots").onclick = (event) => {
   if (event.target.className === "remove") {
-    console.log("remove panel selection.clauses", selection.clauses);
+    console.log("remove panel selection.clauses", $range.clauses);
     let plotId = event.target.id;
-    let toRemove = selection.clauses.filter(c => {
+    let toRemove = $range.clauses.filter(c => {
       return c.source.mark.plot.attributes.style.id === plotId;
     })
     console.log("toRemove", toRemove);
     if (toRemove.length > 0) {
-      selection.reset(toRemove);
-      console.log("new selection", selection.clauses);
+      $range.reset(toRemove);
+      console.log("new selection", $range.clauses);
     }
     // TODO: remove plot from UI...
     event.target.parentElement.remove();
@@ -158,5 +185,5 @@ document.getElementById("plots").onclick = (event) => {
 // Add the table immediately...
 document.getElementById("table").replaceChildren(
   // as: selection - filters on mouseover, not click
-  vg.table({from: TABLE_NAME, filterBy: selection, height: 300, width: 2000})
+  vg.table({from: TABLE_NAME, filterBy: $range, height: 300, width: 2000})
 );

@@ -1,5 +1,6 @@
 import * as vg from "@uwdata/vgplot";
 
+
 export function scatterPlot(
   table_name,
   selection,
@@ -46,7 +47,8 @@ export function histogram(table_name, selection, xaxis, width, height, plotId) {
   );
 }
 
-export function barChart(table_name, selection, yaxis, width, height, plotId) {
+export function barChart(table_name, selection, $click, yaxis, width, height, plotId) {
+
   return vg.plot(
     vg.barX(
       vg.from(table_name, {filterBy: selection}),
@@ -57,7 +59,11 @@ export function barChart(table_name, selection, yaxis, width, height, plotId) {
         sort: {y: "-x", limit: 20}
       }
     ),
-    vg.intervalY({ as: selection }),
+    vg.toggleY({ as: selection }),
+    vg.toggleY({as: $click}),
+    vg.highlight({by: $click}),
+    vg.xDomain(vg.Fixed),
+    vg.yDomain(vg.Fixed),
     vg.xLabel("Count"),
     vg.yLabel(yaxis),
     vg.yLabelAnchor("top"),
@@ -68,3 +74,25 @@ export function barChart(table_name, selection, yaxis, width, height, plotId) {
   )
 }
 
+export function regressionPlot(
+  table_name,
+  selection,
+  xaxis,
+  yaxis,
+  width,
+  height,
+  plotId
+) {
+  return vg.plot(
+    vg.regressionY(vg.from(table_name), {
+      x: xaxis,
+      y: yaxis,
+    }),
+    vg.highlight({by: selection, opacity: 0.1, fill: "grey", r: 3}),
+    vg.intervalXY({ as: selection }),
+    vg.xyDomain(vg.Fixed),
+    vg.width(width),
+    vg.height(height),
+    vg.style({ id: plotId }),
+  );
+}
