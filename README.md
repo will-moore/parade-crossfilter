@@ -6,6 +6,12 @@ It uses [Create React App](https://github.com/facebook/create-react-app)
 with the cross-filter, [dc.js](https://dc-js.github.io/dc.js/) and React interaction
 based on the blog post at https://www.lighttag.io/blog/react-dc-js/.
 
+# Demo
+
+The app works both as an OMERO.web plugin, loading data from your OMERO.server or as a
+standalone static app, loading data from public OMERO servers. You can try a
+[Demo](https://parade-crossfilter.netlify.app/) of this, loading data from IDR by default.
+
 # Install
 
 Install into your omero-web python environment:
