@@ -30,6 +30,14 @@ export function scatterPlot(
 
 export function histogram(table_name, selection, xaxis, width, height, plotId) {
   return vg.plot(
+    vg.rectY(vg.from(table_name), {
+      x: vg.bin(xaxis),
+      y: vg.count(),
+      fill: "#ccc",
+      fillOpacity: 0.2,
+      insetLeft: 0.5,
+      insetRight: 0.5,
+    }),
     vg.rectY(vg.from(table_name, { filterBy: selection }), {
       x: vg.bin(xaxis),
       y: vg.count(),
@@ -38,7 +46,9 @@ export function histogram(table_name, selection, xaxis, width, height, plotId) {
       insetRight: 0.5,
     }),
     vg.intervalX({ as: selection }),
+    // vg.highlight({ by: selection, fill: "#ccc", fillOpacity: 0.2 }),
     vg.xDomain(vg.Fixed),
+    vg.yDomain(vg.Fixed),
     vg.xLabel(xaxis),
     vg.xLabelAnchor("center"),
     vg.width(width),
@@ -47,9 +57,13 @@ export function histogram(table_name, selection, xaxis, width, height, plotId) {
   );
 }
 
-export function barChart(table_name, selection, $click, yaxis, width, height, plotId) {
+export function barChart(table_name, selection, $click, selection2, yaxis, width, height, plotId) {
 
   return vg.plot(
+    vg.barX(
+      vg.from(table_name, {filterBy: selection2}),
+      {x: vg.count(), y: yaxis, fill: "#ccc", fillOpacity: 0.2}
+    ),
     vg.barX(
       vg.from(table_name, {filterBy: selection}),
       {
@@ -59,11 +73,12 @@ export function barChart(table_name, selection, $click, yaxis, width, height, pl
         sort: {y: "-x", limit: 20}
       }
     ),
+    vg.toggleY({ as: selection2 }),
     vg.toggleY({ as: selection }),
     vg.toggleY({as: $click}),
-    vg.highlight({by: $click}),
-    vg.xDomain(vg.Fixed),
-    vg.yDomain(vg.Fixed),
+    vg.highlight({by: $click, opacity: 0.1, fill: "grey", r: 3}),
+    // vg.xDomain(vg.Fixed),
+    // vg.yDomain(vg.Fixed),
     vg.xLabel("Count"),
     vg.yLabel(yaxis),
     vg.yLabelAnchor("top"),
@@ -72,27 +87,4 @@ export function barChart(table_name, selection, $click, yaxis, width, height, pl
     vg.height(height),
     vg.style({ id: plotId })
   )
-}
-
-export function regressionPlot(
-  table_name,
-  selection,
-  xaxis,
-  yaxis,
-  width,
-  height,
-  plotId
-) {
-  return vg.plot(
-    vg.regressionY(vg.from(table_name), {
-      x: xaxis,
-      y: yaxis,
-    }),
-    vg.highlight({by: selection, opacity: 0.1, fill: "grey", r: 3}),
-    vg.intervalXY({ as: selection }),
-    vg.xyDomain(vg.Fixed),
-    vg.width(width),
-    vg.height(height),
-    vg.style({ id: plotId }),
-  );
 }
