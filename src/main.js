@@ -14,7 +14,8 @@ coordinator().databaseConnector(wasm);
 
 const $range = Selection.crossfilter();
 const $click = Selection.intersect();
-const $range2 = Selection.intersect();
+const $range2 = Selection.single();
+const $range3 = Selection.intersect({ include: $range });
 // const $query = Selection.crossfilter({ include: [$range] }); //!
 
 const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
@@ -36,6 +37,7 @@ function escapeRe(s) {
   // escape all regex metacharacters
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
 // Once we've loaded the table, hide loading message and show controls...
 document.getElementById("loading").style.display = "none";
 document.getElementById("content").classList.remove("hidden");
@@ -71,46 +73,57 @@ function populateOptions(cols) {
 }
 
 // Build (or rebuild) the search widget for a given column
-function mountSearch(col) {
-  // Clear any prior search clause so we don't keep filtering on the old column
-  $range.reset();
-  searchMount.innerHTML = "";
 
+function mountSearch(col, delayMs = 750) {
+  // reset only the search selection
+  $range.reset();
+  searchMount.replaceChildren();
   if (!col) return;
 
+  // visible vg.search control
   const ctl = vg.search({
     label: `Search in ${col}`,
-    as: $range,
+    as: $range,           // <- dedicated search selection
     from: TABLE_NAME,
     column: col,
     type: "regexp",
-    // If you want the search to operate within the current crossfilter UI state,
-    // you can add: filterBy: $selection
-    filterBy: $range,
+    filterBy: $range      // optional: scope search within current crossfilter
   });
-
- // Intercept typing and convert to ^…$ (exact match)
-  const input = ctl.querySelector('input[type="search"], input');
-  if (input) {
-    input.addEventListener("input", () => {
-      const raw = input.value.trim();
-
-      // if user already typed a regex (starts with ^ or contains .* etc), leave it alone
-      const looksLikeRegex = /[\^\$\.\*\+\?\|\(\)\[\]\\]/.test(raw);
-
-      const pattern = looksLikeRegex ? raw : `^${escapeRe(raw)}$`;
-
-      // only push back if we changed it to avoid cursor jitter
-      if (pattern !== raw) {
-
-        input.value = pattern;
-        // fire an input event so vg.search updates the selection clause
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-    }, { once: true }); // run once, then user sees the anchored pattern and can edit
-  }
-
   searchMount.appendChild(ctl);
+
+  // find the input (vg.search uses Shadow DOM)
+  const root  = ctl.shadowRoot || ctl;
+  const input = root.querySelector('input[type="search"], input');
+  if (!input) return;
+
+  let t, composing = false;
+
+  const apply = () => {
+    const raw = input.value.trim();
+    const looksLikeRegex = /[\^\$\.\*\+\?\|\(\)\[\]\\]/.test(raw);
+    const pattern = looksLikeRegex ? raw : (raw ? `^${escapeRe(raw)}$` : "");
+    if (pattern !== raw) {
+      input.value = pattern;
+      // notify vg.search so it updates $query
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  };
+
+  const debouncedApply = () => {
+    clearTimeout(t);
+    t = setTimeout(apply, delayMs);
+  };
+
+  // IME-friendly: wait until composition ends
+  input.addEventListener("compositionstart", () => { composing = true; });
+  input.addEventListener("compositionend",   () => { composing = false; apply(); });
+
+  // debounce while typing
+  input.addEventListener("input", () => { if (!composing) debouncedApply(); });
+
+  // commit immediately on Enter or when leaving the field
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") apply(); });
+  input.addEventListener("blur", apply);
 }
 
 // Wire dropdown change
@@ -144,15 +157,14 @@ rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 const coord = coordinator();
 makeClient({
   coordinator: coord,
-  $range,
+  selection: $range,
   prepare: async () => {
-
     // We setup the <select> elements with column names...
     coord.query("describe " + TABLE_NAME).then((data) => {
       let col_info = data.toArray();
       console.log("col_info", col_info);
       const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
-      let number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name);
+      let number_col_names = col_info.filter(d => d.column_type === "BIGINT").map(d => d.column_name).sort(collator.compare);
       let string_col_names = col_info.filter(d => d.column_type === "VARCHAR").map(d => d.column_name).sort(collator.compare);
       console.log("string_col_names", string_col_names);
       populateSelectElement("xaxis", number_col_names);
@@ -201,7 +213,7 @@ document.getElementById("addPlot").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    scatterPlot(TABLE_NAME, $range, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
+    scatterPlot(TABLE_NAME, $range, $range3, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
