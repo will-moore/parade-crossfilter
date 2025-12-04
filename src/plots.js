@@ -1,8 +1,10 @@
 import * as vg from "@uwdata/vgplot";
 
+
 export function scatterPlot(
   table_name,
-  selection,
+  crossSelection,
+  scatterHighlight,
   xaxis,
   yaxis,
   width,
@@ -10,7 +12,7 @@ export function scatterPlot(
   plotId
 ) {
   return vg.plot(
-    vg.dot(vg.from(table_name), {
+    vg.dot(vg.from(table_name, ), {
       x: xaxis,
       y: yaxis,
       tip: true,
@@ -18,8 +20,8 @@ export function scatterPlot(
       fillOpacity: 0.8,
       r: 2,
     }),
-    vg.highlight({by: selection, opacity: 0.1, fill: "grey", r: 3}),
-    vg.intervalXY({ as: selection }),
+    vg.highlight({by: scatterHighlight, opacity: 0.1, fill: "grey", r: 3}),
+    vg.intervalXY({ as: crossSelection }),
     vg.xyDomain(vg.Fixed),
     vg.width(width),
     vg.height(height),
@@ -27,16 +29,16 @@ export function scatterPlot(
   );
 }
 
-export function histogram(table_name, selection, xaxis, width, height, plotId) {
+export function histogram(table_name, crossSelection, xaxis, width, height, plotId) {
   return vg.plot(
-    vg.rectY(vg.from(table_name, { filterBy: selection }), {
+    vg.rectY(vg.from(table_name, { filterBy: crossSelection }), {
       x: vg.bin(xaxis),
       y: vg.count(),
       fill: "darkorange",
       insetLeft: 0.5,
       insetRight: 0.5,
     }),
-    vg.intervalX({ as: selection }),
+    vg.intervalX({ as: crossSelection }),
     vg.xDomain(vg.Fixed),
     vg.xLabel(xaxis),
     vg.xLabelAnchor("center"),
@@ -46,7 +48,8 @@ export function histogram(table_name, selection, xaxis, width, height, plotId) {
   );
 }
 
-export function barChart(table_name, selection, yaxis, width, height, plotId) {
+export function barChart(table_name, selection, clickBar, zoomBar, yaxis, width, height, plotId) {
+
   return vg.plot(
     vg.barX(
       vg.from(table_name, {filterBy: selection}),
@@ -57,7 +60,9 @@ export function barChart(table_name, selection, yaxis, width, height, plotId) {
         sort: {y: "-x", limit: 20}
       }
     ),
-    vg.toggleY({as: selection}),
+    vg.toggleY({as: clickBar}),
+    vg.highlight({by: clickBar, opacity: 0.1, fill: "grey", r: 3}),
+    vg.panZoomX({ as: zoomBar }),
     vg.xLabel("Count"),
     vg.yLabel(yaxis),
     vg.yLabelAnchor("top"),
@@ -67,4 +72,3 @@ export function barChart(table_name, selection, yaxis, width, height, plotId) {
     vg.style({ id: plotId })
   )
 }
-
