@@ -12,11 +12,10 @@ import { rightPanel } from "./rightpanel.js";
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
 
-const $range = Selection.crossfilter();
-const $click = Selection.intersect();
-const $range2 = Selection.single();
-const $range3 = Selection.intersect({ include: $range });
-// const $query = Selection.crossfilter({ include: [$range] }); //!
+const crossSelection = Selection.crossfilter();
+const clickBar = Selection.intersect();
+const zoomBar = Selection.single();
+const scatterHighlight = Selection.intersect({ include: crossSelection });
 
 const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
 
@@ -76,18 +75,18 @@ function populateOptions(cols) {
 
 function mountSearch(col, delayMs = 750) {
   // reset only the search selection
-  $range.reset();
+  crossSelection.reset();
   searchMount.replaceChildren();
   if (!col) return;
 
   // visible vg.search control
   const ctl = vg.search({
     label: `Search in ${col}`,
-    as: $range,           // <- dedicated search selection
+    as: crossSelection,           // <- dedicated search selection
     from: TABLE_NAME,
     column: col,
     type: "regexp",
-    filterBy: $range      // optional: scope search within current crossfilter
+    filterBy: crossSelection      // optional: scope search within current crossfilter
   });
   searchMount.appendChild(ctl);
 
@@ -148,7 +147,7 @@ function populateSelectElement(id, values) {
 }
 
 // Create the thumbnail client, which returns the selectedImages param for the right panel...
-const selectedImagesParam = thumbnailClient("thumbnails", $range, TABLE_NAME);
+const selectedImagesParam = thumbnailClient("thumbnails", crossSelection, TABLE_NAME);
 rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 
 
@@ -157,7 +156,7 @@ rightPanel(selectedImagesParam, "sidebar", TABLE_NAME);
 const coord = coordinator();
 makeClient({
   coordinator: coord,
-  selection: $range,
+  selection: crossSelection,
   prepare: async () => {
     // We setup the <select> elements with column names...
     coord.query("describe " + TABLE_NAME).then((data) => {
@@ -213,7 +212,7 @@ document.getElementById("addPlot").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    scatterPlot(TABLE_NAME, $range, $range3, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
+    scatterPlot(TABLE_NAME, crossSelection, scatterHighlight, xaxis, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
@@ -225,7 +224,7 @@ document.getElementById("addHistogram").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    histogram(TABLE_NAME, $range, xaxis, PLOT_W, PLOT_H, plotId)
+    histogram(TABLE_NAME, crossSelection, xaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
@@ -237,21 +236,21 @@ document.getElementById("addBarChart").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    barChart(TABLE_NAME, $range, $click, $range2, yaxis, PLOT_W, PLOT_H, plotId)
+    barChart(TABLE_NAME, crossSelection, clickBar, zoomBar, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
 document.getElementById("plots").onclick = (event) => {
   if (event.target.className === "remove") {
-    console.log("remove panel selection.clauses", $range.clauses);
+    console.log("remove panel selection.clauses", crossSelection.clauses);
     let plotId = event.target.id;
-    let toRemove = $range.clauses.filter(c => {
+    let toRemove = crossSelection.clauses.filter(c => {
       return c.source.mark.plot.attributes.style.id === plotId;
     })
     console.log("toRemove", toRemove);
     if (toRemove.length > 0) {
-      $range.reset(toRemove);
-      console.log("new selection", $range.clauses);
+      crossSelection.reset(toRemove);
+      console.log("new selection", crossSelection.clauses);
     }
     // TODO: remove plot from UI...
     event.target.parentElement.remove();
@@ -261,5 +260,5 @@ document.getElementById("plots").onclick = (event) => {
 // Add the table immediately...
 document.getElementById("table").replaceChildren(
   // as: selection - filters on mouseover, not click
-  vg.table({from: TABLE_NAME, filterBy: $range, height: 300, width: 2000})
+  vg.table({from: TABLE_NAME, filterBy: crossSelection, height: 300, width: 2000})
 );
