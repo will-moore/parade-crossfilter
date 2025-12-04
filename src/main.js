@@ -12,9 +12,10 @@ import { rightPanel } from "./rightpanel.js";
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
 
-const crossSelection = Selection.crossfilter();
 const clickBar = Selection.intersect();
 const zoomBar = Selection.single();
+const baseFilter = Selection.crossfilter();
+const crossSelection = Selection.intersect({ include: [baseFilter, clickBar]});
 const scatterHighlight = Selection.intersect({ include: crossSelection });
 
 const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
@@ -224,7 +225,7 @@ document.getElementById("addHistogram").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    histogram(TABLE_NAME, crossSelection, xaxis, PLOT_W, PLOT_H, plotId)
+    histogram(TABLE_NAME, crossSelection, baseFilter, xaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 
@@ -236,7 +237,7 @@ document.getElementById("addBarChart").onclick = () => {
   panel.innerHTML = `<button id="${plotId}" class="remove" style="position:absolute;right:5px;top:5px;z-index:10;">×</button>`;
   document.getElementById("plots").appendChild(panel);
   panel.append(
-    barChart(TABLE_NAME, crossSelection, clickBar, zoomBar, yaxis, PLOT_W, PLOT_H, plotId)
+    barChart(TABLE_NAME, baseFilter, clickBar, zoomBar, yaxis, PLOT_W, PLOT_H, plotId)
   );
 }
 

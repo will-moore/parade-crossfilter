@@ -29,7 +29,7 @@ export function scatterPlot(
   );
 }
 
-export function histogram(table_name, crossSelection, xaxis, width, height, plotId) {
+export function histogram(table_name, crossSelection, baseFilter, xaxis, width, height, plotId) {
   return vg.plot(
     vg.rectY(vg.from(table_name, { filterBy: crossSelection }), {
       x: vg.bin(xaxis),
@@ -38,7 +38,7 @@ export function histogram(table_name, crossSelection, xaxis, width, height, plot
       insetLeft: 0.5,
       insetRight: 0.5,
     }),
-    vg.intervalX({ as: crossSelection }),
+    vg.intervalX({ as: baseFilter }),
     vg.xDomain(vg.Fixed),
     vg.xLabel(xaxis),
     vg.xLabelAnchor("center"),
@@ -48,11 +48,11 @@ export function histogram(table_name, crossSelection, xaxis, width, height, plot
   );
 }
 
-export function barChart(table_name, selection, clickBar, zoomBar, yaxis, width, height, plotId) {
+export function barChart(table_name, baseFilter, clickBar, zoomBar, yaxis, width, height, plotId) {
 
   return vg.plot(
     vg.barX(
-      vg.from(table_name, {filterBy: selection}),
+      vg.from(table_name, {filterBy: baseFilter}),
       {
         x: vg.count(),
         y: yaxis,
@@ -60,9 +60,8 @@ export function barChart(table_name, selection, clickBar, zoomBar, yaxis, width,
         sort: {y: "-x", limit: 20}
       }
     ),
-    vg.toggleY({ as: selection }),
-    vg.toggleY({as: clickBar}),
     vg.highlight({by: clickBar, opacity: 0.1, fill: "grey", r: 3}),
+    vg.toggleY({as: clickBar}),
     vg.panZoomX({ as: zoomBar }),
     vg.xLabel("Count"),
     vg.yLabel(yaxis),
