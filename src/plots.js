@@ -60,7 +60,6 @@ export function barChart(table_name, selection, clickBar, zoomBar, yaxis, width,
         sort: {y: "-x", limit: 20}
       }
     ),
-    vg.toggleY({ as: selection }),
     vg.toggleY({as: clickBar}),
     vg.highlight({by: clickBar, opacity: 0.1, fill: "grey", r: 3}),
     vg.panZoomX({ as: zoomBar }),

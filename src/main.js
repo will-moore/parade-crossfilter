@@ -12,9 +12,9 @@ import { rightPanel } from "./rightpanel.js";
 const wasm = new DuckDBWASMConnector({ log: false });
 coordinator().databaseConnector(wasm);
 
-const crossSelection = Selection.crossfilter();
 const clickBar = Selection.intersect();
 const zoomBar = Selection.single();
+const crossSelection = Selection.crossfilter({ include: clickBar });
 const scatterHighlight = Selection.intersect({ include: crossSelection });
 
 const defaultSource = `https://raw.githubusercontent.com/will-moore/ome2024-ngff-challenge/refs/heads/biofile_finder_csvs/samples/idr0010_images_bff.csv`;
