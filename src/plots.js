@@ -57,7 +57,7 @@ export function barChart(table_name, selection, yaxis, width, height, plotId) {
         sort: {y: "-x", limit: 20}
       }
     ),
-    vg.intervalY({ as: selection }),
+    vg.toggleY({as: selection}),
     vg.xLabel("Count"),
     vg.yLabel(yaxis),
     vg.yLabelAnchor("top"),
