@@ -1,0 +1,238 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f6f6f6;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+.panel {
+  background: white;
+  border-radius: 10px;
+  float: left;
+  box-sizing: border-box;
+  overflow: auto;
+  margin: 10px;
+  padding: 10px;
+  position: relative;
+}
+#thumbnails {
+  width: 150px;
+  height: 245px;
+}
+#controls {
+  flex: 0 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  background: #333;
+  color: white;
+}
+#table th {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: #999;
+  width: 300px;
+  text-align: center;
+}
+
+#thumbnails {
+  overflow: auto;
+  width: 100%;
+}
+
+#thumbnails img {
+  border: solid 1px #ccc;
+  margin: 0;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  display: inline-block;
+  background: lightgrey;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#thumbnails img.selected {
+  border: solid 3px #1c4a87;
+}
+
+.thumb {
+  position: relative;
+  margin: 5px;
+  width: 128px;
+  height: 128px;
+  display: inline-block;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner:after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-top: -20px;
+  margin-left: -20px;
+  border-radius: 50%;
+  border: 3px solid rgba(180, 180, 180, 0.6);
+  border-top-color: rgba(0, 0, 0, 0.6);
+  animation: spinner 1s linear infinite;
+}
+
+#sidebar {
+  overflow: auto;
+  padding: 15px;
+  font-size: 14px;
+  background-color: white;
+  border-left: solid #333 1px;
+  box-sizing: border-box;
+}
+
+#preview {
+  border-radius: 10px;
+  width: 100%;
+  max-height: 500px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+#addPlotDialog {
+  width: 500px;
+  height: 330px;
+  background: white;
+  border: solid grey 1px;
+  border-radius: 15px;
+  padding: 0;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.7);
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+#addPlotDialog h2 {
+  margin: 0;
+  border-bottom: solid grey 1px;
+  padding: 15px;
+  font-weight: 200;
+  font-size: 22px;
+}
+
+button {
+  background: darkgreen;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 10px 15px;
+  margin: 0;
+  cursor: pointer;
+}
+
+button.close {
+  background: darkblue;
+}
+
+button.x, button.remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 20px;
+  text-align: center;
+  background: white;
+  color: darkgrey;
+  font-size: 40px
+}
+
+button.remove {
+  visibility: hidden;
+}
+.panel:hover button.remove {
+  visibility: visible;
+}
+
+select {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.tabs{
+    display: block;
+    position: relative;
+}
+
+.tabs .tab{
+    float: left;
+    display: block;
+}
+
+.tabs .tab>input[type="radio"] {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+.tabs .tab>label {
+    display: block;
+    padding: 6px 21px;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+}
+
+.tabs .content {
+    z-index: 0;/* or display: none; */
+    overflow: hidden;
+    width: 100%;
+    padding: 25px;
+    position: absolute;
+    top: 27px;
+    left: 0;
+    /* background: #303030; */
+    /* color: #DFDFDF; */
+    box-sizing: border-box;
+    border-top: solid lightgrey 1px;
+    opacity:0;
+    transition: opacity 200ms ease-out;
+}
+
+.tabs>.tab>[id^="tab"]:checked + label {
+    top: 0;
+    /* background: #303030; */
+    /* color: #F5F5F5; */
+    border-bottom: solid black 1px;
+
+}
+
+.tabs>.tab>[id^="tab"]:checked ~ [id^="tab-content"] {
+    z-index: 1;/* or display: block; */
+   
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+}
